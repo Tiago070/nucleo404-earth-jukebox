@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Earth Information Jukebox — NASA Space Apps Challenge 2026</title>
+<meta name="description" content="Sonificação acessível, com audiodescrição, de visualizações oficiais do NASA Scientific Visualization Studio (SVS) — Earth Information Center.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%2338bdf8'/%3E%3Ccircle cx='50' cy='50' r='15' fill='%230b0f19'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#0b0f19;--panel:#111827;--panel2:#0d1424;--line:#1e293b;--line2:#2b3a52;
+  --cyan:#38bdf8;--amber:#f59e0b;--text:#f1f5f9;--muted:#a8b5c8;--dim:#8193aa;
+  --radius:16px;
+}
+html{font-size:17px}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:1rem;line-height:1.55;min-height:100vh;background:
+  radial-gradient(1100px 520px at 85% -10%,rgba(56,189,248,.13),transparent 60%),
+  radial-gradient(800px 480px at -10% 105%,rgba(245,158,11,.08),transparent 60%),var(--bg)}
+a{color:var(--cyan)}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--amber);outline-offset:3px;border-radius:6px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+.skip{position:absolute;left:-999px;top:8px;background:var(--amber);color:#111;padding:8px 14px;border-radius:8px;z-index:99;font-weight:700}
+.skip:focus{left:8px}
+
+/* ---------- header ---------- */
+header{display:flex;align-items:center;gap:16px;padding:14px 24px;border-bottom:1px solid var(--line);background:rgba(11,15,25,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:20;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:14px;flex:1;min-width:280px}
+.logo{width:44px;height:44px;border-radius:50%;background:conic-gradient(from 0deg,var(--cyan),#4ade80,#c084fc,var(--amber),var(--cyan));position:relative;flex:none;animation:spin 8s linear infinite;animation-play-state:paused}
+.logo::after{content:"";position:absolute;inset:15px;border-radius:50%;background:var(--bg)}
+body.playing .logo{animation-play-state:running}
+.brand h1{font-size:1.35rem;margin:0;line-height:1.2}
+.brand p{margin:0;font-size:.85rem;color:var(--muted)}
+.hbtns{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{background:var(--panel);border:1px solid var(--line2);border-radius:12px;padding:10px 16px;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;font-size:.95rem;min-height:44px}
+.btn:hover{border-color:var(--cyan);background:#13203a}
+.btn[aria-pressed="true"]{border-color:var(--cyan);background:#0c2a44;color:#e0f2fe}
+.btn.ad{font-weight:800;font-size:1.05rem;padding:10px 20px;background:linear-gradient(135deg,#0ea5e9,#2563eb);border:2px solid #7dd3fc;box-shadow:0 0 0 0 rgba(56,189,248,.6)}
+.btn.ad:hover{filter:brightness(1.1)}
+.btn.ad[aria-pressed="true"]{background:linear-gradient(135deg,#f59e0b,#ea580c);border-color:#fde68a;color:#111;animation:pulse 2.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(245,158,11,.55)}70%{box-shadow:0 0 0 12px rgba(245,158,11,0)}100%{box-shadow:0 0 0 0 rgba(245,158,11,0)}}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:12px;overflow:hidden}
+.seg button{background:var(--panel);border:none;padding:8px 12px;cursor:pointer;min-height:44px;min-width:44px;font-weight:700}
+.seg button+button{border-left:1px solid var(--line2)}
+.seg button[aria-pressed="true"]{background:#0c2a44;color:var(--cyan)}
+
+/* ---------- layout ---------- */
+main{display:grid;grid-template-columns:minmax(330px,21rem) 1fr;gap:20px;padding:20px 24px;max-width:1640px;margin:0 auto}
+@media (max-width:1080px){main{grid-template-columns:1fr}}
+.panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.panel h2{font-size:.82rem;text-transform:uppercase;letter-spacing:1.4px;color:var(--muted);margin:0 0 12px;font-weight:700}
+aside{display:flex;flex-direction:column;gap:16px}
+section.stagewrap{display:flex;flex-direction:column;gap:16px;min-width:0}
+
+/* ---------- tracks ---------- */
+.tracks{display:flex;flex-direction:column;gap:10px}
+.track{display:flex;gap:12px;align-items:center;text-align:left;background:#0c1322;border:1px solid var(--line);border-radius:14px;padding:12px;cursor:pointer;transition:.15s;width:100%}
+.track:hover{border-color:var(--line2);background:#101a2e}
+.track[aria-pressed="true"]{border-color:var(--cyan);box-shadow:0 0 0 1px var(--cyan) inset,0 0 24px rgba(56,189,248,.15)}
+.vinyl{width:50px;height:50px;border-radius:50%;flex:none;position:relative;background:repeating-radial-gradient(circle at 50% 50%,#0a0a0a 0 2px,#1b1b1b 2px 3px)}
+.vinyl::after{content:"";position:absolute;inset:15px;border-radius:50%;background:var(--c,#38bdf8);box-shadow:0 0 0 2px #000}
+.track[aria-pressed="true"] .vinyl{animation:spin 2.2s linear infinite;animation-play-state:paused}
+body.playing .track[aria-pressed="true"] .vinyl{animation-play-state:running}
+.tmeta{flex:1;min-width:0}
+.tmeta b{display:block;font-size:.98rem;line-height:1.3}
+.tmeta span{font-size:.82rem;color:var(--muted)}
+.key{display:inline-block;font-size:.72rem;border:1px solid var(--line2);border-radius:5px;padding:0 5px;margin-right:6px;color:var(--dim)}
+.badge{font-size:.72rem;padding:2px 8px;border-radius:99px;border:1px solid var(--line2);color:var(--muted);margin-left:6px;white-space:nowrap}
+.badge.real{color:#4ade80;border-color:rgba(74,222,128,.45)}
+.badge.proc{color:var(--amber);border-color:rgba(245,158,11,.45)}
+.badge.manual{color:var(--cyan);border-color:rgba(56,189,248,.45)}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- deck ---------- */
+.deck{display:flex;flex-direction:column;align-items:center;gap:14px}
+#disc{width:220px;height:220px}
+.field{width:100%}
+.field label{font-size:.9rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;margin-bottom:6px}
+.field output{color:var(--text);font-variant-numeric:tabular-nums;font-weight:600}
+input[type=range]{width:100%;accent-color:var(--cyan);height:28px;cursor:pointer}
+select{width:100%;background:#0c1322;border:1px solid var(--line2);border-radius:12px;padding:10px 12px;min-height:44px}
+
+/* ---------- track header + upload ---------- */
+.trackhead{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start}
+@media (max-width:820px){.trackhead{grid-template-columns:1fr}}
+.trackhead h2{font-size:1.5rem;margin:0;text-transform:none;letter-spacing:0;color:var(--text);line-height:1.25}
+.src{font-size:.88rem;color:var(--muted);margin-top:6px}
+.desc{font-size:1.02rem;color:#d6dee9;margin:12px 0 0}
+.upload{display:flex;flex-direction:column;align-items:stretch;gap:6px;min-width:280px}
+.upload-btn{position:relative;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 20px;border-radius:14px;cursor:pointer;font-weight:800;font-size:1.08rem;color:#111;background:linear-gradient(135deg,#fbbf24,#f59e0b 50%,#ea580c);border:2px solid #fde68a;box-shadow:0 8px 28px rgba(245,158,11,.25);transition:.15s}
+.upload-btn:hover{filter:brightness(1.07);transform:translateY(-1px)}
+.upload-btn:focus-within{outline:3px solid #fff;outline-offset:3px}
+.upload-btn input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+.upload small{font-size:.8rem;color:var(--muted);text-align:center}
+.linkbtn{background:none;border:none;color:var(--cyan);cursor:pointer;text-decoration:underline;font-size:.88rem;padding:4px}
+.svs{font-size:.9rem;text-align:center}
+
+/* ---------- audio description ---------- */
+.adpanel{border:2px solid var(--amber);background:linear-gradient(180deg,#1c1608,#111827)}
+.adpanel h2{color:var(--amber)}
+.adtext{font-size:1.2rem;line-height:1.6;color:#fff7e6;background:#0b0f19;border-radius:12px;padding:14px 16px;border:1px solid #3a2f12;min-height:64px}
+.adrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;align-items:center}
+.adrow .field{flex:1;min-width:220px}
+.adnote{font-size:.88rem;color:var(--amber);margin-top:8px}
+.check{display:flex;align-items:center;gap:8px;font-size:.92rem;color:#d6dee9;cursor:pointer}
+.check input{width:20px;height:20px;accent-color:var(--amber)}
+
+/* ---------- stage ---------- */
+.canvasbox{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line2);background:#000;line-height:0}
+#stage{width:100%;height:auto;display:block;cursor:crosshair;touch-action:none;max-height:64vh;object-fit:contain}
+.overlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(11,15,25,.78);font-size:1.1rem;color:var(--cyan);line-height:1.4;text-align:center;padding:20px}
+.overlay.on{display:flex}
+.overlay.drop{border:3px dashed var(--amber);color:var(--amber);font-weight:700}
+
+/* ---------- transport ---------- */
+.transport{display:flex;flex-direction:column;gap:14px}
+.trow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.ibtn{width:52px;height:52px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line2);background:var(--panel);cursor:pointer;font-size:1.2rem;flex:none}
+.ibtn:hover{border-color:var(--cyan)}
+.ibtn.main{width:64px;height:64px;font-size:1.5rem;background:linear-gradient(135deg,#0ea5e9,#2563eb);border:none}
+.seekwrap{flex:1;min-width:200px}
+.time{font-variant-numeric:tabular-nums;font-size:1rem;color:#d6dee9;min-width:110px;text-align:right}
+.speedgrp{display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex:1}
+.speedgrp .lbl{font-size:.9rem;color:var(--muted);font-weight:600}
+.chips{display:inline-flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:#0c1322;border-radius:99px;padding:6px 14px;cursor:pointer;font-weight:700;min-height:40px;font-variant-numeric:tabular-nums}
+.chip[aria-pressed="true"]{background:var(--cyan);color:#06243a;border-color:var(--cyan)}
+.mixer{width:100%;display:flex;flex-direction:column;gap:12px;background:#0b1220;border:1px solid var(--line);border-radius:14px;padding:14px}
+.mixer h3{margin:0;font-size:.82rem;text-transform:uppercase;letter-spacing:1.4px;color:var(--muted)}
+.mixer .field label span i{font-style:normal;margin-right:6px}
+#volSweep{accent-color:var(--cyan)}
+#volAd{accent-color:var(--amber)}
+.linkbtn2{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;border-radius:12px;border:1px solid var(--line2);background:#0c1322;cursor:pointer;font-weight:700;font-size:.9rem}
+.linkbtn2[aria-pressed="true"]{border-color:var(--cyan);color:var(--cyan);background:#0c2a44}
+.chip.amb[aria-pressed="true"]{background:var(--amber);color:#1a1205;border-color:var(--amber)}
+.hint{font-size:.88rem;color:var(--dim)}
+.hint kbd{border:1px solid var(--line2);border-radius:5px;padding:0 6px;font-family:inherit;color:#cbd5e1}
+
+/* ---------- telemetry ---------- */
+.tele{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:820px){.tele{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.metric{background:#0b1220;border:1px solid var(--line);border-radius:12px;padding:12px 14px;min-width:0}
+.metric small{display:block;font-size:.74rem;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700}
+.metric div{font-size:1.15rem;font-variant-numeric:tabular-nums;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.swatch{display:inline-block;width:16px;height:16px;border-radius:4px;vertical-align:-2px;margin-right:8px;border:1px solid rgba(255,255,255,.3)}
+.phen{margin-top:12px;background:linear-gradient(90deg,rgba(56,189,248,.08),rgba(245,158,11,.06));border:1px solid var(--line2);border-left:4px solid var(--cyan);border-radius:12px;padding:14px 16px;font-size:1.15rem;min-height:56px}
+
+/* ---------- layers ---------- */
+.layers{display:flex;flex-wrap:wrap;gap:10px}
+.layer{display:flex;align-items:center;gap:10px;background:#0c1322;border:1px solid var(--line2);border-radius:12px;padding:10px 14px;cursor:pointer;text-align:left;min-height:48px}
+.layer i{width:14px;height:14px;border-radius:50%;flex:none}
+.layer em{color:var(--muted);font-style:normal;font-size:.88rem}
+.layer .st{font-size:.75rem;font-weight:700;border-radius:99px;padding:1px 8px;background:#123b22;color:#86efac}
+.layer[aria-pressed="false"]{opacity:.55}
+.layer[aria-pressed="false"] .st{background:#3b1212;color:#fca5a5}
+.layer[aria-pressed="false"] span:first-of-type{text-decoration:line-through}
+.layer:disabled{cursor:default;opacity:.7}
+.layers-hint{font-size:.85rem;color:var(--dim);margin:10px 0 0}
+.legendpanel{border:2px solid #7dd3fc;background:linear-gradient(180deg,#0b1d33,#111827)}
+.legendpanel h2{color:#7dd3fc}
+.legendtop{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:14px}
+.legendtop p{margin:0;flex:1;min-width:240px;color:#d6dee9;font-size:.98rem}
+.btn.big{font-weight:800;font-size:1.05rem;padding:12px 20px;background:linear-gradient(135deg,#0ea5e9,#2563eb);border:2px solid #7dd3fc}
+.llist{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:10px}
+.litem{display:flex;align-items:center;gap:12px;background:#0b1220;border:1px solid var(--line2);border-radius:14px;padding:12px 14px;transition:.2s}
+.litem.now{border-color:var(--amber);box-shadow:0 0 0 2px var(--amber) inset,0 0 26px rgba(245,158,11,.25)}
+.litem.off{opacity:.55}
+.lsw{width:34px;height:34px;border-radius:10px;flex:none;border:2px solid rgba(255,255,255,.25)}
+.ltx{flex:1;min-width:0}
+.ltx b{display:block;font-size:1.05rem;line-height:1.3}
+.ltx small{display:block;font-size:.88rem;color:var(--muted);line-height:1.4}
+.ltx small em{font-style:normal;color:#e2e8f0}
+.lbtns{display:flex;flex-direction:column;gap:6px}
+.lbtns button{min-height:40px;min-width:96px;border-radius:10px;border:1px solid var(--line2);background:var(--panel);cursor:pointer;font-weight:700;font-size:.85rem;padding:4px 10px}
+.lbtns button:hover{border-color:var(--cyan)}
+.lbtns .mute[aria-pressed="true"]{color:#fca5a5;border-color:#7f1d1d}
+.amb-tag{font-size:.7rem;font-weight:700;color:#7dd3fc;border:1px solid #1e4b6e;border-radius:99px;padding:0 7px;margin-left:6px;vertical-align:2px}
+details{font-size:1rem;color:#d6dee9}
+details summary{cursor:pointer;color:var(--text);font-weight:700;padding:4px 0}
+details p{margin:10px 0 0}
+
+/* ---------- footer + dialog ---------- */
+footer{border-top:1px solid var(--line);padding:18px 24px;font-size:.88rem;color:var(--muted);text-align:center}
+footer a{color:var(--muted)}
+dialog{background:var(--panel);color:var(--text);border:1px solid var(--line2);border-radius:18px;max-width:680px;width:calc(100% - 32px);padding:24px}
+dialog::backdrop{background:rgba(2,6,23,.75);backdrop-filter:blur(3px)}
+dialog h3{margin:0 0 8px;font-size:1.3rem}
+dialog ul{padding-left:20px;margin:12px 0}
+dialog li{margin:8px 0}
+
+body.ad-on .phen{font-size:1.3rem;border-left-color:var(--amber)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#stage" data-i18n="skip">Pular para o mapa sonoro</a>
+<header>
+  <div class="brand">
+    <div class="logo" aria-hidden="true"></div>
+    <div>
+      <h1>Earth Information Jukebox</h1>
+      <p data-i18n="subtitle">NASA Space Apps Challenge 2026 · Dados da Terra para ouvir</p>
+    </div>
+  </div>
+  <div class="hbtns">
+    <button class="btn ad" id="adBtn" aria-pressed="false" aria-keyshortcuts="A"><span aria-hidden="true">🔊</span> <span data-i18n="adBtn">Audiodescrição</span></button>
+    <div class="seg" role="group" aria-label="Tamanho do texto" id="sizeGrp">
+      <button data-size="17" aria-pressed="true" aria-label="Texto normal">A</button>
+      <button data-size="19" aria-pressed="false" aria-label="Texto grande">A+</button>
+      <button data-size="21" aria-pressed="false" aria-label="Texto muito grande">A++</button>
+    </div>
+    <button class="btn" id="creditsBtn" data-i18n="credits">Citações NASA</button>
+    <button class="btn" id="langBtn">EN</button>
+  </div>
+</header>
+
+<main>
+  <aside>
+    <div class="panel">
+      <h2 data-i18n="tracks">Discos · Catálogo NASA SVS</h2>
+      <div class="tracks" id="tracks" role="group"></div>
+    </div>
+    <div class="panel deck">
+      <canvas id="disc" width="440" height="440" aria-hidden="true"></canvas>
+      <div class="field">
+        <label for="scale"><span data-i18n="scale">Escala musical</span></label>
+        <select id="scale">
+          <option value="majPent" data-i18n="majPent">Pentatônica Maior</option>
+          <option value="minPent" data-i18n="minPent">Pentatônica Menor</option>
+          <option value="lydian" data-i18n="lydian">Lídio</option>
+        </select>
+      </div>
+      <div class="mixer" role="group" aria-labelledby="mixTitle">
+        <h3 id="mixTitle" data-i18n="mixTitle">Volumes</h3>
+        <div class="field">
+          <label for="volSweep"><span><i aria-hidden="true">🗺️</i><span data-i18n="volSweep">Varredura do mapa</span></span><output id="volSweepOut">80%</output></label>
+          <input type="range" id="volSweep" min="0" max="1" step="0.01" value="0.8">
+        </div>
+        <div class="field">
+          <label for="volAd"><span><i aria-hidden="true">🔊</i><span data-i18n="volAd">Audiodescrição</span></span><output id="volAdOut">60%</output></label>
+          <input type="range" id="volAd" min="0" max="1" step="0.01" value="0.6">
+        </div>
+        <button class="linkbtn2" id="volLink" aria-pressed="true"><span aria-hidden="true">🔗</span> <span id="volLinkTxt"></span></button>
+      </div>
+    </div>
+  </aside>
+
+  <section class="stagewrap">
+    <div class="panel">
+      <div class="trackhead">
+        <div>
+          <h2 id="trackTitle">—</h2>
+          <div class="src" id="srcInfo">—</div>
+          <p class="desc" id="trackDesc"></p>
+        </div>
+        <div class="upload">
+          <label class="upload-btn"><span aria-hidden="true">📂</span> <span data-i18n="loadTitle">Carregar imagem real</span>
+            <input type="file" id="fileInput" accept="image/*">
+          </label>
+          <small data-i18n="loadSub">PNG ou JPG · ou arraste sobre o mapa · vale para a faixa selecionada</small>
+          <button class="linkbtn" id="restoreBtn" hidden data-i18n="restore">↺ Voltar à imagem padrão</button>
+          <a class="svs" id="svsLink" href="#" target="_blank" rel="noopener">NASA SVS ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <section class="panel legendpanel" id="legendPanel" aria-labelledby="legendTitle">
+      <h2 id="legendTitle"><span aria-hidden="true">🎧</span> <span data-i18n="legendTitle">Legenda sonora · ouça antes do mapa</span></h2>
+      <div class="legendtop">
+        <button class="btn big" id="legendAll" aria-keyshortcuts="L">▶ <span data-i18n="legendAll">Ouvir legenda completa</span></button>
+        <button class="btn" id="legendStop" hidden>⏹ <span data-i18n="legendStop">Parar legenda</span></button>
+        <p data-i18n="legendSub">Cada cor da imagem tem um som. A legenda diz o nome do item, a cor e toca o som associado.</p>
+      </div>
+      <ul class="llist" id="legend"></ul>
+      <label class="check" style="margin-top:12px"><input type="checkbox" id="legendFirst" checked> <span data-i18n="legendFirst">Tocar a legenda automaticamente antes da primeira varredura de cada faixa</span></label>
+    </section>
+
+    <div class="panel adpanel" id="adPanel" hidden>
+      <h2><span aria-hidden="true">🔊</span> <span data-i18n="adTitle">Audiodescrição ativa</span></h2>
+      <div class="adtext" id="adText">—</div>
+      <div class="adrow">
+        <button class="btn" id="adDescribe" aria-keyshortcuts="D">🖼️ <span data-i18n="adDescribe">Descrever imagem</span></button>
+        <button class="btn" id="adRules">📏 <span data-i18n="adRules">Ler regras de som</span></button>
+        <button class="btn" id="adCurrent" aria-keyshortcuts="R">🔬 <span data-i18n="adCurrent">Ler tradução atual</span></button>
+        <button class="btn" id="adStop">⏹ <span data-i18n="adStop">Parar narração</span></button>
+      </div>
+      <div class="adrow">
+        <div class="speedgrp" role="group" aria-labelledby="adRateLbl">
+          <span class="lbl" id="adRateLbl" data-i18n="adRate">Velocidade da narração</span>
+          <div class="chips" id="adChips"></div>
+        </div>
+        <label class="check"><input type="checkbox" id="adAuto" checked> <span data-i18n="adAuto">Narrar mudanças durante a reprodução</span></label>
+      </div>
+      <div class="adnote" id="adNote" hidden></div>
+    </div>
+
+    <div class="canvasbox" id="canvasbox">
+      <canvas id="stage" width="1280" height="720" tabindex="0" role="img" aria-describedby="imgDesc"></canvas>
+      <div class="overlay" id="loading" data-i18n="generating">Gerando réplica procedural…</div>
+      <div class="overlay drop" id="dropOv" data-i18n="dropHere">Solte a imagem aqui</div>
+    </div>
+    <p class="sr-only" id="imgDesc"></p>
+
+    <div class="panel transport" role="group" aria-label="Controles de reprodução">
+      <div class="trow">
+        <button class="ibtn" id="stopBtn">■</button>
+        <button class="ibtn main" id="playBtn" aria-keyshortcuts="Space">▶</button>
+        <div class="seekwrap">
+          <label for="seek" class="sr-only" data-i18n="seekLabel">Posição da varredura no mapa</label>
+          <input type="range" id="seek" min="0" max="1000" step="1" value="0">
+        </div>
+        <div class="time" id="time" aria-hidden="true">0:00 / 0:40</div>
+      </div>
+      <div class="trow">
+        <div class="speedgrp" role="group" aria-labelledby="speedLbl">
+          <span class="lbl" id="speedLbl" data-i18n="speed">Velocidade da varredura</span>
+          <div class="chips" id="chips"></div>
+        </div>
+        <label class="check"><input type="checkbox" id="loop" checked> <span data-i18n="loop">Repetir</span></label>
+      </div>
+      <div class="hint" id="hint"></div>
+    </div>
+
+    <div class="panel">
+      <h2 data-i18n="telemetry">Tradução científica ao vivo</h2>
+      <div class="tele">
+        <div class="metric"><small data-i18n="position">Posição no mapa</small><div id="tPos">0.0%</div></div>
+        <div class="metric"><small data-i18n="color">Cor média detectada</small><div id="tRgb"><span class="swatch"></span>—</div></div>
+        <div class="metric"><small data-i18n="sound">Frequência / instrumento</small><div id="tSound">—</div></div>
+        <div class="metric"><small data-i18n="feature">Fenômeno dominante</small><div id="tFeat">—</div></div>
+      </div>
+      <div class="phen" id="tPhen" aria-hidden="true">—</div>
+      <div class="sr-only" id="live" aria-live="polite" aria-atomic="true"></div>
+    </div>
+
+
+    <div class="panel">
+      <details>
+        <summary data-i18n="methodTitle">Metodologia: framework NASA “Data Sonification: Caldwell 73” (SVS #13786)</summary>
+        <p data-i18n="methodBody"></p>
+      </details>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span data-i18n="footer">Visualizações: NASA Goddard Space Flight Center · Scientific Visualization Studio (SVS).</span>
+  <a href="https://svs.gsfc.nasa.gov/gallery/earth-information-center/" target="_blank" rel="noopener">svs.gsfc.nasa.gov/gallery/earth-information-center</a> ·
+  <a href="https://svs.gsfc.nasa.gov/13786/" target="_blank" rel="noopener">#13786</a> ·
+  <a href="https://svs.gsfc.nasa.gov/5669/" target="_blank" rel="noopener">#5669</a> ·
+  <a href="https://svs.gsfc.nasa.gov/5313/" target="_blank" rel="noopener">#5313</a> ·
+  <a href="https://svs.gsfc.nasa.gov/5011/" target="_blank" rel="noopener">#5011</a> ·
+  <a href="https://svs.gsfc.nasa.gov/4950/" target="_blank" rel="noopener">#4950</a>
+</footer>
+
+<dialog id="creditsDlg" aria-labelledby="credTitle">
+  <h3 id="credTitle" data-i18n="citationsTitle">Citações oficiais da NASA</h3>
+  <p style="color:var(--muted);margin:0" data-i18n="citationsIntro"></p>
+  <ul>
+    <li><b>Earth Information Center Gallery</b> — <a href="https://svs.gsfc.nasa.gov/gallery/earth-information-center/" target="_blank" rel="noopener">svs.gsfc.nasa.gov/gallery/earth-information-center/</a></li>
+    <li><b>#13786</b> — Data Sonification: Caldwell 73 — <a href="https://svs.gsfc.nasa.gov/13786/" target="_blank" rel="noopener">svs.gsfc.nasa.gov/13786</a> <span data-i18n="citMethod">(metodologia de sonificação)</span></li>
+    <li><b>#5669</b> — GEOS Aerosols — <a href="https://svs.gsfc.nasa.gov/5669/" target="_blank" rel="noopener">svs.gsfc.nasa.gov/5669</a></li>
+    <li><b>#5313</b> — Change in Night Lights 2012–2023 (EIC Version) — <a href="https://svs.gsfc.nasa.gov/5313/" target="_blank" rel="noopener">svs.gsfc.nasa.gov/5313</a></li>
+    <li><b>#5011</b> — Lightning Events Detected from the ISS (2017–2023) — <a href="https://svs.gsfc.nasa.gov/5011/" target="_blank" rel="noopener">svs.gsfc.nasa.gov/5011</a></li>
+    <li><b>#4950</b> — GEDI Forest Height — <a href="https://svs.gsfc.nasa.gov/4950/" target="_blank" rel="noopener">svs.gsfc.nasa.gov/4950</a></li>
+  </ul>
+  <p style="font-size:.88rem;color:var(--dim)" data-i18n="citationsNote"></p>
+  <div style="text-align:right"><button class="btn" id="credClose" data-i18n="close">Fechar</button></div>
+</dialog>
+
+<script>
+(() => {
+'use strict';
+/* ============================================================
+   1. UTILITÁRIOS
+   ============================================================ */
+const $ = s => document.querySelector(s);
+const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+const lerp = (a, b, t) => a + (b - a) * t;
+const smooth = (e0, e1, x) => { const t = clamp((x - e0) / (e1 - e0), 0, 1); return t * t * (3 - 2 * t); };
+const mix = (c1, c2, t) => [lerp(c1[0], c2[0], t), lerp(c1[1], c2[1], t), lerp(c1[2], c2[2], t)];
+const DEG = Math.PI / 180;
+const mk = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
+const ctx2d = c => c.getContext('2d', { willReadFrequently: true });
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const nextFrame = () => new Promise(r => requestAnimationFrame(() => setTimeout(r, 0)));
+
+function rng(seed) {
+  return function () {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+const gauss = r => Math.sqrt(-2 * Math.log(r() + 1e-9)) * Math.cos(2 * Math.PI * r());
+
+function hash(x, y) {
+  let h = (Math.imul(x | 0, 374761393) + Math.imul(y | 0, 668265263)) | 0;
+  h = Math.imul(h ^ (h >>> 13), 1274126177);
+  return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+}
+function vnoise(x, y) {
+  const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
+  const u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+  const a = hash(xi, yi), b = hash(xi + 1, yi), c = hash(xi, yi + 1), d = hash(xi + 1, yi + 1);
+  return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+}
+function fbm(x, y, o = 4) {
+  let s = 0, a = 0.5, f = 1, n = 0;
+  for (let i = 0; i < o; i++) { s += a * vnoise(x * f, y * f); n += a; f *= 2.03; a *= 0.5; }
+  return s / n;
+}
+
+/* ============================================================
+   2. GEOGRAFIA SIMPLIFICADA (lon, lat) — base das réplicas
+   ============================================================ */
+const LAND = [
+  // América do Norte
+  [[-168,66],[-162,70],[-140,70],[-125,72],[-95,72],[-80,73],[-65,62],[-60,55],[-53,47],[-66,44],[-70,41],[-76,35],[-81,31],[-80,25],[-83,29],[-90,30],[-97,27],[-97,21],[-90,21],[-87,16],[-83,10],[-79,9],[-82,8],[-86,12],[-92,14],[-105,20],[-110,24],[-112,30],[-117,33],[-124,40],[-124,48],[-133,56],[-150,60],[-165,62]],
+  // América do Sul
+  [[-79,9],[-72,12],[-62,10],[-52,5],[-35,-5],[-39,-15],[-48,-26],[-58,-35],[-65,-42],[-68,-52],[-73,-52],[-75,-40],[-71,-30],[-70,-18],[-76,-14],[-81,-5],[-80,1],[-77,7]],
+  // Groenlândia
+  [[-55,60],[-45,60],[-20,70],[-18,80],[-35,83],[-60,82],[-72,78],[-55,70]],
+  // Eurásia
+  [[-10,36],[-9,43],[-2,44],[-4,48],[2,51],[8,54],[10,58],[5,62],[15,69],[28,71],[40,67],[60,69],[80,73],[100,77],[140,72],[180,69],[180,65],[160,60],[140,55],[135,43],[127,39],[122,30],[120,23],[108,21],[106,10],[100,13],[103,1],[98,8],[95,16],[90,22],[80,15],[77,8],[72,20],[66,25],[58,23],[55,17],[44,12],[43,16],[35,28],[34,31],[36,36],[28,37],[26,40],[23,36],[20,40],[14,38],[16,40],[12,44],[13,45],[9,44],[3,43],[-1,37],[-6,36]],
+  // África
+  [[-17,15],[-17,21],[-13,28],[-6,36],[10,37],[11,33],[20,31],[32,31],[34,28],[43,12],[51,12],[44,-2],[40,-10],[40,-16],[35,-24],[32,-29],[27,-34],[18,-35],[15,-27],[12,-17],[13,-6],[9,-1],[9,4],[3,6],[-8,4],[-13,8]],
+  // Madagascar
+  [[44,-25],[47,-25],[50,-15],[49,-12],[44,-17]],
+  // Austrália
+  [[114,-22],[122,-18],[130,-12],[137,-12],[142,-11],[146,-19],[153,-25],[150,-37],[141,-38],[135,-35],[129,-32],[115,-34],[114,-26]],
+  // Reino Unido / Irlanda
+  [[-5,50],[1,51],[0,53],[-3,56],[-5,58],[-6,55]], [[-10,52],[-6,52],[-6,55],[-10,54]],
+  // Japão
+  [[130,31],[135,34],[140,35],[142,40],[141,45],[139,40],[133,35]],
+  // Indonésia
+  [[95,5],[105,-6],[115,-8],[120,-9],[125,-8],[140,-3],[130,0],[118,5],[110,2],[100,2]],
+  // Nova Zelândia
+  [[167,-46],[174,-41],[178,-38],[173,-35],[170,-44]],
+  // Antártida
+  [[-180,-68],[-120,-72],[-60,-64],[-30,-74],[0,-70],[40,-68],[90,-66],[140,-66],[180,-70],[180,-90],[-180,-90]]
+];
+let landMask = null;
+function buildLandMask() {
+  const W = 1440, H = 720, c = mk(W, H), x = ctx2d(c);
+  x.fillStyle = '#000'; x.fillRect(0, 0, W, H); x.fillStyle = '#fff';
+  pathPolys(x, (lo, la) => [(lo + 180) / 360 * W, (90 - la) / 180 * H]);
+  landMask = { W, H, d: x.getImageData(0, 0, W, H).data };
+}
+function isLand(lon, lat) {
+  lon = ((lon + 180) % 360 + 360) % 360 - 180;
+  const x = Math.min(landMask.W - 1, ((lon + 180) / 360 * landMask.W) | 0);
+  const y = clamp(((90 - lat) / 180 * landMask.H) | 0, 0, landMask.H - 1);
+  return landMask.d[(y * landMask.W + x) * 4] > 127;
+}
+function pathPolys(ctx, proj) {
+  for (const poly of LAND) {
+    ctx.beginPath();
+    poly.forEach(([lo, la], i) => { const [x, y] = proj(lo, la); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+    ctx.closePath(); ctx.fill();
+  }
+}
+function orthoInverse(dx, dy, lon0, lat0) {
+  const rho2 = dx * dx + dy * dy;
+  if (rho2 > 1) return null;
+  const z = Math.sqrt(1 - rho2), sl = Math.sin(lat0), cl = Math.cos(lat0);
+  const lat = Math.asin(clamp(z * sl + dy * cl, -1, 1));
+  const lon = lon0 + Math.atan2(dx, z * cl - dy * sl);
+  return { lat: lat / DEG, lon: lon / DEG, z };
+}
+
+/* ============================================================
+   3. RÉPLICAS PROCEDURAIS (fallback quando o arquivo local falha)
+   ============================================================ */
+
+// 3.1 GEOS Aerosols — SVS #5669
+function genAerosols() {
+  const W = 1280, H = 720, lw = 640, lh = 360;
+  const low = mk(lw, lh), lc = ctx2d(low), id = lc.createImageData(lw, lh), D = id.data;
+  for (let y = 0; y < lh; y++) {
+    const lat = 90 - (y + 0.5) / lh * 180, ny = y / lh;
+    for (let x = 0; x < lw; x++) {
+      const lon = -180 + (x + 0.5) / lw * 360, nx = x / lw;
+      const wx = fbm(nx * 5 + 1.7, ny * 3 + 9.2, 3), wy = fbm(nx * 5 + 5.3, ny * 3 + 1.3, 3);
+      let c;
+      if (isLand(lon, lat)) {
+        const t = 0.85 + 0.3 * vnoise(nx * 80, ny * 40);
+        c = lat < -62 ? [78 * t, 82 * t, 78 * t] : [60 * t, 63 * t, 61 * t];
+      } else {
+        c = [12, 27, 34];
+        const sw = fbm(nx * 9 + wx * 2.2, ny * 5 + wy * 2.2, 4);
+        const cl = smooth(0.42, 0.72, sw) * (0.55 + 0.45 * smooth(-10, -50, lat));
+        c = mix(c, [125, 155, 170], cl * 0.85);
+      }
+      // sal marinho / sulfatos (verde)
+      const wl = Math.exp(-(((lat - 48) / 16) ** 2)) + 0.85 * Math.exp(-(((lat + 46) / 13) ** 2)) + 0.5 * Math.exp(-(((lat - 8) / 7) ** 2));
+      const gN = fbm(nx * 7 + wx * 1.8 + 3.1, ny * 6 + wy * 1.8 + 7.7, 4);
+      const gA = smooth(0.5, 0.74, gN * 0.8 + wl * 0.3);
+      c = mix(c, [40, 225, 65], gA * 0.92);
+      // poeira mineral (roxo)
+      const bandC = 19 + 5 * Math.sin(lon * 0.06);
+      const lonW = smooth(-75, -45, lon) * (1 - smooth(55, 75, lon));
+      let dust = Math.exp(-(((lat - bandC) / 7.5) ** 2)) * lonW;
+      dust += 0.8 * Math.exp(-(((lon - 62) / 12) ** 2 + ((lat - 31) / 4) ** 2));
+      const dN = fbm(nx * 12 + wx * 1.5, ny * 12 + wy * 1.5, 4);
+      const dA = smooth(0.3, 0.7, dust * (0.55 + 0.8 * dN));
+      c = mix(c, [200, 140, 222], dA);
+      if (dA > 0.85) c = mix(c, [235, 205, 245], (dA - 0.85) / 0.15 * 0.6);
+      // fumaça de queimadas (vermelho-alaranjado)
+      const sm = Math.exp(-(((lon - 23) / 13) ** 2 + ((lat + 9) / 8) ** 2))
+        + 0.6 * Math.exp(-(((lon - 2) / 14) ** 2 + ((lat + 3) / 6) ** 2))
+        + 0.9 * Math.exp(-(((lon + 8) / 3) ** 2 + ((lat - 42) / 3) ** 2))
+        + 0.35 * Math.exp(-(((lon + 60) / 10) ** 2 + ((lat + 12) / 8) ** 2));
+      const sN = fbm(nx * 14 + wx, ny * 14 + wy, 3);
+      const sA = smooth(0.35, 0.8, sm * (0.6 + 0.7 * sN));
+      c = mix(c, [205, 85, 35], sA * 0.88);
+      if (sA > 0.8) c = mix(c, [255, 140, 80], (sA - 0.8) * 2.5);
+      const i = (y * lw + x) * 4;
+      D[i] = c[0]; D[i + 1] = c[1]; D[i + 2] = c[2]; D[i + 3] = 255;
+    }
+  }
+  lc.putImageData(id, 0, 0);
+  const out = mk(W, H), o = ctx2d(out);
+  o.imageSmoothingEnabled = true; o.imageSmoothingQuality = 'high';
+  o.drawImage(low, 0, 0, W, H);
+  const proj = (lo, la) => [(lo + 180) / 360 * W, (90 - la) / 180 * H];
+  const r = rng(5669);
+  // luzes de cidades
+  const cities = [[-85, 38, 9], [-118, 36, 3], [5, 49, 7], [78, 23, 7], [115, 32, 8], [137, 36, 2], [-47, -22, 4], [30, 0, 8]];
+  for (let k = 0; k < 1500; k++) {
+    const h = cities[k % cities.length], lo = h[0] + gauss(r) * h[2], la = h[1] + gauss(r) * h[2] * 0.6;
+    if (!isLand(lo, la)) continue;
+    const [px, py] = proj(lo, la);
+    o.fillStyle = `rgba(250,248,225,${0.35 + r() * 0.55})`; o.fillRect(px, py, 1.6, 1.6);
+  }
+  // focos de queimadas
+  const fires = [[24, -10, 7], [-55, -12, 9], [-120, 55, 6], [-8, 41, 2], [133, -15, 6]];
+  for (let k = 0; k < 500; k++) {
+    const h = fires[k % fires.length], lo = h[0] + gauss(r) * h[2], la = h[1] + gauss(r) * h[2] * 0.6;
+    if (!isLand(lo, la)) continue;
+    const [px, py] = proj(lo, la);
+    o.fillStyle = `rgba(255,${70 + r() * 70 | 0},40,${0.5 + r() * 0.5})`; o.fillRect(px, py, 2, 2);
+  }
+  // furacão no Caribe/Atlântico
+  const [hx, hy] = proj(-72, 26);
+  o.strokeStyle = 'rgba(200,230,235,0.55)'; o.lineWidth = 2.2;
+  for (let arm = 0; arm < 3; arm++) {
+    o.beginPath();
+    for (let t = 0; t < 4.5; t += 0.08) {
+      const rr = 3 + t * 6, a = t * 1.9 + arm * 2.094;
+      const px = hx + Math.cos(a) * rr, py = hy + Math.sin(a) * rr;
+      t ? o.lineTo(px, py) : o.moveTo(px, py);
+    }
+    o.stroke();
+  }
+  o.fillStyle = 'rgba(30,40,50,.9)'; o.beginPath(); o.arc(hx, hy, 3, 0, 7); o.fill();
+  return out;
+}
+
+// 3.2 Night Lights 2012–2023 — SVS #5313
+const HOT = [
+  [2, 48, 6, 500, 'o'], [-1.5, 52.5, 1.8, 160, 'o'], [-4, 40, 3.5, 140, 'o'], [11, 44, 2.5, 120, 'm'], [8, 51, 2.5, 220, 'm'],
+  [31.2, 30.4, 0.9, 140, 'o'], [31.4, 29, 0.35, 30, 'o'], [31.6, 27.5, 0.35, 30, 'o'], [32.2, 26, 0.35, 30, 'o'], [32.7, 24.6, 0.35, 25, 'o'],
+  [35, 32, 1.2, 90, 'o'], [33, 39, 4, 160, 'p'], [31, 49, 4.5, 200, 'm'], [38, 55, 5, 180, 'w'], [78, 22, 7, 650, 'p'],
+  [114, 32, 7, 520, 'w'], [138, 36, 2, 150, 'w'], [-82, 38, 8, 520, 'w'], [-120, 37, 3, 110, 'w'], [-100, 20, 4, 130, 'p'],
+  [-46, -22, 4, 160, 'p'], [-60, -34, 3, 60, 'w'], [7, 7, 3, 120, 'p'], [28, -26, 2, 60, 'w'], [50, 26, 3, 110, 'p'],
+  [72, 30, 3.5, 130, 'p'], [110, -7, 4, 160, 'p'], [45, 33, 2.5, 70, 'p'], [151, -33, 2, 50, 'w']
+];
+const COL = { o: '245,160,70', p: '172,132,250', w: '226,220,205' };
+function pickCol(mode, r) {
+  const v = r();
+  if (mode === 'o') return v < 0.78 ? COL.o : COL.w;
+  if (mode === 'p') return v < 0.78 ? COL.p : COL.w;
+  if (mode === 'm') return v < 0.45 ? COL.o : v < 0.9 ? COL.p : COL.w;
+  return v < 0.75 ? COL.w : v < 0.88 ? COL.o : COL.p;
+}
+function drawLights(ctx, proj, bb, density, seed, dot) {
+  const r = rng(seed);
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  for (const [lo, la, sp, n, mode] of HOT) {
+    if (lo + sp * 3 < bb[0] || lo - sp * 3 > bb[1] || la + sp * 3 < bb[2] || la - sp * 3 > bb[3]) continue;
+    const cnt = Math.round(n * density);
+    for (let i = 0; i < cnt; i++) {
+      const L = lo + gauss(r) * sp, A = la + gauss(r) * sp * 0.7;
+      if (!isLand(L, A)) continue;
+      const [px, py] = proj(L, A), col = pickCol(mode, r), b = 0.35 + 0.65 * r() ** 2, s = dot * (0.6 + r() * 1.2);
+      ctx.fillStyle = `rgba(${col},${b.toFixed(2)})`; ctx.fillRect(px - s / 2, py - s / 2, s, s);
+      if (b > 0.8) { ctx.fillStyle = `rgba(${col},0.14)`; ctx.beginPath(); ctx.arc(px, py, s * 2.2, 0, 7); ctx.fill(); }
+    }
+  }
+  ctx.restore();
+}
+function genNightlights() {
+  const W = 1600, H = 450, LAT0 = 80, LAT1 = -60;
+  const c = mk(W, H), x = ctx2d(c);
+  const proj = (lo, la) => [(lo + 180) / 360 * W, (LAT0 - la) / (LAT0 - LAT1) * H];
+  x.fillStyle = '#06070a'; x.fillRect(0, 0, W, H);
+  x.fillStyle = '#2a2b2e'; pathPolys(x, proj);
+  drawLights(x, proj, [-180, 180, LAT1, LAT0], 1, 5313, 1.6);
+  const INS = [
+    { name: 'Western Europe', r: [0.088, 0.33, 0.28, 0.62], bb: [-11, 18, 34, 60] },
+    { name: 'Eastern Mediterranean', r: [0.285, 0.035, 0.175, 0.56], bb: [24, 40, 22, 40] },
+    { name: 'Ukraine *', r: [0.6, 0.035, 0.17, 0.39], bb: [22, 42, 43, 53] },
+    { name: 'India', r: [0.785, 0.36, 0.185, 0.6], bb: [66, 92, 6, 36] }
+  ];
+  INS.forEach((ins, k) => {
+    const rx = ins.r[0] * W, ry = ins.r[1] * H, rw = ins.r[2] * W, rh = ins.r[3] * H;
+    let [lo0, lo1, la0, la1] = ins.bb;
+    const mid = (la0 + la1) / 2, cosm = Math.cos(mid * DEG), asp = rw / rh;
+    const lonSpan = (lo1 - lo0) * cosm, latSpan = la1 - la0;
+    if (lonSpan / latSpan < asp) { const need = latSpan * asp / cosm, cx = (lo0 + lo1) / 2; lo0 = cx - need / 2; lo1 = cx + need / 2; }
+    else { const need = lonSpan / asp, cy = (la0 + la1) / 2; la0 = cy - need / 2; la1 = cy + need / 2; }
+    // retângulo de origem + linhas de conexão
+    const [sx0, sy0] = proj(lo0, la1), [sx1, sy1] = proj(lo1, la0);
+    x.strokeStyle = 'rgba(200,200,200,0.55)'; x.lineWidth = 1;
+    x.strokeRect(sx0, sy0, sx1 - sx0, sy1 - sy0);
+    x.beginPath(); x.moveTo(sx0, sy0); x.lineTo(rx, ry); x.moveTo(sx1, sy1); x.lineTo(rx + rw, ry + rh); x.stroke();
+    // inset
+    x.save(); x.shadowColor = 'rgba(0,0,0,.8)'; x.shadowBlur = 14;
+    x.fillStyle = '#06070a'; x.fillRect(rx, ry, rw, rh); x.restore();
+    x.save(); x.beginPath(); x.rect(rx, ry, rw, rh); x.clip();
+    const p2 = (lo, la) => [rx + (lo - lo0) / (lo1 - lo0) * rw, ry + (la1 - la) / (la1 - la0) * rh];
+    x.fillStyle = '#2c2d30'; pathPolys(x, p2);
+    const zoom = clamp(360 / (lo1 - lo0) * 0.22, 2, 7);
+    drawLights(x, p2, [lo0, lo1, la0, la1], zoom, 900 + k, 2.4);
+    x.restore();
+    x.strokeStyle = '#a3a3a3'; x.lineWidth = 1.5; x.strokeRect(rx, ry, rw, rh);
+    x.fillStyle = '#f1f5f9'; x.font = 'bold 12px system-ui,sans-serif'; x.fillText(ins.name, rx + 8, ry + 17);
+  });
+  // barra de cores
+  const bx = W * 0.475, by = H * 0.48, bw = 150;
+  x.fillStyle = 'rgba(255,255,255,.85)'; x.font = '8px system-ui,sans-serif'; x.textAlign = 'center';
+  x.fillText('Change in Lighting Intensity from 2012 to 2023', bx + bw / 2, by - 5);
+  const g = x.createLinearGradient(bx, 0, bx + bw, 0);
+  g.addColorStop(0, 'rgb(245,150,60)'); g.addColorStop(0.5, 'rgb(240,238,230)'); g.addColorStop(1, 'rgb(165,120,250)');
+  x.fillStyle = g; x.fillRect(bx, by, bw, 6);
+  x.fillStyle = 'rgba(200,200,200,.8)'; x.font = '7px system-ui,sans-serif';
+  x.fillText('lights out', bx + 12, by + 15); x.fillText('no change', bx + bw / 2, by + 15); x.fillText('new lights', bx + bw - 12, by + 15);
+  x.textAlign = 'start';
+  return c;
+}
+
+// 3.3 Lightning from the ISS — SVS #5011
+function genISS() {
+  const W = 1024, H = 576, c = mk(W, H), x = ctx2d(c), id = x.createImageData(W, H), D = id.data;
+  const cx = 430, cy = 335, R = 385, lon0 = 33 * DEG, lat0 = 2 * DEG;
+  for (let py = 0; py < H; py++) for (let px = 0; px < W; px++) {
+    const i = (py * W + px) * 4, dx = (px - cx) / R, dy = (cy - py) / R;
+    const p = orthoInverse(dx, dy, lon0, lat0);
+    let v, b;
+    if (!p) { v = 4; b = 8; }
+    else {
+      const land = isLand(p.lon, p.lat), n = fbm(p.lon * 0.4 + 10, p.lat * 0.4 + 10, 4);
+      const base = land ? 120 + 50 * (n - 0.5) : 60 + 8 * n;
+      const cloud = smooth(0.56, 0.74, fbm(p.lon * 0.18 + 3, p.lat * 0.25 + 8, 5));
+      v = base * (1 - cloud) + 205 * cloud;
+      const shade = 0.95 - 0.8 * smooth(-0.15, 0.85, dx * 0.95 + dy * 0.15);
+      v = Math.max(v * shade * (0.75 + 0.25 * p.z), 12); b = v + 4;
+    }
+    D[i] = v; D[i + 1] = v; D[i + 2] = b; D[i + 3] = 255;
+  }
+  x.putImageData(id, 0, 0);
+  const r = rng(5011);
+  for (let k = 0; k < 320; k++) {
+    const sx = r() * W, sy = r() * H;
+    if (Math.hypot(sx - cx, sy - cy) < R + 2) continue;
+    const a = 0.25 + r() * 0.6; x.fillStyle = `rgba(215,215,225,${a})`; x.fillRect(sx, sy, r() < 0.1 ? 2 : 1, r() < 0.1 ? 2 : 1);
+  }
+  // órbita
+  x.strokeStyle = 'rgba(210,210,215,0.35)'; x.lineWidth = 1.5;
+  x.beginPath(); x.moveTo(80, 330); x.quadraticCurveTo(430, 255, 760, 262); x.stroke();
+  x.setLineDash([10, 8]); x.beginPath(); x.moveTo(110, 512); x.quadraticCurveTo(420, 492, 735, 500); x.stroke(); x.setLineDash([]);
+  // raios (amarelo-dourado)
+  const clusters = [[368, 245, 14, 22, 26], [455, 28, 16, 12, 22], [925, 320, 10, 70, 30], [740, 30, 8, 4, 4], [960, 70, 4, 4, 3]];
+  for (const [ccx, ccy, sx, sy, n] of clusters) for (let k = 0; k < n; k++) {
+    const px = ccx + gauss(r) * sx, py = ccy + gauss(r) * sy, rad = 1.5 + r() * 2.2;
+    x.fillStyle = 'rgba(255,190,20,0.28)'; x.beginPath(); x.arc(px, py, rad * 2.2, 0, 7); x.fill();
+    x.fillStyle = '#ffd52a'; x.beginPath(); x.arc(px, py, rad, 0, 7); x.fill();
+  }
+  // trajetória e marcador da ISS (brancos — ignorados pelo filtro)
+  x.strokeStyle = 'rgba(236,236,242,0.95)'; x.lineWidth = 3;
+  x.beginPath(); x.moveTo(212, 0); x.lineTo(425, 305); x.stroke();
+  x.fillStyle = '#f5f5fa'; x.beginPath(); x.arc(427, 307, 6, 0, 7); x.fill();
+  x.font = 'bold 26px system-ui,sans-serif'; x.fillText('ISS', 408, 342);
+  return c;
+}
+
+// 3.4 GEDI Forest Height — SVS #4950
+const GEDI_STOPS = [[0, [80, 62, 42]], [12, [98, 98, 50]], [25, [120, 140, 58]], [38, [170, 190, 95]], [48, [215, 220, 150]], [55, [245, 240, 215]]];
+function gediCmap(h) {
+  for (let i = 1; i < GEDI_STOPS.length; i++) {
+    const [h1, c1] = GEDI_STOPS[i], [h0, c0] = GEDI_STOPS[i - 1];
+    if (h <= h1) return mix(c0, c1, (h - h0) / (h1 - h0));
+  }
+  return GEDI_STOPS[GEDI_STOPS.length - 1][1];
+}
+function gediHeight(lon, lat) {
+  let h = 5 + 9 * fbm(lon * 0.15 + 50, lat * 0.15 + 50, 3);
+  const sahara = smooth(12, 19, lat) * (1 - smooth(31, 36, lat)) * (lon < 36 ? 1 : 0);
+  const arab = (lon > 34 && lon < 62) ? smooth(12, 18, lat) * (1 - smooth(31, 35, lat)) : 0;
+  h *= 1 - 0.85 * Math.max(sahara, arab);
+  h += 40 * Math.exp(-(((lon - 20) / 13) ** 2 + (lat / 7) ** 2));
+  h += 24 * Math.exp(-(((lon + 5) / 11) ** 2 + ((lat - 7) / 3.2) ** 2));
+  h += 20 * smooth(42, 48, lat) * (1 - smooth(66, 72, lat));
+  h += 9 * Math.exp(-(((lon - 80) / 10) ** 2 + ((lat - 20) / 9) ** 2));
+  h += 20 * Math.exp(-(((lon - 49) / 2) ** 2 + ((lat + 17) / 5) ** 2));
+  h += 10 * Math.exp(-(((lon - 37) / 4) ** 2 + ((lat + 4) / 6) ** 2));
+  h += 12 * (fbm(lon * 0.9, lat * 0.9, 3) - 0.5);
+  return clamp(h, 0, 55);
+}
+function genGEDI() {
+  const W = 1024, H = 576, c = mk(W, H), x = ctx2d(c), id = x.createImageData(W, H), D = id.data;
+  const cx = 548, cy = 288, R = 262, lon0 = 28 * DEG, lat0 = 14 * DEG;
+  const L = [-0.45, 0.45, 0.77], ln = Math.hypot(...L); L[0] /= ln; L[1] /= ln; L[2] /= ln;
+  for (let py = 0; py < H; py++) for (let px = 0; px < W; px++) {
+    const i = (py * W + px) * 4, dx = (px - cx) / R, dy = (cy - py) / R;
+    const p = orthoInverse(dx, dy, lon0, lat0);
+    let col;
+    if (!p) col = [2, 2, 3];
+    else {
+      const nd = Math.max(dx * L[0] + dy * L[1] + p.z * L[2], 0);
+      if (isLand(p.lon, p.lat)) {
+        const h = gediHeight(p.lon, p.lat);
+        const streak = 1 + 0.07 * Math.sin((p.lon * 2.3 + p.lat * 3.1) * 3) + 0.05 * Math.sin((p.lon * 3.1 - p.lat * 2.2) * 4);
+        const tex = 0.9 + 0.2 * vnoise(p.lon * 6, p.lat * 6);
+        const sh = (0.3 + 0.85 * nd) * streak * tex;
+        col = gediCmap(h).map(v => clamp(v * sh, 0, 255));
+      } else {
+        const sh = 0.32 + 0.8 * nd, spec = Math.pow(nd, 40) * 60;
+        col = [40 * sh + spec, 105 * sh + spec, 175 * sh + spec];
+        if (p.z < 0.15) col = mix(col, [90, 150, 210], (0.15 - p.z) / 0.15 * 0.5);
+      }
+    }
+    D[i] = col[0]; D[i + 1] = col[1]; D[i + 2] = col[2]; D[i + 3] = 255;
+  }
+  x.putImageData(id, 0, 0);
+  // legenda "Height Above Ground" (área ignorada: 18% inferiores)
+  const lx = 36, ly = 528, lw = 230;
+  const g = x.createLinearGradient(lx, 0, lx + lw, 0);
+  GEDI_STOPS.forEach(([h, cc]) => g.addColorStop(h / 55, `rgb(${cc.map(Math.round).join(',')})`));
+  x.fillStyle = g; x.fillRect(lx, ly, lw, 11);
+  x.beginPath(); x.moveTo(lx + lw, ly - 2); x.lineTo(lx + lw + 10, ly + 5.5); x.lineTo(lx + lw, ly + 13); x.fillStyle = 'rgb(245,240,215)'; x.fill();
+  x.fillStyle = '#f8fafc'; x.font = 'bold 11px system-ui,sans-serif'; x.textAlign = 'center';
+  x.fillText('Height Above Ground', lx + lw / 2, ly - 8);
+  x.font = '7px system-ui,sans-serif'; x.fillStyle = '#cbd5e1';
+  for (let k = 0; k <= 5; k++) x.fillText(String(k * 10), lx + lw * (k * 10 / 55), ly + 20);
+  x.font = '8px system-ui,sans-serif'; x.fillText('meters', lx + lw / 2, ly + 31);
+  x.textAlign = 'start';
+  return c;
+}
+
+/* ============================================================
+   4. ESCALAS MUSICAIS
+   ============================================================ */
+const SCALES = { majPent: [0, 2, 4, 7, 9], minPent: [0, 3, 5, 7, 10], lydian: [0, 2, 4, 6, 7, 9, 11] };
+const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
+function scaleFreq(norm, baseMidi, octaves, offsetDeg = 0) {
+  const s = SCALES[state.scale], n = s.length * octaves;
+  const d = Math.round(clamp(norm, 0, 1) * n) + offsetDeg;
+  const o = Math.floor(d / s.length), idx = ((d % s.length) + s.length) % s.length;
+  return mtof(baseMidi + 12 * o + s[idx]);
+}
+
+/* ============================================================
+   5. CATÁLOGO DE FAIXAS + REGRAS PIXEL → SOM
+   ============================================================ */
+const yN = (c, a) => 1 - (c.sumY / c.count) / a.h;   // norte/alto do mapa = mais agudo
+
+const TRACKS = [
+{
+  id: 'aerosols', svs: '5669', url: 'https://svs.gsfc.nasa.gov/5669/', disc: '#38bdf8',
+  file: './Aerosols_2025-08-19T20_00_00_1920x1080.png', gen: genAerosols,
+  title: { pt: 'GEOS Aerosols — Partículas Atmosféricas Multi-Camada', en: 'GEOS Aerosols — Multi-Layer Atmospheric Particles' },
+  short: { pt: 'GEOS Aerosols', en: 'GEOS Aerosols' },
+  desc: {
+    pt: 'Modelo GEOS (NASA GMAO) em 19/08/2025: sal marinho e sulfatos (verde/ciano), poeira mineral do Saara cruzando o Atlântico (roxo) e fumaça de queimadas na África Central e na Península Ibérica (vermelho-alaranjado). Cada camada vira um timbre diferente, tocando ao mesmo tempo.',
+    en: 'GEOS model (NASA GMAO) on 2025-08-19: sea salt and sulfates (green/cyan), Saharan mineral dust crossing the Atlantic (purple) and wildfire smoke over Central Africa and the Iberian Peninsula (red-orange). Each layer becomes a different timbre, all playing together.'
+  },
+  visual: { pt: "Mapa-múndi plano, com oceanos em azul-escuro e continentes em cinza. Faixas verde-neon serpenteiam sobre o Pacífico Norte, o Atlântico Norte e os oceanos do sul. Uma longa faixa lilás de poeira sai do Saara, atravessa o Atlântico e chega ao Caribe, perto de um furacão em espiral. Manchas vermelho-alaranjadas de fumaça cobrem a África Central, e um foco intenso aparece em Portugal e na Espanha. Pontinhos brancos marcam cidades iluminadas.", en: "A flat world map with dark-blue oceans and gray continents. Neon-green ribbons swirl over the North Pacific, the North Atlantic and the southern oceans. A long lilac band of dust leaves the Sahara, crosses the Atlantic and reaches the Caribbean, near a spiral hurricane. Red-orange smoke patches cover Central Africa, with an intense hotspot over Portugal and Spain. Tiny white dots mark city lights." },
+  rules: { pt: "Verde ou ciano, que é sal marinho e sulfatos, vira uma onda sine grave. Roxo, a poeira mineral, vira um acorde sine médio de três notas. Vermelho-alaranjado, a fumaça, vira uma onda triangle aguda. Quanto mais ao norte, mais aguda a nota; quanto mais densa a pluma, mais alto o volume.", en: "Green or cyan, meaning sea salt and sulfates, becomes a low sine wave. Purple, the mineral dust, becomes a three-note mid-range sine chord. Red-orange, the smoke, becomes a high triangle wave. The farther north, the higher the note; the denser the plume, the louder it gets." },
+  step: () => 0.3,
+  cats: {
+    green: { color: '#4ade80', name: { pt: 'Sal marinho / sulfatos', en: 'Sea salt / sulfates' }, inst: { pt: 'sine grave/média', en: 'low/mid sine' },
+      phrase: { pt: 'Plumas de sal marinho e sulfatos levantadas pelos ventos sobre os oceanos: nota longa e suave (sine).', en: 'Sea-salt and sulfate plumes lifted by ocean winds: a low, continuous sine tone.' } },
+    purple: { color: '#c084fc', name: { pt: 'Poeira mineral (Saara → Atlântico)', en: 'Mineral dust (Sahara → Atlantic)' }, inst: { pt: 'acorde sine médio', en: 'mid sine chord' },
+      phrase: { pt: 'Poeira mineral do Saara atravessando o Atlântico rumo às Américas: acorde harmônico médio.', en: 'Saharan mineral dust crossing the Atlantic toward the Americas: a mid-range harmonic chord.' } },
+    red: { color: '#fb923c', name: { pt: 'Fumaça de queimadas', en: 'Wildfire smoke' }, inst: { pt: 'triangle agudo', en: 'high triangle' },
+      phrase: { pt: 'Fumaça de queimadas (carbono negro e orgânico) na África Central e na Península Ibérica: triangle agudo em destaque.', en: 'Wildfire smoke (black and organic carbon) over Central Africa and the Iberian Peninsula: a prominent high triangle tone.' } }
+  },
+  silence: { pt: 'Ar relativamente limpo nesta longitude: silêncio.', en: 'Relatively clean air at this longitude: silence.' },
+  classify(r, g, b) {
+    if (r > 130 && r > g + 35 && r > b + 45) return 'red';
+    if (r > 110 && b > 110 && r > g + 15 && b > g + 15) return 'purple';
+    if (g > 90 && g > r + 25 && g >= b - 10) return 'green';
+    return null;
+  },
+  sonify(a) {
+    const out = [], C = a.cats, T = a.tot; let dom = null, best = 0;
+    if (C.green) { const f = C.green.count / T; if (f > 0.006) {
+      out.push({ f: scaleFreq(yN(C.green, a), 38, 2), type: 'sine', g: 0.07 + 0.22 * Math.sqrt(f), a: 0.06, d: 0.2, s: 0.7, hold: 0.3, r: 0.6, cat: 'green', y: C.green.sumY / C.green.count });
+      if (f > best) { best = f; dom = 'green'; } } }
+    if (C.purple) { const f = C.purple.count / T; if (f > 0.006) {
+      const n = yN(C.purple, a), g = (0.05 + 0.16 * Math.sqrt(f)) / 1.3;
+      [0, 2, 4].forEach(k => out.push({ f: scaleFreq(n, 55, 1, k), type: 'sine', g, a: 0.08, d: 0.25, s: 0.75, hold: 0.25, r: 0.7, cat: 'purple', y: C.purple.sumY / C.purple.count }));
+      if (f * 1.5 > best) { best = f * 1.5; dom = 'purple'; } } }
+    if (C.red) { const f = C.red.count / T; if (f > 0.004) {
+      out.push({ f: scaleFreq(yN(C.red, a), 72, 1), type: 'triangle', g: 0.06 + 0.25 * Math.sqrt(f), a: 0.01, d: 0.12, s: 0.5, hold: 0.15, r: 0.35, cat: 'red', y: C.red.sumY / C.red.count });
+      if (f * 3 > best) { best = f * 3; dom = 'red'; } } }
+    return { notes: out, dom };
+  }
+},
+{
+  id: 'nightlights', svs: '5313', url: 'https://svs.gsfc.nasa.gov/5313/', disc: '#f59e0b',
+  file: './nightlights_flat_series_and_change_wZooms_13_EIC.02599_print.jpg', gen: genNightlights,
+  title: { pt: 'Mudança nas Luzes Noturnas 2012–2023 — Versão EIC', en: 'Change in Night Lights 2012–2023 — EIC Version' },
+  short: { pt: 'Luzes Noturnas', en: 'Night Lights' },
+  desc: {
+    pt: 'Variação da intensidade luminosa noturna (VIIRS/Black Marble) entre 2012 e 2023, com zooms na Europa Ocidental, Mediterrâneo Oriental, Ucrânia e Índia. O fundo escuro é ignorado; o contraste das luzes controla o volume e o ritmo.',
+    en: 'Change in nighttime light intensity (VIIRS/Black Marble) between 2012 and 2023, with zooms over Western Europe, the Eastern Mediterranean, Ukraine and India. The dark background is ignored; light contrast drives volume and rhythm.'
+  },
+  visual: { pt: "Mapa-múndi noturno muito escuro, mais largo do que alto. Pontos de luz marcam as cidades: âmbar onde a luz diminuiu e violeta onde surgiram luzes novas. Quatro quadros ampliados destacam a Europa Ocidental, quase toda âmbar; o Mediterrâneo Oriental, com o vale do Nilo em âmbar; a Ucrânia; e a Índia, quase toda violeta. No centro há uma barra de cores que vai do âmbar, luzes apagadas, ao violeta, luzes novas.", en: "A very dark night-time world map, wider than tall. Points of light mark cities: amber where light decreased and violet where new lights appeared. Four zoomed frames highlight Western Europe, mostly amber; the Eastern Mediterranean, with the Nile valley in amber; Ukraine; and India, mostly violet. In the middle, a color bar runs from amber, lights out, to violet, new lights." },
+  rules: { pt: "O fundo preto e cinza-escuro fica em silêncio. Âmbar, luz que diminuiu, vira notas graves e suaves. Violeta, luzes novas, vira notas agudas e brilhantes. Quanto mais luzes na coluna, mais rápido o ritmo; quanto mais brilho, mais volume.", en: "The black and dark-gray background stays silent. Amber, light that decreased, becomes soft low notes. Violet, new lights, becomes bright high notes. The more lights in the column, the faster the rhythm; the brighter they are, the louder." },
+  step: () => 0.16,
+  cats: {
+    orange: { color: '#f59e0b', name: { pt: 'Redução de luz (âmbar)', en: 'Dimmer lights (amber)' }, inst: { pt: 'sine grave suave', en: 'soft low sine' },
+      phrase: { pt: 'Âmbar: a luz noturna diminuiu entre 2012 e 2023 (troca por LED, eficiência energética ou crises): notas graves suaves.', en: 'Amber: nighttime light decreased between 2012 and 2023 (LED retrofits, efficiency or crises): soft low notes.' } },
+    purple: { color: '#a78bfa', name: { pt: 'Novas luzes (violeta)', en: 'New lights (violet)' }, inst: { pt: 'triangle agudo brilhante', en: 'bright high triangle' },
+      phrase: { pt: 'Violeta: novas luzes e expansão urbana entre 2012 e 2023 (Índia, Oriente Médio, Turquia): notas agudas brilhantes.', en: 'Violet: new lights and urban growth between 2012 and 2023 (India, Middle East, Türkiye): bright high notes.' } },
+    neutral: { color: '#e5e7eb', name: { pt: 'Sem mudança', en: 'No change' }, inst: { pt: '— (só telemetria)', en: '— (telemetry only)' },
+      phrase: { pt: 'Luzes estáveis, sem mudança significativa no período.', en: 'Stable lights, no significant change over the period.' } }
+  },
+  silence: { pt: 'Oceano ou região sem iluminação artificial: pausa rítmica.', en: 'Ocean or unlit region: rhythmic rest.' },
+  classify(r, g, b) {
+    if (r + g + b < 35) return null;
+    if (r > 120 && r > b + 50 && g > 70) return 'orange';
+    if (b > 110 && b > g + 25 && r > g - 10) return 'purple';
+    if (r + g + b > 420) return 'neutral';
+    return null;
+  },
+  sonify(a, step) {
+    const out = [], C = a.cats, T = a.tot; let dom = null, best = 0;
+    ['orange', 'purple'].forEach(k => {
+      const c = C[k]; if (!c) return;
+      const d = c.count / T;
+      if (d > best) { best = d; dom = k; }
+      const div = d > 0.06 ? 1 : d > 0.02 ? 2 : 4;   // mais luz = ritmo mais denso
+      if (step % div) return;
+      const n = yN(c, a), L = c.maxL, y = c.sumY / c.count;
+      if (k === 'orange') out.push({ f: scaleFreq(n, 43, 1), type: 'sine', g: (0.07 + 0.35 * Math.sqrt(d)) * (0.5 + L * 0.5), a: 0.02, d: 0.15, s: 0.4, hold: 0.05, r: 0.35, cat: k, y });
+      else out.push({ f: scaleFreq(n, 76, 1), type: 'triangle', g: (0.05 + 0.3 * Math.sqrt(d)) * (0.5 + L * 0.5), a: 0.005, d: 0.08, s: 0.3, hold: 0.03, r: 0.25, cat: k, y });
+    });
+    if (!dom && C.neutral) dom = 'neutral';
+    return { notes: out, dom };
+  }
+},
+{
+  id: 'lightning', svs: '5011', url: 'https://svs.gsfc.nasa.gov/5011/', disc: '#facc15',
+  file: './iss_lightning_preview.jpg', gen: genISS, percussive: true,
+  title: { pt: 'Raios Detectados a partir da ISS (2017–2023)', en: 'Lightning Events Detected from the ISS (2017–2023)' },
+  short: { pt: 'Raios da ISS', en: 'ISS Lightning' },
+  desc: {
+    pt: 'Flashes registrados pelo LIS (Lightning Imaging Sensor) a bordo da Estação Espacial Internacional. Sonificação pontuada: cada flash amarelo-dourado cruzado pela barra dispara um pulso percussivo; a trajetória branca da ISS, o texto “ISS”, o globo cinza e o espaço são ignorados.',
+    en: 'Flashes recorded by LIS (Lightning Imaging Sensor) aboard the International Space Station. Pointillistic sonification: each golden flash crossed by the playhead fires a percussive pulse; the white ISS track, the “ISS” label, the gray globe and space are ignored.'
+  },
+  visual: { pt: "Globo terrestre cinza visto do espaço, mostrando o leste da África, a Península Arábica e Madagascar, com nuvens brancas e o lado direito na sombra da noite. Uma linha branca diagonal desce do topo até um ponto marcado ISS, sobre a costa do Quênia e da Tanzânia. Pequenos aglomerados amarelo-dourados indicam raios perto do Lago Vitória, no norte do Egito e numa faixa vertical na borda direita da imagem.", en: "A gray Earth seen from space, showing East Africa, the Arabian Peninsula and Madagascar, with white clouds and the right side in night shadow. A white diagonal line runs from the top down to a point labeled ISS, over the coast of Kenya and Tanzania. Small golden-yellow clusters mark lightning near Lake Victoria, over northern Egypt and in a vertical strip at the right edge of the image." },
+  rules: { pt: "Só os flashes amarelo-dourados de raio tocam, como pulsos curtos de marimba, no instante em que a barra os cruza. A linha branca da órbita, o texto ISS, o globo cinza e o espaço ficam em silêncio. Raios mais ao norte soam mais agudos.", en: "Only the golden-yellow lightning flashes play, as short marimba pulses, at the moment the playhead crosses them. The white orbit line, the ISS label, the gray globe and space stay silent. Lightning farther north sounds higher." },
+  step: () => 0.15,
+  cats: {
+    flash: { color: '#facc15', name: { pt: 'Flash de raio (LIS/ISS)', en: 'Lightning flash (LIS/ISS)' }, inst: { pt: 'marimba/sino percussivo', en: 'percussive marimba/bell' },
+      phrase: { pt: 'Raio detectado pelo sensor LIS a bordo da ISS: pulso percussivo; quanto mais ao norte na imagem, mais agudo.', en: 'Lightning detected by the LIS sensor aboard the ISS: percussive pulse; the higher in the frame, the higher the pitch.' } }
+  },
+  silence: { pt: 'Nenhum raio nesta coluna (trajetória da ISS, nuvens e espaço são ignorados).', en: 'No lightning in this column (ISS track, clouds and space are ignored).' },
+  classify(r, g, b) {
+    if (b > 170) return null;                       // linha branca da órbita / texto "ISS"
+    if (r > 190 && g > 140 && b < 100) return 'flash';
+    return null;
+  },
+  sonify(a) { return { notes: [], dom: a.cats.flash ? 'flash' : null }; }
+},
+{
+  id: 'gedi', svs: '4950', url: 'https://svs.gsfc.nasa.gov/4950/', disc: '#84cc16',
+  file: './GEDI_global_w_colorbar_0900_print.jpg', gen: genGEDI,
+  title: { pt: 'GEDI — Altura do Dossel Florestal', en: 'GEDI Forest Height — Canopy Height' },
+  short: { pt: 'GEDI Florestas', en: 'GEDI Forests' },
+  desc: {
+    pt: 'Altura do dossel medida pelo lidar GEDI na ISS. Fundo espacial, oceanos e a legenda “Height Above Ground” (18% inferiores) são ignorados. Do verde-oliva escuro ao amarelo-claro: quanto mais alto e denso o dossel, mais aguda a nota.',
+    en: 'Canopy height measured by the GEDI lidar on the ISS. Space, oceans and the “Height Above Ground” legend (bottom 18%) are ignored. From dark olive to bright yellow-cream: the taller and denser the canopy, the higher the note.'
+  },
+  visual: { pt: "Globo terrestre sobre fundo preto, centrado na África, com a Europa, o Oriente Médio e a Índia ao norte. Os oceanos são azuis. A vegetação aparece em relevo: marrom-escuro no Saara e na Arábia, verde-oliva nas savanas e verde-claro a creme nas florestas altas da Bacia do Congo, da costa da Guiné e do leste de Madagascar. No canto inferior esquerdo, a legenda Height Above Ground vai de 0 a mais de 50 metros.", en: "Earth on a black background, centered on Africa, with Europe, the Middle East and India to the north. Oceans are blue. Vegetation is shown in relief: dark brown over the Sahara and Arabia, olive green over the savannas, and light green to cream over the tall forests of the Congo Basin, the Guinea coast and eastern Madagascar. In the lower-left corner, the Height Above Ground legend runs from 0 to over 50 meters." },
+  rules: { pt: "Espaço, oceanos e a legenda na parte de baixo ficam em silêncio. Só a vegetação toca, sempre dentro da escala musical: do marrom, vegetação baixa, ao creme, dossel alto. Quanto mais alta e densa a floresta, mais aguda a nota.", en: "Space, oceans and the legend at the bottom stay silent. Only vegetation plays, always within the musical scale: from brown, low vegetation, to cream, tall canopy. The taller and denser the forest, the higher the note." },
+  step: () => 0.22,
+  cats: {
+    forest: { color: '#a3e635', name: { pt: 'Cobertura florestal', en: 'Forest cover' }, inst: { pt: 'sine + triangle (altura → pitch)', en: 'sine + triangle (height → pitch)' },
+      phrase: { pt: '', en: '' } }
+  },
+  silence: { pt: 'Oceano, espaço ou área de legenda: ignorados.', en: 'Ocean, space or legend area: ignored.' },
+  classify(r, g, b, y, h) {
+    if (y > h * 0.82) return null;                  // barra "Height Above Ground"
+    if (r + g + b < 30) return null;                // espaço
+    if (b > r + 25 && b > g + 15) return null;      // oceano
+    if (g < b - 5) return null;
+    return 'forest';
+  },
+  sonify(a, step) {
+    const c = a.cats.forest; if (!c) return { notes: [], dom: null };
+    const d = c.count / a.tot; if (d < 0.01) return { notes: [], dom: null };
+    const meanL = c.sumL / c.count, hn = clamp((meanL - 0.2) / 0.6, 0, 1), hx = clamp((c.maxL - 0.2) / 0.7, 0, 1);
+    const out = [{ f: scaleFreq(hn, 45, 3), type: 'sine', g: 0.08 + 0.22 * Math.sqrt(d), a: 0.03, d: 0.15, s: 0.6, hold: 0.1, r: 0.4, cat: 'forest', y: c.sumY / c.count }];
+    if (step % 2 === 0) out.push({ f: scaleFreq(hx, 57, 3), type: 'triangle', g: (0.05 + 0.12 * Math.sqrt(d)), a: 0.01, d: 0.1, s: 0.4, hold: 0.05, r: 0.3, cat: 'forest', y: c.sumY / c.count });
+    return { notes: out, dom: 'forest', meters: Math.round(hn * 55) };
+  },
+  phraseFor(res, lang) {
+    const m = res.meters ?? 0;
+    if (m > 30) return lang === 'pt' ? `Dossel alto e denso (~${m} m), como nas florestas tropicais da Bacia do Congo: notas agudas.` : `Tall, dense canopy (~${m} m), as in the Congo Basin rainforests: high notes.`;
+    if (m > 10) return lang === 'pt' ? `Florestas abertas e savanas arborizadas (~${m} m): notas médias.` : `Open forests and wooded savannas (~${m} m): mid-range notes.`;
+    return lang === 'pt' ? `Vegetação baixa, arbustos ou deserto (~${m} m): notas graves.` : `Low vegetation, shrubs or desert (~${m} m): low notes.`;
+  }
+}
+];
+TRACKS.forEach(t => t.cache = {});
+
+/* --- Legenda sonora: cor, descrição do som e demonstração de cada item --- */
+const seq = (fn, times) => times.forEach((at, i) => fn(at, i));
+const AMB = {
+  ocean: (cPt, cEn, pPt, pEn) => ({
+    ambient: true, color: '#1d4e89', name: { pt: 'Oceano', en: 'Ocean' }, colorName: { pt: cPt, en: cEn },
+    inst: { pt: 'ruído suave e regular', en: 'soft regular noise' },
+    sound: { pt: 'ruído de fundo suave e regular, como ondas do mar', en: 'soft, regular background noise, like sea waves' },
+    phrase: { pt: pPt, en: pEn },
+    demo: () => { seq(at => AudioEngine.noise({ g: 0.16, a: 0.45, hold: 0.15, r: 0.6, cutoff: 650, at }), [0, 1.2]); return 2.6; }
+  }),
+  land: (cPt, cEn, pPt, pEn) => ({
+    ambient: true, color: '#6b7280', name: { pt: 'Continente', en: 'Land' }, colorName: { pt: cPt, en: cEn },
+    inst: { pt: 'tom grave contínuo', en: 'steady low tone' },
+    sound: { pt: 'zumbido grave e contínuo, como a vibração da terra', en: 'a deep, steady hum, like the ground vibrating' },
+    phrase: { pt: pPt, en: pEn },
+    demo: () => { AudioEngine.note({ f: mtof(40), type: 'triangle', g: 0.3, a: 0.15, d: 0.3, s: 0.8, hold: 1.2, r: 0.5 }); AudioEngine.note({ f: mtof(52), type: 'sine', g: 0.12, a: 0.15, d: 0.3, s: 0.8, hold: 1.2, r: 0.5 }); return 2.3; }
+  })
+};
+const LEG = {
+  aerosols: {
+    green: { colorName: { pt: 'verde e ciano', en: 'green and cyan' }, sound: { pt: 'nota longa e suave, que sobe quanto mais ao norte', en: 'a long, soft note that rises the farther north' },
+      demo: () => { AudioEngine.note({ f: scaleFreq(0.5, 38, 2), type: 'sine', g: 0.3, a: 0.08, d: 0.2, s: 0.8, hold: 1.0, r: 0.6 }); return 2.0; } },
+    purple: { colorName: { pt: 'roxo, lilás', en: 'purple, lilac' }, sound: { pt: 'acorde médio e suave de três notas', en: 'a soft three-note mid-range chord' },
+      demo: () => { [0, 2, 4].forEach(k => AudioEngine.note({ f: scaleFreq(0.5, 55, 1, k), type: 'sine', g: 0.14, a: 0.1, d: 0.25, s: 0.8, hold: 1.0, r: 0.7 })); return 2.2; } },
+    red: { colorName: { pt: 'vermelho-alaranjado', en: 'red-orange' }, sound: { pt: 'notas agudas em destaque', en: 'prominent high notes' },
+      demo: () => { seq((at, i) => AudioEngine.note({ f: scaleFreq([0.3, 0.6, 0.9][i], 72, 1), type: 'triangle', g: 0.24, a: 0.01, d: 0.12, s: 0.5, hold: 0.15, r: 0.35, at }), [0, 0.35, 0.7]); return 1.6; } }
+  },
+  nightlights: {
+    orange: { colorName: { pt: 'âmbar', en: 'amber' }, sound: { pt: 'notas graves e suaves', en: 'soft low notes' },
+      demo: () => { seq((at, i) => AudioEngine.note({ f: scaleFreq(i / 4, 43, 1), type: 'sine', g: 0.3, a: 0.02, d: 0.15, s: 0.4, hold: 0.05, r: 0.35, at }), [0, 0.3, 0.6, 0.9]); return 1.6; } },
+    purple: { colorName: { pt: 'violeta', en: 'violet' }, sound: { pt: 'notas agudas e brilhantes', en: 'bright high notes' },
+      demo: () => { seq((at, i) => AudioEngine.note({ f: scaleFreq(i / 4, 76, 1), type: 'triangle', g: 0.22, a: 0.005, d: 0.08, s: 0.3, hold: 0.03, r: 0.25, at }), [0, 0.2, 0.4, 0.6, 0.8]); return 1.4; } },
+    neutral: { colorName: { pt: 'branco', en: 'white' }, sound: { pt: 'sem som próprio; aparece só na tradução científica', en: 'no sound of its own; shown in the scientific translation only' }, demo: () => 0 }
+  },
+  lightning: {
+    flash: { colorName: { pt: 'amarelo-dourado', en: 'golden yellow' }, sound: { pt: 'pulsos curtos de marimba', en: 'short marimba pulses' },
+      demo: () => { seq((at, i) => AudioEngine.perc(scaleFreq([0.4, 0.7, 0.5, 0.9][i], 57, 3), 0.4, 0, at), [0, 0.3, 0.75, 1.0]); return 1.8; } }
+  },
+  gedi: {
+    forest: { colorName: { pt: 'do marrom ao verde e ao creme', en: 'brown to green to cream' }, sound: { pt: 'notas que sobem com a altura da floresta: graves na vegetação baixa, agudas no dossel alto', en: 'notes that rise with forest height: low for short vegetation, high for tall canopy' },
+      demo: () => { seq((at, i) => AudioEngine.note({ f: scaleFreq(i / 4, 45, 3), type: 'sine', g: 0.28, a: 0.03, d: 0.15, s: 0.6, hold: 0.1, r: 0.4, at }), [0, 0.35, 0.7, 1.05, 1.4]); return 2.3; } }
+  }
+};
+TRACKS.forEach(t => Object.entries(LEG[t.id]).forEach(([k, v]) => Object.assign(t.cats[k], v)));
+const isGray = (r, g, b, tol) => Math.abs(r - g) < tol && Math.abs(g - b) < tol && Math.abs(r - b) < tol;
+const AMB_CFG = {
+  aerosols: {
+    ocean: AMB.ocean('azul-escuro', 'dark blue', 'Oceano sem plumas visíveis: só o som regular de fundo do mar.', 'Ocean with no visible plumes: just the regular sea background sound.'),
+    land: AMB.land('cinza', 'gray', 'Continente sem aerossóis visíveis: só o tom grave da terra.', 'Land with no visible aerosols: just the low hum of land.'),
+    base(r, g, b) { const s = r + g + b; if (s < 20) return null; return isGray(r, g, b, 14) && s > 150 ? 'land' : 'ocean'; }
+  },
+  nightlights: {
+    ocean: AMB.ocean('preto', 'black', 'Oceano escuro, sem luzes: som regular de fundo do mar.', 'Dark ocean with no lights: regular sea background sound.'),
+    land: AMB.land('cinza-escuro', 'dark gray', 'Terra sem iluminação artificial relevante: tom grave da terra.', 'Land without significant artificial light: low hum of land.'),
+    base(r, g, b) { const s = r + g + b; if (s < 35) return 'ocean'; return isGray(r, g, b, 16) && s < 260 ? 'land' : null; }
+  },
+  lightning: {
+    ocean: AMB.ocean('cinza-escuro', 'dark gray', 'Oceano sob a órbita da ISS, sem raios: som regular de fundo.', 'Ocean under the ISS orbit, no lightning: regular background sound.'),
+    land: AMB.land('cinza-claro', 'light gray', 'Terra e nuvens sem raios nesta coluna: tom grave da terra.', 'Land and clouds with no lightning in this column: low hum of land.'),
+    base(r, g, b) { const s = r + g + b; if (s < 50 || b > 170 || !isGray(r, g, b, 20)) return null; return s < 230 ? 'ocean' : 'land'; }
+  },
+  gedi: {
+    ocean: AMB.ocean('azul', 'blue', 'Oceano: só o som regular de fundo do mar.', 'Ocean: just the regular sea background sound.'),
+    base(r, g, b, y, h) { if (y > h * 0.82 || r + g + b < 30) return null; return (b > r + 25 && b > g + 15) ? 'ocean' : null; }
+  }
+};
+TRACKS.forEach(t => {
+  const cfg = AMB_CFG[t.id], amb = {};
+  if (cfg.ocean) amb.ocean = cfg.ocean;
+  if (cfg.land) amb.land = cfg.land;
+  t.cats = Object.assign(amb, t.cats);   // fundo primeiro na legenda
+  t.base = cfg.base;
+});
+
+
+/* ============================================================
+   6. I18N
+   ============================================================ */
+const I18N = {
+  pt: {
+    skip: 'Pular para o mapa sonoro',
+    subtitle: 'NASA Space Apps Challenge 2026 · Dados da Terra para ouvir',
+    tracks: 'Discos · Catálogo NASA SVS', credits: 'Citações NASA',
+    play: 'Tocar', pause: 'Pausar', stop: 'Parar e voltar ao início',
+    speed: 'Velocidade da varredura', speedFine: 'Ajuste fino da velocidade', scale: 'Escala musical', volume: 'Volume mestre', mixTitle: 'Volumes', volSweep: 'Varredura do mapa', volAd: 'Audiodescrição', linkOn: 'Volumes vinculados (mudar um ajusta o outro)', linkOff: 'Volumes independentes', speedSet: s => `Velocidade ${s}×`,
+    majPent: 'Pentatônica Maior', minPent: 'Pentatônica Menor', lydian: 'Lídio', loop: 'Repetir',
+    loadTitle: 'Carregar imagem real', loadSub: 'PNG ou JPG · ou arraste sobre o mapa · vale para a faixa selecionada',
+    restore: '↺ Voltar à imagem padrão', dropHere: 'Solte a imagem aqui para sonificá-la',
+    generating: 'Gerando réplica procedural…',
+    hint: '<kbd>L</kbd> legenda sonora · <kbd>Espaço</kbd> toca/pausa · <kbd>←</kbd><kbd>→</kbd> movem a barra · <kbd>A</kbd> audiodescrição · <kbd>D</kbd> descreve a imagem · <kbd>R</kbd> lê a tradução · <kbd>1</kbd>–<kbd>4</kbd> trocam a faixa · clique ou arraste no mapa para ouvir um ponto',
+    telemetry: 'Tradução científica ao vivo', position: 'Posição no mapa', color: 'Cor média detectada', sound: 'Frequência / instrumento', feature: 'Fenômeno dominante',
+    legendTitle: 'Legenda sonora · ouça antes do mapa', legendAll: 'Ouvir legenda completa', legendStop: 'Parar legenda',
+    legendSub: 'Cada cor da imagem tem um som. A legenda diz o nome do item, a cor e toca o som associado.',
+    legendFirst: 'Tocar a legenda automaticamente antes da primeira varredura de cada faixa',
+    listen: '▶ Ouvir', mute: '🔇 Silenciar', unmute: '🔊 Reativar', colorWord: 'cor', soundWord: 'Som', bg: 'fundo',
+    legendIntro: t => `Legenda sonora: ${t}. Cada cor tem um som.`, legendEnd: 'Fim da legenda. Agora o mapa.',
+    layersTitle: 'Camadas sonoras desta faixa', layersHint: 'Toque numa camada para silenciá-la ou reativá-la e ouvir cada fenômeno isolado.',
+    layerOn: 'ativa', layerOff: 'muda', infoOnly: 'só informação',
+    methodTitle: 'Metodologia: framework NASA “Data Sonification: Caldwell 73” (SVS #13786)',
+    methodBody: 'Seguindo a abordagem do NASA SVS em “Data Sonification: Caldwell 73” (#13786), cada imagem é lida como uma partitura: uma barra vertical varre o mapa da esquerda para a direita. A posição vertical do pixel define a altura da nota (pitch), com o topo mais agudo. O brilho e a densidade definem o volume. A faixa de cor (espectro) escolhe o timbre ou instrumento, e a distribuição espacial das feições cria o ritmo. Todas as notas são encaixadas na escala escolhida e moldadas por envelope ADSR exponencial, que evita estalos. A audiodescrição narra a imagem, as regras e cada fenômeno ouvido, e abaixa a música enquanto fala.',
+    footer: 'Visualizações: NASA Goddard Space Flight Center · Scientific Visualization Studio (SVS).',
+    citationsTitle: 'Citações oficiais da NASA',
+    citationsIntro: 'Todas as visualizações são do NASA Scientific Visualization Studio (Goddard Space Flight Center), parte da galeria Earth Information Center.',
+    citationsNote: 'Quando os arquivos originais não estão na mesma pasta do index.html, o app desenha réplicas procedurais aproximadas apenas para demonstração; os dados científicos são da NASA.',
+    citMethod: '(metodologia de sonificação)', close: 'Fechar',
+    srcReal: f => `Fonte: arquivo oficial ${f}`, srcProc: f => `Réplica procedural (o arquivo ${f} não está ao lado do index.html)`,
+    srcTainted: f => `Réplica procedural: ${f} foi aberto via file://, e o navegador bloqueia a leitura dos pixels. Sirva por HTTP ou use “Carregar imagem real”.`,
+    srcManual: n => `Imagem carregada por você: ${n}`,
+    bReal: 'real', bProc: 'procedural', bManual: 'manual', silence: 'silêncio', features: 'feições', column: 'coluna',
+    canvasAria: t => `Mapa sonoro: ${t}. Clique ou arraste para ouvir um ponto; setas movem a barra.`,
+    langBtn: 'EN', langAria: 'Switch language to English',
+    sizeLbl: 'Tamanho do texto', sizes: ['Texto normal', 'Texto grande', 'Texto muito grande'],
+    seekLabel: 'Posição da varredura no mapa', transport: 'Controles de reprodução',
+    adBtn: 'Audiodescrição', adTitle: 'Audiodescrição ativa', adDescribe: 'Descrever imagem', adRules: 'Ler regras de som',
+    adCurrent: 'Ler tradução atual', adStop: 'Parar narração', adRate: 'Velocidade da narração', adAuto: 'Narrar mudanças durante a reprodução',
+    adOn: 'Audiodescrição ativada.', adOff: 'Audiodescrição desativada.',
+    adNoSpeech: 'Este navegador não tem síntese de voz. As descrições aparecem neste painel e são enviadas ao leitor de tela.',
+    trackLabel: 'Faixa', imageLabel: 'O que a imagem mostra', rulesLabel: 'Como ela soa',
+    playHint: 'Pressione Espaço para tocar.', at: 'Posição', endSweep: 'Fim da varredura.',
+    loaded: n => `Imagem ${n} carregada.`, badFile: 'Escolha um arquivo de imagem (PNG ou JPG).'
+  },
+  en: {
+    skip: 'Skip to the sound map',
+    subtitle: 'NASA Space Apps Challenge 2026 · Earth data you can hear',
+    tracks: 'Records · NASA SVS Catalog', credits: 'NASA Citations',
+    play: 'Play', pause: 'Pause', stop: 'Stop and rewind',
+    speed: 'Sweep speed', speedFine: 'Fine speed adjustment', scale: 'Musical scale', volume: 'Master volume', mixTitle: 'Volumes', volSweep: 'Map sweep', volAd: 'Audio description', linkOn: 'Linked volumes (changing one adjusts the other)', linkOff: 'Independent volumes', speedSet: s => `Speed ${s}×`,
+    majPent: 'Major Pentatonic', minPent: 'Minor Pentatonic', lydian: 'Lydian', loop: 'Loop',
+    loadTitle: 'Load real image', loadSub: 'PNG or JPG · or drop it on the map · applies to the selected track',
+    restore: '↺ Back to default image', dropHere: 'Drop the image here to sonify it',
+    generating: 'Generating procedural replica…',
+    hint: '<kbd>L</kbd> sound legend · <kbd>Space</kbd> play/pause · <kbd>←</kbd><kbd>→</kbd> move the playhead · <kbd>A</kbd> audio description · <kbd>D</kbd> describe image · <kbd>R</kbd> read translation · <kbd>1</kbd>–<kbd>4</kbd> switch track · click or drag on the map to hear a point',
+    telemetry: 'Live scientific translation', position: 'Map position', color: 'Detected mean color', sound: 'Frequency / instrument', feature: 'Dominant phenomenon',
+    legendTitle: 'Sound legend · listen before the map', legendAll: 'Play full legend', legendStop: 'Stop legend',
+    legendSub: 'Each color in the image has a sound. The legend says the item name and its color, then plays the matching sound.',
+    legendFirst: 'Play the legend automatically before each track’s first sweep',
+    listen: '▶ Listen', mute: '🔇 Mute', unmute: '🔊 Unmute', colorWord: 'color', soundWord: 'Sound', bg: 'background',
+    legendIntro: t => `Sound legend: ${t}. Each color has a sound.`, legendEnd: 'End of legend. Now the map.',
+    layersTitle: 'Sound layers in this track', layersHint: 'Tap a layer to mute or unmute it and hear each phenomenon on its own.',
+    layerOn: 'on', layerOff: 'muted', infoOnly: 'info only',
+    methodTitle: 'Methodology: NASA “Data Sonification: Caldwell 73” framework (SVS #13786)',
+    methodBody: 'Following the NASA SVS approach in “Data Sonification: Caldwell 73” (#13786), each image is read like a musical score: a vertical playhead sweeps the map from left to right. A pixel’s vertical position sets pitch, with the top sounding highest. Brightness and density set volume. The color band (spectrum) picks the timbre or instrument, and the spatial distribution of features creates rhythm. Every note is snapped to the selected scale and shaped by an exponential ADSR envelope that prevents clicks. Audio description narrates the image, the rules and each phenomenon heard, lowering the music while it speaks.',
+    footer: 'Visualizations: NASA Goddard Space Flight Center · Scientific Visualization Studio (SVS).',
+    citationsTitle: 'Official NASA citations',
+    citationsIntro: 'All visualizations are from NASA’s Scientific Visualization Studio (Goddard Space Flight Center), part of the Earth Information Center gallery.',
+    citationsNote: 'When the original files are not next to index.html, the app draws approximate procedural replicas for demo purposes only; the scientific data belongs to NASA.',
+    citMethod: '(sonification methodology)', close: 'Close',
+    srcReal: f => `Source: official file ${f}`, srcProc: f => `Procedural replica (file ${f} is not next to index.html)`,
+    srcTainted: f => `Procedural replica: ${f} was opened via file://, so the browser blocks pixel reads. Serve over HTTP or use “Load real image”.`,
+    srcManual: n => `Image you loaded: ${n}`,
+    bReal: 'real', bProc: 'procedural', bManual: 'manual', silence: 'silence', features: 'features', column: 'column',
+    canvasAria: t => `Sound map: ${t}. Click or drag to hear a point; arrow keys move the playhead.`,
+    langBtn: 'PT', langAria: 'Mudar idioma para Português',
+    sizeLbl: 'Text size', sizes: ['Normal text', 'Large text', 'Extra large text'],
+    seekLabel: 'Sweep position on the map', transport: 'Playback controls',
+    adBtn: 'Audio description', adTitle: 'Audio description on', adDescribe: 'Describe image', adRules: 'Read sound rules',
+    adCurrent: 'Read current translation', adStop: 'Stop narration', adRate: 'Narration speed', adAuto: 'Narrate changes during playback',
+    adOn: 'Audio description on.', adOff: 'Audio description off.',
+    adNoSpeech: 'This browser has no speech synthesis. Descriptions appear in this panel and are sent to the screen reader.',
+    trackLabel: 'Track', imageLabel: 'What the image shows', rulesLabel: 'How it sounds',
+    playHint: 'Press Space to play.', at: 'Position', endSweep: 'End of sweep.',
+    loaded: n => `Image ${n} loaded.`, badFile: 'Please choose an image file (PNG or JPG).'
+  }
+};
+const tr = k => I18N[state.lang][k];
+
+/* ============================================================
+   7. MOTOR DE ÁUDIO (Web Audio API) — ADSR exponencial + ducking
+   ============================================================ */
+const AudioEngine = {
+  ctx: null, master: null, comp: null, analyser: null, voices: 0, freq: null, ducked: false,
+  init() {
+    if (this.ctx) return;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    this.ctx = new AC();
+    const comp = this.ctx.createDynamicsCompressor();
+    comp.threshold.value = -18; comp.knee.value = 12; comp.ratio.value = 4; comp.attack.value = 0.005; comp.release.value = 0.2;
+    this.analyser = this.ctx.createAnalyser(); this.analyser.fftSize = 256; this.analyser.smoothingTimeConstant = 0.8;
+    this.freq = new Uint8Array(this.analyser.frequencyBinCount);
+    this.comp = comp;
+    comp.connect(this.analyser); this.analyser.connect(this.ctx.destination);
+    this.newBus();
+  },
+  wake() { this.init(); if (this.ctx.state === 'suspended') this.ctx.resume(); },
+  target() { return Math.max(state.volume * (this.ducked ? 0.22 : 1), 0.0001); },
+  newBus() { this.master = this.ctx.createGain(); this.master.gain.value = this.target(); this.master.connect(this.comp); },
+  setVolume() { if (this.master) this.master.gain.setTargetAtTime(this.target(), this.ctx.currentTime, 0.08); },
+  duck(on) { if (this.ducked === on) return; this.ducked = on; this.setVolume(); },
+  flush() {
+    if (!this.ctx) return;
+    const old = this.master, t = this.ctx.currentTime;
+    old.gain.cancelScheduledValues(t); old.gain.setValueAtTime(Math.max(old.gain.value, 0.0001), t);
+    old.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+    setTimeout(() => { try { old.disconnect(); } catch (e) {} }, 200);
+    this.newBus(); this.voices = 0;
+  },
+  env(param, t, peak, a, d, s, hold, r) {
+    peak = Math.max(peak, 0.0002); const sus = Math.max(peak * s, 0.0001);
+    param.setValueAtTime(0.0001, t);
+    param.exponentialRampToValueAtTime(peak, t + a);
+    param.exponentialRampToValueAtTime(sus, t + a + d);
+    param.setValueAtTime(sus, t + a + d + hold);
+    param.exponentialRampToValueAtTime(0.0001, t + a + d + hold + r);
+    return t + a + d + hold + r;
+  },
+  note(n, pan = 0) {
+    if (!this.ctx || this.ctx.state !== 'running' || this.voices > 40) return;
+    const c = this.ctx, t = c.currentTime + 0.01 + (n.at || 0);
+    const osc = c.createOscillator(), g = c.createGain();
+    osc.type = n.type; osc.frequency.setValueAtTime(n.f, t);
+    const end = this.env(g.gain, t, n.g, n.a, n.d, n.s, n.hold, n.r);
+    let node = g;
+    if (c.createStereoPanner) { const p = c.createStereoPanner(); p.pan.value = clamp(pan, -1, 1); g.connect(p); node = p; }
+    osc.connect(g); node.connect(this.master);
+    osc.start(t); osc.stop(end + 0.05);
+    this.voices++; osc.onended = () => { this.voices--; try { node.disconnect(); } catch (e) {} };
+  },
+  perc(f, gain, pan = 0, at = 0) {   // marimba/sino: fundamental + parciais inarmônicas, ataque rápido
+    [[1, 1, 0.45], [3.93, 0.35, 0.09], [9.2, 0.12, 0.04]].forEach(([mul, amp, dec]) => {
+      this.note({ f: f * mul, type: 'sine', g: gain * amp, a: 0.003, d: dec, s: 0.05, hold: 0, r: dec * 0.8, at }, pan);
+    });
+  },
+  noiseBuf() {
+    if (!this.nb) {
+      const len = this.ctx.sampleRate * 2, b = this.ctx.createBuffer(1, len, this.ctx.sampleRate), d = b.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      this.nb = b;
+    }
+    return this.nb;
+  },
+  noise(n, pan = 0) {   // mar: ruído filtrado com subida e descida suaves (onda)
+    if (!this.ctx || this.ctx.state !== 'running' || this.voices > 40) return;
+    const c = this.ctx, t = c.currentTime + 0.01 + (n.at || 0);
+    const src = c.createBufferSource(); src.buffer = this.noiseBuf(); src.loop = true;
+    const f = c.createBiquadFilter(); f.type = 'lowpass'; f.Q.value = 0.8;
+    f.frequency.setValueAtTime(n.cutoff * 0.5, t); f.frequency.linearRampToValueAtTime(n.cutoff, t + n.a); f.frequency.linearRampToValueAtTime(n.cutoff * 0.4, t + n.a + n.hold + n.r);
+    const g = c.createGain();
+    const end = this.env(g.gain, t, n.g, n.a, 0.1, 0.8, n.hold, n.r);
+    let node = g;
+    if (c.createStereoPanner) { const p = c.createStereoPanner(); p.pan.value = clamp(pan, -1, 1); g.connect(p); node = p; }
+    src.connect(f); f.connect(g); node.connect(this.master);
+    src.start(t, Math.random()); src.stop(end + 0.05);
+    this.voices++; src.onended = () => { this.voices--; try { node.disconnect(); } catch (e) {} };
+  }
+};
+
+/* ============================================================
+   8. AUDIODESCRIÇÃO (Web Speech API)
+   ============================================================ */
+const Speech = {
+  ok: 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window,
+  voices: [], pending: 0, gen: 0,
+  init() {
+    if (!this.ok) return;
+    const load = () => { this.voices = speechSynthesis.getVoices(); };
+    load(); speechSynthesis.onvoiceschanged = load;
+  },
+  pickVoice() {
+    const prefs = state.lang === 'pt' ? ['pt-br', 'pt'] : ['en-us', 'en'];
+    for (const p of prefs) { const v = this.voices.find(v => v.lang.toLowerCase().replace('_', '-').startsWith(p)); if (v) return v; }
+    return null;
+  },
+  speak(text, interrupt = true) {
+    $('#adText').textContent = text;
+    state.lastSpoken = performance.now();
+    const readTime = Math.min(9000, 700 + text.length * 55 / state.adRate);
+    if (!this.ok) { announce(text); return sleep(readTime); }
+    if (interrupt) { this.gen++; this.pending = 0; speechSynthesis.cancel(); }
+    const gen = this.gen, v = this.pickVoice();
+    // frases curtas: evita o corte de falas longas no Chrome
+    const parts = (text.match(/[^.!?;]+[.!?;]*/g) || [text]).map(s => s.trim()).filter(Boolean);
+    const spoken = new Promise(res => parts.forEach((s, i) => {
+      const u = new SpeechSynthesisUtterance(s);
+      u.lang = state.lang === 'pt' ? 'pt-BR' : 'en-US'; if (v) u.voice = v; u.rate = state.adRate; u.volume = state.adVol;
+      this.pending++; AudioEngine.duck(true);
+      const done = () => {
+        if (gen === this.gen) { this.pending = Math.max(0, this.pending - 1); if (!this.pending) AudioEngine.duck(false); }
+        if (i === parts.length - 1) res();
+      };
+      u.onend = done; u.onerror = done;
+      speechSynthesis.speak(u);
+    }));
+    // garantia: sem voz instalada o navegador pode nunca disparar onend
+    return Promise.race([spoken, sleep(readTime * 2.5 + 2000)]);
+  },
+  stop() { this.gen++; this.pending = 0; if (this.ok) speechSynthesis.cancel(); AudioEngine.duck(false); },
+  busy() { return this.ok && (speechSynthesis.speaking || speechSynthesis.pending); }
+};
+
+/* ============================================================
+   9. ESTADO, ANÁLISE DE PIXELS E LOOP
+   ============================================================ */
+const BASE_DUR = 40;
+const SPEEDS = [0.5, 0.75, 1, 1.5, 2];
+const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const state = {
+  lang: 'pt', scale: 'majPent', volume: 0.8, adVol: 0.6, volLinked: true, volRatio: 0.75, speed: 1, loop: true,
+  track: null, srcCanvas: null, src: null, srcKind: 'proc', srcName: '',
+  playing: false, x: 0, acc: 0, step: 0, loadToken: 0, seeking: false,
+  markers: [], recent: new Map(), muted: new Set(),
+  lastLive: 0, lastDom: '', lastTele: 0, lastFlash: null, lastTime: 0,
+  ambAcc: 0, legendTok: 0, touring: false, legendFirst: true,
+  ad: false, adAuto: true, adRate: 1, lastSpoken: 0, lastSpokenDom: '', current: null
+};
+const stage = $('#stage'), sctx = ctx2d(stage);
+const disc = $('#disc'), dctx = disc.getContext('2d');
+
+function analyzeColumn(cx) {
+  const { data, w, h } = state.src, t = state.track, cats = {}, base = {};
+  let sr = 0, sg = 0, sb = 0, n = 0, rr = 0, rg = 0, rb = 0, tot = 0;
+  const xc = clamp(Math.round(cx), 0, w - 1);
+  for (let dx = -1; dx <= 1; dx++) {
+    const x = clamp(xc + dx, 0, w - 1);
+    for (let y = 0; y < h; y += 2) {
+      const i = (y * w + x) * 4, r = data[i], g = data[i + 1], b = data[i + 2];
+      tot++; rr += r; rg += g; rb += b;
+      const k = t.classify(r, g, b, y, h);
+      if (!k) { const bk = t.base(r, g, b, y, h); if (bk) base[bk] = (base[bk] || 0) + 1; continue; }
+      n++; sr += r; sg += g; sb += b;
+      const o = cats[k] || (cats[k] = { count: 0, sumY: 0, sumL: 0, maxL: 0 });
+      const L = (r * 0.299 + g * 0.587 + b * 0.114) / 255;
+      o.count++; o.sumY += y; o.sumL += L; if (L > o.maxL) o.maxL = L;
+    }
+  }
+  return { cats, base, n, tot, h, w, x: xc, avg: n ? [sr / n, sg / n, sb / n] : null, raw: [rr / tot, rg / tot, rb / tot] };
+}
+
+function sonifyAt(x, manual = false) {
+  if (!state.src) return;
+  const t = state.track, a = analyzeColumn(x);
+  const res = t.sonify(a, state.step++);
+  res.notes = res.notes.filter(n => !state.muted.has(n.cat));
+  const pan = (x / state.src.w) * 1.6 - 0.8;
+  res.notes.forEach(n => {
+    AudioEngine.note(n, pan);
+    state.markers.push({ x, y: n.y, color: t.cats[n.cat].color, t: performance.now() });
+  });
+  updateTelemetry(a, res, manual);
+}
+
+const isFlash = (r, g, b) => TRACKS[2].classify(r, g, b) === 'flash';
+function scanLightning(x0, x1, force = false) {
+  const { data, w, h } = state.src; let hits = 0;
+  const muted = state.muted.has('flash');
+  for (let x = Math.max(0, Math.floor(x0)); x <= Math.min(w - 1, Math.floor(x1)); x++) {
+    let run = -1;
+    for (let y = 0; y <= h; y++) {
+      let f = false;
+      if (y < h) { const i = (y * w + x) * 4; f = isFlash(data[i], data[i + 1], data[i + 2]); }
+      if (f) { if (run < 0) run = y; continue; }
+      if (run >= 0) {
+        const yc = (run + y - 1) / 2; run = -1;
+        const key = Math.round(yc / 10), last = state.recent.get(key);
+        state.recent.set(key, x);
+        if (!force && last !== undefined && Math.abs(x - last) < 8) continue;
+        if (hits++ >= 6 || muted) continue;
+        const nf = scaleFreq(1 - yc / h, 57, 3);
+        AudioEngine.perc(nf, 0.32, (x / w) * 1.6 - 0.8);
+        state.markers.push({ x, y: yc, color: '#facc15', t: performance.now(), big: true });
+        state.lastFlash = { f: nf, t: performance.now() };
+      }
+    }
+  }
+  return hits;
+}
+function lightningTelemetry(manual) {
+  const a = analyzeColumn(state.x), res = state.track.sonify(a), lf = state.lastFlash;
+  if (lf && performance.now() - lf.t < 500) res.dom = 'flash';   // flash acabou de soar
+  updateTelemetry(a, res, manual);
+}
+
+/* fundo: mar (ruído regular) e continente (tom grave), sempre mais baixos que os fenômenos */
+function playAmbient(a) {
+  const pan = (a.x / a.w) * 1.6 - 0.8, T = a.tot;
+  const fo = (a.base.ocean || 0) / T, fl = (a.base.land || 0) / T;
+  if (fo > 0.05 && !state.muted.has('ocean')) AudioEngine.noise({ g: 0.03 + 0.08 * fo, a: 0.45, hold: 0.15, r: 0.6, cutoff: 650 }, pan);
+  if (fl > 0.05 && !state.muted.has('land')) AudioEngine.note({ f: mtof(40), type: 'triangle', g: 0.04 + 0.1 * fl, a: 0.15, d: 0.3, s: 0.75, hold: 0.35, r: 0.45 }, pan);
+}
+function baseDom(a) {
+  const o = a.base.ocean || 0, l = a.base.land || 0;
+  if (o + l < a.tot * 0.05) return null;
+  return o >= l ? (state.track.cats.ocean ? 'ocean' : null) : (state.track.cats.land ? 'land' : null);
+}
+
+function announce(text) { const el = $('#live'); el.textContent = ''; setTimeout(() => { el.textContent = text; }, 30); }
+
+function phraseOf(res) {
+  const t = state.track, L = state.lang, dom = res.dom;
+  if (dom) return t.phraseFor ? t.phraseFor(res, L) : t.cats[dom].phrase[L];
+  return res.bdom ? t.cats[res.bdom].phrase[L] : t.silence[L];
+}
+
+/* telemetria + região aria-live + narração automática */
+function updateTelemetry(a, res, manual) {
+  const now = performance.now();
+  if (!manual && now - state.lastTele < 120) return;
+  state.lastTele = now;
+  const t = state.track, L = state.lang, pos = a.x / a.w * 100;
+  $('#tPos').textContent = pos.toFixed(1) + '%';
+  const c = (a.avg || a.raw).map(v => Math.round(v));
+  $('#tRgb').innerHTML = `<span class="swatch" style="background:rgb(${c})"></span>${c.join(', ')} <small style="color:var(--dim)">${a.avg ? tr('features') : tr('column')}</small>`;
+  let snd;
+  if (t.percussive) {
+    const lf = state.lastFlash;
+    snd = res.dom && lf && now - lf.t < 900 ? `${lf.f.toFixed(1)} Hz · ${t.cats.flash.inst[L]}` : `— (${tr('silence')})`;
+  } else if (res.notes.length) {
+    const uniq = [...new Map(res.notes.map(n => [n.type + Math.round(n.f), n])).values()].slice(0, 3);
+    snd = uniq.map(n => `${n.f.toFixed(0)} Hz ${n.type}`).join(' · ');
+  } else snd = `— (${tr('silence')})`;
+  $('#tSound').textContent = snd;
+  const dom = res.dom;
+  res.bdom = dom ? null : baseDom(a);
+  const shown = dom || res.bdom;
+  $('#tFeat').innerHTML = shown ? `<i class="swatch" style="background:${t.cats[shown].color}"></i>${t.cats[shown].name[L]}${dom ? '' : ` <small style="color:var(--dim)">(${tr('bg')})</small>`}` : '—';
+  const phrase = phraseOf(res);
+  $('#tPhen').textContent = phrase;
+  state.current = { pos, phrase, dom };
+  const domKey = dom + (res.meters !== undefined ? Math.floor(res.meters / 10) : '');
+  // leitor de tela (desligado quando a audiodescrição fala, para não duplicar)
+  if (!state.ad && ((domKey !== state.lastDom && now - state.lastLive > 2500) || manual)) {
+    state.lastDom = domKey; state.lastLive = now;
+    announce(`${pos.toFixed(0)}% — ${phrase}`);
+  }
+  // narração automática: só quando o fenômeno muda e a voz está livre
+  if (state.ad && state.adAuto && state.playing && dom && domKey !== state.lastSpokenDom && now - state.lastSpoken > 4000 && !Speech.busy()) {
+    state.lastSpokenDom = domKey;
+    Speech.speak(`${Math.round(pos)}%. ${phrase}`, false);
+  }
+}
+
+/* loop principal */
+let lastTs = performance.now();
+function frame(ts) {
+  const dt = Math.min(0.1, (ts - lastTs) / 1000); lastTs = ts;
+  if (state.playing && state.src) {
+    const w = state.src.w, prev = state.x;
+    state.x += w * dt / (BASE_DUR / state.speed);
+    if (state.x >= w) {
+      if (state.loop) { state.x = 0; state.recent.clear(); }
+      else { state.x = w - 1; setPlaying(false); const msg = tr('endSweep'); state.ad ? Speech.speak(msg) : announce(msg); }
+    }
+    state.ambAcc += dt;
+    if (state.ambAcc >= 1.2) { state.ambAcc = 0; playAmbient(analyzeColumn(state.x)); }
+    if (state.track.percussive) {
+      if (state.x >= prev) scanLightning(prev, state.x);
+      state.acc += dt;
+      if (state.acc >= 0.15) { state.acc = 0; lightningTelemetry(false); }
+    } else {
+      state.acc += dt;
+      const stepDur = state.track.step() / Math.sqrt(state.speed);
+      if (state.acc >= stepDur) { state.acc -= stepDur; sonifyAt(state.x); }
+    }
+  }
+  render(); drawDisc(); updateClock();
+  requestAnimationFrame(frame);
+}
+
+const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+function updateClock(force) {
+  if (!state.src) return;
+  const now = performance.now();
+  if (!force && now - state.lastTime < 200) return;
+  state.lastTime = now;
+  const total = BASE_DUR / state.speed, frac = state.x / state.src.w;
+  $('#time').textContent = `${fmt(frac * total)} / ${fmt(total)}`;
+  if (!state.seeking) {
+    const seek = $('#seek'); seek.value = Math.round(frac * 1000);
+    seek.setAttribute('aria-valuetext', `${(frac * 100).toFixed(0)}% · ${fmt(frac * total)}`);
+  }
+}
+
+function render() {
+  if (!state.srcCanvas) return;
+  const w = stage.width, h = stage.height, x = state.x;
+  sctx.drawImage(state.srcCanvas, 0, 0);
+  if (state.track.id === 'gedi') {   // zona da legenda ignorada
+    sctx.save(); sctx.fillStyle = 'rgba(11,15,25,0.35)'; sctx.fillRect(0, h * 0.82, w, h * 0.18);
+    sctx.setLineDash([6, 6]); sctx.strokeStyle = 'rgba(245,158,11,.6)'; sctx.lineWidth = 1;
+    sctx.beginPath(); sctx.moveTo(0, h * 0.82); sctx.lineTo(w, h * 0.82); sctx.stroke(); sctx.restore();
+  }
+  sctx.fillStyle = 'rgba(56,189,248,0.05)'; sctx.fillRect(0, 0, x, h);
+  const band = Math.max(30, w * 0.03), grd = sctx.createLinearGradient(x - band, 0, x, 0);
+  grd.addColorStop(0, 'rgba(56,189,248,0)'); grd.addColorStop(1, 'rgba(56,189,248,0.28)');
+  sctx.fillStyle = grd; sctx.fillRect(x - band, 0, band, h);
+  sctx.save(); sctx.shadowColor = '#38bdf8'; sctx.shadowBlur = 12;
+  sctx.strokeStyle = '#38bdf8'; sctx.lineWidth = Math.max(2, w / 600);
+  sctx.beginPath(); sctx.moveTo(x, 0); sctx.lineTo(x, h); sctx.stroke(); sctx.restore();
+  const now = performance.now(), scale = w / 1000;
+  state.markers = state.markers.filter(m => now - m.t < 900);
+  for (const m of state.markers) {
+    const k = (now - m.t) / 900, rad = (m.big ? 8 : 5) * scale * (1 + k * 2.2);
+    sctx.globalAlpha = 1 - k; sctx.strokeStyle = m.color; sctx.lineWidth = 2 * scale;
+    sctx.beginPath(); sctx.arc(m.x, m.y, rad, 0, 7); sctx.stroke();
+  }
+  sctx.globalAlpha = 1;
+}
+
+let discAngle = 0;
+function drawDisc() {
+  const W = disc.width, H = disc.height, cx = W / 2, cy = H / 2, c = dctx;
+  c.clearRect(0, 0, W, H);
+  const col = state.track ? state.track.disc : '#38bdf8';
+  const bins = 64, r0 = W * 0.33;
+  let data = null;
+  if (AudioEngine.analyser && state.playing) { AudioEngine.analyser.getByteFrequencyData(AudioEngine.freq); data = AudioEngine.freq; }
+  for (let i = 0; i < bins; i++) {
+    const v = data ? data[Math.floor(i * data.length / bins * 0.8)] / 255 : 0.05;
+    const a = i / bins * Math.PI * 2 - Math.PI / 2, len = 6 + v * W * 0.15;
+    c.strokeStyle = i % 2 ? col : '#f59e0b'; c.globalAlpha = 0.35 + v * 0.65; c.lineWidth = W * 0.012; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(cx + Math.cos(a) * r0, cy + Math.sin(a) * r0); c.lineTo(cx + Math.cos(a) * (r0 + len), cy + Math.sin(a) * (r0 + len)); c.stroke();
+  }
+  c.globalAlpha = 1;
+  if (state.playing && !reduceMotion) discAngle += 0.035;
+  c.save(); c.translate(cx, cy); c.rotate(discAngle);
+  const R = W * 0.3;
+  c.fillStyle = '#0a0a0a'; c.beginPath(); c.arc(0, 0, R, 0, 7); c.fill();
+  c.strokeStyle = 'rgba(255,255,255,0.06)'; c.lineWidth = 1;
+  for (let rr = R * 0.42; rr < R; rr += W * 0.012) { c.beginPath(); c.arc(0, 0, rr, 0, 7); c.stroke(); }
+  c.strokeStyle = 'rgba(255,255,255,0.18)'; c.lineWidth = W * 0.01;
+  c.beginPath(); c.arc(0, 0, R * 0.8, -0.6, 0.1); c.stroke();
+  const lg = c.createRadialGradient(0, 0, 0, 0, 0, R * 0.38);
+  lg.addColorStop(0, '#fff'); lg.addColorStop(0.15, col); lg.addColorStop(1, col);
+  c.fillStyle = lg; c.beginPath(); c.arc(0, 0, R * 0.38, 0, 7); c.fill();
+  c.fillStyle = '#0b0f19'; c.font = `bold ${W * 0.042}px system-ui,sans-serif`; c.textAlign = 'center';
+  c.fillText(state.track ? 'SVS #' + state.track.svs : 'NASA', 0, -R * 0.08);
+  c.font = `${W * 0.032}px system-ui,sans-serif`;
+  c.fillText(state.track ? state.track.short[state.lang] : '', 0, R * 0.2);
+  c.restore();
+}
+
+/* ============================================================
+   10. CARREGAMENTO HÍBRIDO DAS IMAGENS
+   ============================================================ */
+function imgToCanvas(img) {
+  const s = Math.min(1, 1600 / img.naturalWidth), w = Math.round(img.naturalWidth * s), h = Math.round(img.naturalHeight * s);
+  const c = mk(w, h); ctx2d(c).drawImage(img, 0, 0, w, h); return c;
+}
+function tryLoadReal(src) {
+  return new Promise(res => {
+    const img = new Image();
+    img.onload = () => {
+      try { const c = imgToCanvas(img); ctx2d(c).getImageData(0, 0, 1, 1); res({ canvas: c }); }
+      catch (e) { res({ tainted: true }); }   // file:// → canvas "tainted"
+    };
+    img.onerror = () => res({});              // arquivo ausente → réplica procedural
+    img.src = src;
+  });
+}
+function setSource(canvas, kind, name) {
+  const frac = state.src ? state.x / state.src.w : 0;
+  state.srcCanvas = canvas; state.srcKind = kind; state.srcName = name || '';
+  stage.width = canvas.width; stage.height = canvas.height;
+  state.src = { data: ctx2d(canvas).getImageData(0, 0, canvas.width, canvas.height).data, w: canvas.width, h: canvas.height };
+  state.x = clamp(frac * canvas.width, 0, canvas.width - 1);
+  state.markers = []; state.recent.clear();
+  state.track.kind = kind;
+  $('#restoreBtn').hidden = kind !== 'manual';
+  updateSourceInfo(); updateCards(); updateClock(true);
+  const a = analyzeColumn(state.x); updateTelemetry(a, state.track.sonify(a, 1), true);
+}
+async function selectTrack(id, narrate = true) {
+  const t = TRACKS.find(k => k.id === id), token = ++state.loadToken;
+  if (state.touring) stopLegend();
+  state.track = t; state.step = 0; state.acc = 0; state.lastDom = ''; state.lastSpokenDom = '';
+  state.muted.clear();
+  updateCards(); updateTrackText(); updateLegend();
+  if (narrate && state.ad) Speech.speak(trackNarration());
+  else if (narrate) announce(`${tr('trackLabel')}: ${t.title[state.lang]}`);
+  if (t.cache.manual) return setSource(t.cache.manual, 'manual', t.cache.manualName);
+  if (t.cache.real) return setSource(t.cache.real, 'real');
+  $('#loading').classList.add('on');
+  const r = await tryLoadReal(t.file);
+  if (token !== state.loadToken) return;
+  if (r.canvas) { t.cache.real = r.canvas; $('#loading').classList.remove('on'); return setSource(r.canvas, 'real'); }
+  t.tainted = !!r.tainted;
+  await nextFrame();
+  if (!t.cache.proc) t.cache.proc = t.gen();
+  if (token !== state.loadToken) return;
+  $('#loading').classList.remove('on');
+  setSource(t.cache.proc, 'proc');
+}
+function loadFile(file) {
+  if (!file || !/^image\//.test(file.type)) { const m = tr('badFile'); state.ad ? Speech.speak(m) : announce(m); return; }
+  const reader = new FileReader();
+  reader.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      const c = imgToCanvas(img), t = state.track;
+      t.cache.manual = c; t.cache.manualName = file.name;
+      setSource(c, 'manual', file.name);
+      const m = tr('loaded')(file.name); state.ad ? Speech.speak(m) : announce(m);
+    };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ============================================================
+   11. INTERFACE
+   ============================================================ */
+const trackNarration = () => {
+  const t = state.track, L = state.lang;
+  return `${tr('trackLabel')}: ${t.title[L]}. ${tr('imageLabel')}: ${t.visual[L]} ${tr('rulesLabel')}: ${t.rules[L]} ${state.playing ? '' : tr('playHint')}`;
+};
+const describeImage = () => `${tr('imageLabel')}: ${state.track.visual[state.lang]}`;
+const readRules = () => `${tr('rulesLabel')}: ${state.track.rules[state.lang]}`;
+const readCurrent = () => {
+  const c = state.current; if (!c) return '';
+  return `${tr('at')} ${Math.round(c.pos)}%. ${c.phrase} ${$('#tSound').textContent}.`;
+};
+
+function buildCards() {
+  const box = $('#tracks'); box.innerHTML = '';
+  TRACKS.forEach((t, i) => {
+    const b = document.createElement('button');
+    b.className = 'track'; b.dataset.id = t.id; b.setAttribute('aria-pressed', 'false'); b.setAttribute('aria-keyshortcuts', String(i + 1));
+    b.innerHTML = `<span class="vinyl" style="--c:${t.disc}" aria-hidden="true"></span><span class="tmeta"><b></b><span></span></span>`;
+    b.addEventListener('click', () => { AudioEngine.init(); selectTrack(t.id); });
+    box.appendChild(b);
+  });
+}
+function updateCards() {
+  document.querySelectorAll('.track').forEach((b, i) => {
+    const t = TRACKS.find(k => k.id === b.dataset.id);
+    b.setAttribute('aria-pressed', String(state.track === t));
+    b.querySelector('b').textContent = t.title[state.lang];
+    const kind = t.kind;
+    const badge = kind ? `<span class="badge ${kind}">${tr(kind === 'real' ? 'bReal' : kind === 'manual' ? 'bManual' : 'bProc')}</span>` : '';
+    b.querySelector('.tmeta span').innerHTML = `<span class="key" aria-hidden="true">${i + 1}</span>NASA SVS #${t.svs}${badge}`;
+  });
+}
+function updateTrackText() {
+  const t = state.track, L = state.lang;
+  $('#trackTitle').textContent = t.title[L];
+  $('#trackDesc').textContent = t.desc[L];
+  $('#svsLink').href = t.url; $('#svsLink').textContent = `NASA SVS #${t.svs} ↗`;
+  $('#imgDesc').textContent = t.visual[L];
+  stage.setAttribute('aria-label', I18N[L].canvasAria(t.title[L]));
+  if (state.ad && !Speech.busy()) $('#adText').textContent = trackNarration();
+}
+function updateSourceInfo() {
+  const t = state.track, f = t.file.replace('./', '');
+  $('#srcInfo').textContent = state.srcKind === 'real' ? tr('srcReal')(f) : state.srcKind === 'manual' ? tr('srcManual')(state.srcName) : (t.tainted ? tr('srcTainted')(f) : tr('srcProc')(f));
+}
+function legendLine(k) {
+  const c = state.track.cats[k], L = state.lang;
+  return `${c.name[L]}, ${tr('colorWord')} ${c.colorName[L]}. ${tr('soundWord')}: ${c.sound[L]}.`;
+}
+function updateLegend() {
+  const t = state.track, L = state.lang;
+  const box = $('#legend'); box.innerHTML = '';
+  Object.entries(t.cats).forEach(([k, c]) => {
+    const infoOnly = !c.ambient && c.demo && t.id === 'nightlights' && k === 'neutral', muted = state.muted.has(k);
+    const li = document.createElement('li');
+    li.className = 'litem' + (muted ? ' off' : ''); li.dataset.cat = k;
+    li.innerHTML = `<span class="lsw" style="background:${c.color}" aria-hidden="true"></span>
+      <div class="ltx"><b>${c.name[L]}${c.ambient ? `<span class="amb-tag">${tr('bg')}</span>` : ''}</b>
+      <small>${tr('colorWord')}: <em>${c.colorName[L]}</em> · ${tr('soundWord').toLowerCase()}: <em>${c.sound[L]}</em></small></div>
+      <div class="lbtns">
+        <button class="play" ${infoOnly ? 'disabled' : ''} aria-label="${tr('listen').replace('▶ ', '')}: ${c.name[L]}">${tr('listen')}</button>
+        ${infoOnly ? '' : `<button class="mute" aria-pressed="${muted}" aria-label="${muted ? tr('unmute').slice(3) : tr('mute').slice(3)}: ${c.name[L]}">${muted ? tr('unmute') : tr('mute')}</button>`}
+      </div>`;
+    li.querySelector('.play').addEventListener('click', () => playLegendItem(k));
+    const mb = li.querySelector('.mute');
+    if (mb) mb.addEventListener('click', () => {
+      state.muted.has(k) ? state.muted.delete(k) : state.muted.add(k);
+      updateLegend();
+      const m = `${c.name[L]}: ${state.muted.has(k) ? tr('layerOff') : tr('layerOn')}`;
+      state.ad ? Speech.speak(m) : announce(m);
+      const nb = $(`#legend li[data-cat="${k}"] .mute`); if (nb) nb.focus();
+    });
+    box.appendChild(li);
+  });
+}
+function highlight(k) { document.querySelectorAll('#legend .litem').forEach(li => li.classList.toggle('now', li.dataset.cat === k)); }
+/* um item: diz nome + cor + som e, em seguida, toca o som */
+async function playLegendItem(k, tok) {
+  AudioEngine.wake();
+  if (tok === undefined) { tok = ++state.legendTok; Speech.stop(); }
+  highlight(k);
+  await Speech.speak(legendLine(k));
+  if (tok !== state.legendTok) return false;
+  await sleep(250);
+  const dur = state.track.cats[k].demo();
+  await sleep(dur * 1000 + 400);
+  if (tok !== state.legendTok) return false;
+  highlight(null);
+  return true;
+}
+/* legenda completa, item por item — antes da imagem */
+async function playLegend() {
+  AudioEngine.wake();
+  const t = state.track, tok = ++state.legendTok;
+  const wasPlaying = state.playing; if (wasPlaying) pause();
+  state.touring = true; $('#legendStop').hidden = false;
+  t.legendHeard = true;
+  Speech.stop();
+  await Speech.speak(tr('legendIntro')(t.title[state.lang]));
+  let ok = tok === state.legendTok;
+  for (const k of Object.keys(t.cats)) {
+    if (!ok) break;
+    ok = await playLegendItem(k, tok);
+  }
+  if (ok) await Speech.speak(tr('legendEnd'));
+  highlight(null);
+  if (tok === state.legendTok) { state.touring = false; $('#legendStop').hidden = true; }
+  return ok && tok === state.legendTok;
+}
+function stopLegend() {
+  state.legendTok++; state.touring = false; Speech.stop(); highlight(null); $('#legendStop').hidden = true;
+}
+function buildChips(sel, cls, onPick) {
+  const box = $(sel); box.innerHTML = '';
+  SPEEDS.forEach(s => {
+    const b = document.createElement('button');
+    b.className = 'chip ' + cls; b.textContent = s + '×'; b.dataset.s = s;
+    b.addEventListener('click', () => onPick(s, true));
+    box.appendChild(b);
+  });
+}
+const markChips = (sel, v) => document.querySelectorAll(sel + ' .chip').forEach(b => b.setAttribute('aria-pressed', String(Math.abs(+b.dataset.s - v) < 0.01)));
+function setSpeed(s, user) {
+  state.speed = s; markChips('#chips', s); updateClock(true);
+  if (user) { const m = tr('speedSet')(s); state.ad ? Speech.speak(m) : announce(m); }
+}
+function setAdRate(s, user) {
+  state.adRate = s; markChips('#adChips', s);
+  if (user && state.ad) Speech.speak(tr('speedSet')(s));
+}
+/* volumes: varredura e audiodescrição, vinculados por proporção */
+function setVolumes(sweep, ad) {
+  state.volume = clamp(sweep, 0, 1); state.adVol = clamp(ad, 0, 1);
+  $('#volSweep').value = state.volume; $('#volAd').value = state.adVol;
+  $('#volSweepOut').textContent = Math.round(state.volume * 100) + '%';
+  $('#volAdOut').textContent = Math.round(state.adVol * 100) + '%';
+  AudioEngine.setVolume();
+}
+function updateLinkBtn() {
+  $('#volLink').setAttribute('aria-pressed', String(state.volLinked));
+  $('#volLinkTxt').textContent = state.volLinked ? tr('linkOn') : tr('linkOff');
+}
+function setSize(px) {
+  document.documentElement.style.fontSize = px + 'px';
+  document.querySelectorAll('#sizeGrp button').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.size === px)));
+}
+function applyLang() {
+  const L = state.lang, D = I18N[L];
+  document.documentElement.lang = L === 'pt' ? 'pt-BR' : 'en';
+  document.querySelectorAll('[data-i18n]').forEach(el => { const v = D[el.dataset.i18n]; if (typeof v === 'string') el.textContent = v; });
+  $('#hint').innerHTML = D.hint;
+  $('#langBtn').textContent = D.langBtn; $('#langBtn').setAttribute('aria-label', D.langAria);
+  $('#sizeGrp').setAttribute('aria-label', D.sizeLbl);
+  document.querySelectorAll('#sizeGrp button').forEach((b, i) => b.setAttribute('aria-label', D.sizes[i]));
+  document.querySelector('.transport').setAttribute('aria-label', D.transport);
+  $('#stopBtn').setAttribute('aria-label', D.stop);
+  $('#adNote').textContent = D.adNoSpeech;
+  updatePlayBtn(); updateLinkBtn();
+  if (state.track) {
+    updateCards(); updateTrackText(); updateLegend();
+    if (state.src) { updateSourceInfo(); const a = analyzeColumn(state.x); updateTelemetry(a, state.track.sonify(a, 1), true); }
+  }
+}
+function updatePlayBtn() {
+  const b = $('#playBtn');
+  b.textContent = state.playing ? '❚❚' : '▶';
+  b.setAttribute('aria-label', state.playing ? tr('pause') : tr('play'));
+}
+function setPlaying(on) {
+  state.playing = on; document.body.classList.toggle('playing', on); updatePlayBtn();
+}
+async function play() {
+  AudioEngine.wake();
+  if (state.touring) stopLegend();   // Tocar durante a legenda pula direto para o mapa
+  else if (state.legendFirst && !state.track.legendHeard) {
+    setPlaying(false);
+    const ok = await playLegend();
+    if (!ok) return;
+  }
+  if (state.src && !state.loop && state.x >= state.src.w - 2) state.x = 0;
+  setPlaying(true);
+}
+function pause() { setPlaying(false); }
+const togglePlay = () => state.playing ? pause() : play();
+function stop() {
+  if (state.touring) stopLegend();
+  setPlaying(false);
+  if (AudioEngine.ctx) AudioEngine.flush();
+  state.x = 0; state.acc = 0; state.step = 0; state.recent.clear(); state.markers = []; state.lastSpokenDom = '';
+  if (state.src) { const a = analyzeColumn(0); updateTelemetry(a, state.track.sonify(a, 1), true); updateClock(true); }
+}
+function setAD(on) {
+  state.ad = on;
+  $('#adBtn').setAttribute('aria-pressed', String(on));
+  $('#adPanel').hidden = !on;
+  $('#adNote').hidden = Speech.ok;
+  document.body.classList.toggle('ad-on', on);
+  if (on) { AudioEngine.init(); Speech.speak(`${tr('adOn')} ${trackNarration()}`); }
+  else { Speech.stop(); announce(tr('adOff')); }
+}
+
+/* --- interação: ouvir um ponto --- */
+function scrubAt(x, y = null) {
+  if (!state.src) return;
+  AudioEngine.wake();
+  state.x = clamp(x, 0, state.src.w - 1);
+  if (state.track.percussive) { scanLightning(state.x - 3, state.x + 3, true); lightningTelemetry(true); }
+  else sonifyAt(state.x, true);
+  if (y !== null) pointNote(state.x, y);
+  updateClock(true);
+}
+function pointNote(x, y) {   // nota extra do pixel exato sob o cursor
+  const { data, w, h } = state.src, i = ((y | 0) * w + (x | 0)) * 4, t = state.track;
+  const k = t.classify(data[i], data[i + 1], data[i + 2], y | 0, h);
+  if (!k || t.percussive || state.muted.has(k)) return;
+  const type = k === 'red' || (k === 'purple' && t.id === 'nightlights') ? 'triangle' : 'sine';
+  AudioEngine.note({ f: scaleFreq(1 - y / h, 52, 3), type, g: 0.14, a: 0.01, d: 0.1, s: 0.4, hold: 0.05, r: 0.3 }, (x / w) * 1.6 - 0.8);
+  state.markers.push({ x, y, color: '#ffffff', t: performance.now(), big: true });
+}
+let speakTimer = 0;
+function narrateSoon() {   // depois de arrastar/buscar, narra o ponto onde parou
+  if (!state.ad) return;
+  clearTimeout(speakTimer);
+  speakTimer = setTimeout(() => Speech.speak(readCurrent()), 500);
+}
+function canvasPos(e) {
+  const r = stage.getBoundingClientRect();
+  const ar = stage.width / stage.height, boxAr = r.width / r.height;
+  let w = r.width, h = r.height, ox = 0, oy = 0;
+  if (boxAr > ar) { w = r.height * ar; ox = (r.width - w) / 2; } else { h = r.width / ar; oy = (r.height - h) / 2; }
+  return { x: clamp((e.clientX - r.left - ox) / w * stage.width, 0, stage.width - 1), y: clamp((e.clientY - r.top - oy) / h * stage.height, 0, stage.height - 1) };
+}
+let dragging = false, lastScrub = 0;
+stage.addEventListener('pointerdown', e => { dragging = true; stage.setPointerCapture(e.pointerId); const p = canvasPos(e); lastScrub = performance.now(); scrubAt(p.x, p.y); });
+stage.addEventListener('pointermove', e => {
+  if (!dragging) return; const now = performance.now(); if (now - lastScrub < 90) return; lastScrub = now;
+  const p = canvasPos(e); scrubAt(p.x, p.y);
+});
+['pointerup', 'pointercancel'].forEach(ev => stage.addEventListener(ev, () => { if (dragging) narrateSoon(); dragging = false; }));
+stage.addEventListener('keydown', e => {
+  if (!state.src || (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft')) return;
+  e.preventDefault();
+  const step = state.src.w * (e.shiftKey ? 0.05 : 0.01) * (e.key === 'ArrowRight' ? 1 : -1);
+  const prev = state.x, nx = clamp(state.x + step, 0, state.src.w - 1);
+  if (state.track.percussive) { AudioEngine.wake(); state.x = nx; scanLightning(Math.min(prev, nx), Math.max(prev, nx), true); lightningTelemetry(true); updateClock(true); }
+  else scrubAt(nx);
+  narrateSoon();
+});
+
+/* --- drag & drop de imagem --- */
+const box = $('#canvasbox'), dropOv = $('#dropOv');
+['dragenter', 'dragover'].forEach(ev => box.addEventListener(ev, e => { e.preventDefault(); dropOv.classList.add('on'); }));
+['dragleave', 'drop'].forEach(ev => box.addEventListener(ev, e => { e.preventDefault(); if (ev === 'dragleave' && box.contains(e.relatedTarget)) return; dropOv.classList.remove('on'); }));
+box.addEventListener('drop', e => { const f = e.dataTransfer && e.dataTransfer.files[0]; if (f) loadFile(f); });
+
+/* --- controles --- */
+$('#playBtn').addEventListener('click', togglePlay);
+$('#stopBtn').addEventListener('click', stop);
+$('#loop').addEventListener('change', e => { state.loop = e.target.checked; });
+$('#scale').addEventListener('change', e => { state.scale = e.target.value; });
+$('#volSweep').addEventListener('input', e => { const v = +e.target.value; setVolumes(v, state.volLinked ? v * state.volRatio : state.adVol); });
+$('#volAd').addEventListener('input', e => { const v = +e.target.value; setVolumes(state.volLinked ? v / state.volRatio : state.volume, v); });
+$('#volAd').addEventListener('change', () => { if (state.ad) Speech.speak(tr('volAd') + ' ' + Math.round(state.adVol * 100) + '%'); });
+$('#volLink').addEventListener('click', () => {
+  state.volLinked = !state.volLinked;
+  if (state.volLinked && state.volume > 0.01) state.volRatio = clamp(state.adVol / state.volume, 0.05, 4);
+  updateLinkBtn(); announce($('#volLinkTxt').textContent);
+});
+$('#seek').addEventListener('input', e => {
+  if (!state.src) return; state.seeking = true;
+  const now = performance.now(), x = +e.target.value / 1000 * (state.src.w - 1);
+  if (now - lastScrub > 80) { lastScrub = now; scrubAt(x); } else state.x = x;
+});
+$('#seek').addEventListener('change', () => { state.seeking = false; narrateSoon(); });
+$('#langBtn').addEventListener('click', () => {
+  state.lang = state.lang === 'pt' ? 'en' : 'pt'; applyLang();
+  if (state.ad) Speech.speak(trackNarration());
+});
+document.querySelectorAll('#sizeGrp button').forEach(b => b.addEventListener('click', () => setSize(+b.dataset.size)));
+$('#fileInput').addEventListener('change', e => { loadFile(e.target.files && e.target.files[0]); e.target.value = ''; });
+$('#restoreBtn').addEventListener('click', () => { const t = state.track; delete t.cache.manual; delete t.cache.manualName; selectTrack(t.id, false); });
+
+$('#adBtn').addEventListener('click', () => setAD(!state.ad));
+$('#legendAll').addEventListener('click', () => playLegend());
+$('#legendStop').addEventListener('click', stopLegend);
+$('#legendFirst').addEventListener('change', e => { state.legendFirst = e.target.checked; });
+$('#adDescribe').addEventListener('click', () => Speech.speak(describeImage()));
+$('#adRules').addEventListener('click', () => Speech.speak(readRules()));
+$('#adCurrent').addEventListener('click', () => Speech.speak(readCurrent()));
+$('#adStop').addEventListener('click', () => Speech.stop());
+$('#adAuto').addEventListener('change', e => { state.adAuto = e.target.checked; });
+
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const tag = (e.target.tagName || '').toLowerCase();
+  const inForm = ['input', 'select', 'textarea'].includes(tag);
+  if (e.code === 'Space') {
+    if (inForm || ['button', 'a', 'summary'].includes(tag)) return;
+    e.preventDefault(); togglePlay(); return;
+  }
+  if (inForm || document.querySelector('dialog[open]')) return;
+  const k = e.key.toLowerCase();
+  if (k === 'a') setAD(!state.ad);
+  else if (k === 'l') state.touring ? stopLegend() : playLegend();
+  else if (k === 'd') { if (!state.ad) setAD(true); Speech.speak(describeImage()); }
+  else if (k === 'r') { if (!state.ad) setAD(true); Speech.speak(readCurrent()); }
+  else if (['1', '2', '3', '4'].includes(k)) { AudioEngine.init(); selectTrack(TRACKS[+k - 1].id); }
+});
+
+const dlg = $('#creditsDlg');
+$('#creditsBtn').addEventListener('click', () => { if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', ''); });
+$('#credClose').addEventListener('click', () => { if (dlg.close) dlg.close(); else dlg.removeAttribute('open'); });
+
+/* ============================================================
+   12. BOOT
+   ============================================================ */
+Speech.init();
+buildLandMask();
+buildCards();
+buildChips('#chips', '', setSpeed);
+buildChips('#adChips', 'amb', setAdRate);
+applyLang();
+setSpeed(1); setAdRate(1); setVolumes(0.8, 0.6);
+selectTrack('aerosols', false);
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
