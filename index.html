@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ecos da Terra — Dados da Terra para ouvir e sentir · NASA Space Apps Challenge 2026</title>
-<meta name="description" content="Ecos da Terra (equipe Núcleo404): sonificação acessível, com audiodescrição e vibração, de visualizações oficiais do NASA Scientific Visualization Studio (SVS) — Earth Information Center.">
+<title>Ecos da Terra — Dados da Terra para ouvir · NASA Space Apps Challenge 2026</title>
+<meta name="description" content="Ecos da Terra (equipe Núcleo404): sonificação acessível, com audiodescrição e controle pelo olhar, de visualizações oficiais do NASA Scientific Visualization Studio (SVS) — Earth Information Center.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%231b3a4f'/%3E%3Ccircle cx='40' cy='50' r='24' fill='none' stroke='white' stroke-width='6'/%3E%3Cpath d='M16 50h48M40 26c-9 13-9 35 0 48M40 26c9 13 9 35 0 48' fill='none' stroke='white' stroke-width='5'/%3E%3Cpath d='M72 36a20 20 0 0 1 0 28M82 28a32 32 0 0 1 0 44' fill='none' stroke='%23fbbf24' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
 :root{
@@ -339,7 +339,7 @@ dialog li{margin:8px 0;font-size:.92rem}
 a.iconbtn{text-decoration:none}
 .mlink{text-decoration:none}
 
-/* ---------- controle pelo olhar (em breve) ---------- */
+/* ---------- controle pelo olhar (botão em destaque) ---------- */
 .tbtn.eye{border:2px solid #7c3aed;color:#5b21b6;background:linear-gradient(135deg,#f5f3ff,#fdf4ff);animation:ring 2.8s ease-out infinite}
 .tbtn.eye:hover{background:#ede9fe}
 .tbtn.eye .soon{font-size:.64rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:#7c3aed;color:#fff;border-radius:99px;padding:2px 7px;line-height:1.4}
@@ -381,32 +381,51 @@ dialog .tech{font-size:.82rem;color:var(--muted)}
 .dlgacts .btnp{width:auto}
 .dlgacts a.btns{text-decoration:none;color:var(--text)}
 
-/* ---------- vibração ---------- */
-.vibpanel .switchrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
-.vstat{font-size:.84rem;line-height:1.45;border-radius:10px;padding:9px 12px;margin:0 0 14px}
-.vstat.ok{background:#f0faf3;color:#166534;border:1px solid #bbe5c8}
-.vstat.warn{background:#fdf6ec;color:#92400e;border:1px solid #f3d5b0}
-.vlevels,.vmap{list-style:none;margin:0;padding:0}
-.vrow{display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:4px 10px;padding:9px 6px;border-bottom:1px solid var(--line);border-radius:10px}
-.vrow .vlv{grid-row:1/3;width:30px;height:30px;border-radius:9px;background:var(--act);color:var(--actText);font-weight:800;display:flex;align-items:center;justify-content:center;font-size:.86rem}
-.vrow .vlv.sp{background:#f5f3ff;color:#6d28d9}
-.vrow .vtx b{display:block;font-size:.92rem;line-height:1.25}
-.vrow .vtx small{display:block;font-size:.76rem;color:var(--muted);line-height:1.3}
-.vrow .vpat{grid-column:2;width:112px;height:18px}
-.vpat rect{fill:var(--navy)} .vpat line{stroke:var(--line2);stroke-width:1}
-.vrow .btns{grid-row:1/3;grid-column:3;min-height:36px;padding:0 10px;font-size:.8rem}
-.vrow.buzz{animation:buzz .1s linear 12;background:#fff7ed}
-@keyframes buzz{0%,100%{transform:translateX(0)}25%{transform:translateX(-1.5px)}75%{transform:translateX(1.5px)}}
-.vmap li{display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--line)}
-.vmap .lsw{width:26px;height:26px;border-radius:7px;flex:none}
-.vmap .ltx{flex:1;min-width:0}
-.vmap .ltx b{display:block;font-size:.88rem;font-weight:600;line-height:1.3}
-.vmap .ltx small{display:block;font-size:.76rem;color:var(--muted)}
-.vdots{display:inline-flex;gap:3px;flex:none}
-.vdots i{width:8px;height:8px;border-radius:50%;background:var(--line2)}
-.vdots i.on{background:var(--navy)}
-.vdots.h i{background:var(--navy)}
-.vdots.h i:nth-child(1){opacity:.25}.vdots.h i:nth-child(2){opacity:.4}.vdots.h i:nth-child(3){opacity:.6}.vdots.h i:nth-child(4){opacity:.8}
+/* ---------- controle pelo olhar: ligado ---------- */
+.tbtn.eye[aria-pressed="true"]{background:#7c3aed;border-color:#7c3aed;color:#fff;animation:none}
+.tbtn.eye[aria-pressed="true"] .soon{background:#fff;color:#6d28d9}
+.gzopts{display:flex;flex-direction:column;gap:10px;margin:14px 0 6px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#faf9ff}
+.gzcal{position:fixed;inset:0;z-index:95;background:rgba(17,12,38,.93);color:#fff}
+.gzcal .gzbox{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(540px,calc(100% - 28px));max-height:calc(100% - 28px);overflow:auto;background:#fff;color:var(--text);border-radius:20px;padding:22px 24px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.gzcal .gzbox .eyeic{margin:0 auto 8px}
+.gzcal .gzbox h3{margin:0 0 6px;font-size:1.3rem}
+.gzcal .gzbox p{margin:0 0 8px;font-size:.95rem;line-height:1.5}
+.gzcal.run .gzbox{display:none}
+.gzprev{position:relative;width:240px;max-width:100%;aspect-ratio:4/3;margin:10px auto;border-radius:14px;overflow:hidden;background:#111;box-shadow:0 0 0 4px #e2e8f0;transition:box-shadow .2s}
+.gzprev.ok{box-shadow:0 0 0 4px #22c55e}
+.gzprev video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:block}
+.gzhint{font-size:.86rem!important;color:var(--muted)}
+.gzhint.warn{color:#b45309}
+.gzhint.good{color:#15803d;font-weight:600}
+.gzstep{position:absolute;left:50%;top:24px;transform:translateX(-50%);font-weight:700;font-size:1.05rem;background:rgba(255,255,255,.12);padding:8px 16px;border-radius:99px;white-space:nowrap}
+.gzdot{position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:#a78bfa;box-shadow:0 0 0 8px rgba(167,139,250,.3);transition:left .5s ease,top .5s ease}
+.gzdot::after{content:"";position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:#fff}
+.gzdot.collect{animation:gzshrink 1.1s linear forwards}
+@keyframes gzshrink{to{transform:scale(.5);background:#c4b5fd}}
+.gzcur{position:fixed;left:0;top:0;width:64px;height:64px;margin:-32px 0 0 -32px;z-index:88;pointer-events:none;border-radius:50%;background:rgba(124,58,237,.16);border:2px solid rgba(124,58,237,.85);box-shadow:0 0 0 2px rgba(255,255,255,.7)}
+.gzcur.nodot{background:none;border-color:transparent;box-shadow:none}
+.gzcur svg{position:absolute;left:-6px;top:-6px;width:72px;height:72px;transform:rotate(-90deg)}
+.gzcur circle{fill:none;stroke:#7c3aed;stroke-width:5;stroke-linecap:round}
+.gzcur.lost{opacity:.35}
+.gzcorner{position:fixed;z-index:87;pointer-events:none;display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:16px;background:#5b21b6;color:#fff;font-weight:700;font-size:.92rem;opacity:.88;transition:opacity .2s,transform .2s,background .2s;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.gzcorner svg.i{width:22px;height:22px}
+.gzcorner.tl{left:10px;top:var(--gzTop,10px)}.gzcorner.tr{right:10px;top:var(--gzTop,10px)}.gzcorner.bl{left:10px;bottom:10px}.gzcorner.br{right:10px;bottom:10px}
+.gzcorner.hot{opacity:1;transform:scale(1.07)}
+.gzcorner.fire{background:#15803d;opacity:1}
+.gcard{padding:14px 16px;border:2px solid #7c3aed}
+.gcard .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.gcard .bdg{font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:#7c3aed;color:#fff;border-radius:99px;padding:2px 8px}
+.gzrow{display:flex;gap:10px;align-items:center;margin-top:10px}
+.gzcam{width:88px;aspect-ratio:4/3;border-radius:10px;overflow:hidden;background:#111;flex:none}
+.gzcam video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:block}
+.gzst{min-width:0}
+.gzst b{display:flex;align-items:center;gap:6px;font-size:.92rem}
+.gzst b i{width:8px;height:8px;border-radius:50%;background:#22c55e;flex:none}
+.gzst b i.off{background:#f59e0b}
+.gzst small{display:block;font-size:.76rem;color:var(--muted);line-height:1.35;margin-top:2px}
+.gcard .acts{display:flex;gap:8px;margin-top:10px}
+.gcard .acts .btns{flex:1;min-height:38px;font-size:.82rem;padding:0 8px}
+@media (max-height:980px){.rightcol.gz .mini{display:none}}
 
 /* ---------- documentação (fim da página) ---------- */
 .docs{background:var(--card);border-top:1px solid var(--line);padding:64px 24px 72px;color:var(--text)}
@@ -472,10 +491,10 @@ dialog .tech{font-size:.82rem;color:var(--muted)}
   <header class="topbar">
     <button class="iconbtn" id="menuBtn" aria-keyshortcuts="M" aria-controls="menu"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16M15.5 10l-2 2 2 2"/></svg></button>
     <div class="logo" aria-hidden="true"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="12" r="7"/><path d="M3 12h14M10 5c-2.6 3.8-2.6 10.2 0 14M10 5c2.6 3.8 2.6 10.2 0 14"/><path d="M19.6 8.6a5.5 5.5 0 0 1 0 6.8M22.2 6.4a9.2 9.2 0 0 1 0 11.2" stroke="#fbbf24"/></svg></div>
-    <div class="brand"><b>Ecos da Terra</b><small data-i18n="subtitle">Dados da Terra para ouvir e sentir · equipe Núcleo404 · NASA Space Apps Challenge 2026</small></div>
+    <div class="brand"><b>Ecos da Terra</b><small data-i18n="subtitle">Dados da Terra para ouvir · equipe Núcleo404 · NASA Space Apps Challenge 2026</small></div>
     <div class="ctx"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span id="ctxChip">—</span></div>
     <span class="tspace"></span>
-    <button class="tbtn eye" id="eyeBtn" type="button" aria-haspopup="dialog"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M12 12h.01"/></svg><span class="eyelbl" data-i18n="eyeBtn">Controle pelo olhar</span><span class="soon" data-i18n="soon">em breve</span></button>
+    <button class="tbtn eye" id="eyeBtn" type="button" aria-haspopup="dialog" aria-pressed="false" aria-keyshortcuts="O"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M12 12h.01"/></svg><span class="eyelbl" data-i18n="eyeBtn">Controle pelo olhar</span><span class="soon" data-i18n="soon">beta</span></button>
     <label class="tbtn up" id="upBtn" title="Foto ou vídeo do seu aparelho · ou arraste sobre o mapa"><svg class="i" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg><span data-i18n="upTitle">Enviar foto ou vídeo</span><input type="file" id="fileInput" accept="image/*,video/*" aria-keyshortcuts="U"></label>
     <button class="tbtn ad" id="adBtn" aria-pressed="false" aria-keyshortcuts="A"><span class="dot" aria-hidden="true"></span><svg class="i" viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg><span data-i18n="adBtn">Audiodescrição</span></button>
     <div class="seg" role="group" id="sizeGrp">
@@ -498,7 +517,6 @@ dialog .tech{font-size:.82rem;color:var(--muted)}
         <button class="navbtn" data-panel="legend" aria-expanded="false" aria-controls="drawer"><svg class="i" viewBox="0 0 24 24"><path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2"/></svg><span class="lbl" data-i18n="navLegend">Cores e sons</span></button>
         <button class="navbtn" data-panel="ad" aria-expanded="false" aria-controls="drawer"><svg class="i" viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg><span class="lbl" data-i18n="navAd">Audiodescrição</span></button>
         <button class="navbtn" data-panel="sound" aria-expanded="false" aria-controls="drawer"><svg class="i" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg><span class="lbl" data-i18n="navSound">Som</span></button>
-        <button class="navbtn" data-panel="vib" aria-expanded="false" aria-controls="drawer" aria-keyshortcuts="V"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 17.5h2M3.5 9v6M20.5 9v6"/></svg><span class="lbl" data-i18n="navVib">Vibração</span></button>
         <button class="navbtn" data-panel="about" aria-expanded="false" aria-controls="drawer"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><span class="lbl" data-i18n="navAbout">Sobre</span></button>
       </div>
       <div class="mfoot">
@@ -580,25 +598,6 @@ dialog .tech{font-size:.82rem;color:var(--muted)}
         </div>
       </section>
 
-      <!-- VIBRAÇÃO -->
-      <section class="dpanel vibpanel" id="dVib" aria-labelledby="vibTitle" hidden>
-        <div class="dhead"><div><div class="kicker" data-i18n="kVib">Tato</div><h2 id="vibTitle" data-i18n="navVib">Vibração</h2></div><button class="dclose" data-close aria-label="Fechar"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-        <div class="dbody">
-          <div class="switchrow"><span class="lbl" style="font-weight:600" id="vibSwLbl" data-i18n="vibSwitchLbl">Vibrar ao tocar o mapa</span><button class="switch" id="vibSwitch" role="switch" aria-checked="true" aria-labelledby="vibSwLbl vibSwitchTxt"><span class="trk" aria-hidden="true"></span><span id="vibSwitchTxt">Ligada</span></button></div>
-          <p class="vstat" id="vibStatus" role="status"></p>
-          <div class="grp" role="group" aria-labelledby="vibStrLbl"><span class="lbl" id="vibStrLbl" data-i18n="vibStrength">Intensidade</span><div class="chips" id="vibChips"></div></div>
-          <div class="adopts">
-            <label class="check"><input type="checkbox" id="vibTexture" checked> <span data-i18n="vibTexture">Textura: pulsa no ritmo do dado enquanto o dedo desliza</span></label>
-            <label class="check"><input type="checkbox" id="vibBorders" checked> <span data-i18n="vibBorders">Bordas: toque duplo ao mudar de cor ou de camada</span></label>
-            <label class="check"><input type="checkbox" id="vibEvents" checked> <span data-i18n="vibEvents">Eventos: padrão próprio para raios e objetos</span></label>
-            <label class="check"><input type="checkbox" id="vibSweep"> <span data-i18n="vibSweep">Vibrar também durante a reprodução</span></label>
-          </div>
-          <div class="dsec"><h3 data-i18n="vibLevelsT">Níveis de vibração</h3><p class="lsub" data-i18n="vibLevelsSub">Toque em Testar para sentir cada nível.</p><ul class="vlevels" id="vibLevels"></ul></div>
-          <div class="dsec"><h3 data-i18n="vibMapT">Neste mapa</h3><ul class="vmap" id="vibMap"></ul></div>
-          <div class="note"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width:16px;height:16px"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><span data-i18n="vibNote">O navegador só liga e desliga o motor. A força é simulada pela duração e pelo ritmo dos pulsos.</span></div>
-        </div>
-      </section>
-
       <!-- SOBRE -->
       <section class="dpanel about" id="dAbout" aria-labelledby="aboutTitle" hidden>
         <div class="dhead"><div><div class="kicker" data-i18n="kAbout">Contexto</div><h2 id="aboutTitle" data-i18n="aboutTitle">Sobre esta imagem</h2></div><button class="dclose" data-close aria-label="Fechar"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
@@ -636,6 +635,11 @@ dialog .tech{font-size:.82rem;color:var(--muted)}
 
     <div class="rightcol" id="rightcol">
       <div class="pill"><span class="p1"><i aria-hidden="true"></i><span id="pillTxt">—</span></span><a id="svsLink" href="#" target="_blank" rel="noopener">NASA SVS<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg></a></div>
+      <section class="card gcard" id="gazeCard" aria-labelledby="gzCardT" hidden>
+        <div class="row"><div class="kicker" id="gzCardT" data-i18n="gzCardT">Controle pelo olhar</div><span class="bdg">beta</span></div>
+        <div class="gzrow"><div class="gzcam" id="gzCamBox"><video id="gzVid" muted playsinline></video></div><div class="gzst"><b><i id="gzDotSt" aria-hidden="true"></i><span id="gzState">—</span></b><small id="gzInfo"></small></div></div>
+        <div class="acts"><button class="btns" id="gzRecal" type="button" data-i18n="gzRecal">Recalibrar</button><button class="btns" id="gzOffBtn" type="button" data-i18n="gzStop">Desligar</button></div>
+      </section>
       <section class="card mcard" id="mediaCard" aria-labelledby="mcLbl" hidden>
         <div class="row"><div class="kicker" id="mcLbl" data-i18n="mcKicker">Seu arquivo</div><span class="bdg" id="mcBadge" hidden></span></div>
         <h4 id="mcName">—</h4>
@@ -688,12 +692,12 @@ dialog .tech{font-size:.82rem;color:var(--muted)}
 <div data-lang="pt">
   <div class="kicker">Documentação aberta</div>
   <h2>Como funciona o Ecos da Terra</h2>
-  <p class="lead">O Ecos da Terra transforma imagens de satélite da NASA em som, voz e vibração, para que quem não enxerga, ou enxerga pouco, explore os mesmos dados que aparecem na tela. Esta seção explica, sem jargão, o que acontece por trás de cada som, quais tecnologias usamos e por quê, o que ainda falta e o que vem a seguir.</p>
+  <p class="lead">O Ecos da Terra transforma imagens de satélite da NASA em som e voz, para que quem não enxerga, ou enxerga pouco, explore os mesmos dados que aparecem na tela. Esta seção explica, sem jargão, o que acontece por trás de cada som, quais tecnologias usamos e por quê, o que ainda falta e o que vem a seguir.</p>
 
   <div class="dgrid">
     <div class="dcard"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M12 12h.01"/></svg></span><h4>Ver</h4><p>Quatro visualizações oficiais do NASA Scientific Visualization Studio, ou a sua própria foto ou vídeo.</p></div>
     <div class="dcard"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></span><h4>Ouvir</h4><p>Cada cor da imagem vira um som. Uma voz explica o que é cada som e descreve o ponto que você toca.</p></div>
-    <div class="dcard"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 17.5h2M3.5 9v6M20.5 9v6"/></svg></span><h4>Sentir</h4><p>No celular Android, a tela vibra mais forte onde o dado é mais intenso, como se o mapa tivesse textura.</p></div>
+    <div class="dcard"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M12 12h.01"/></svg></span><h4>Comandar com o olhar</h4><p>Com a câmera frontal, o olhar escolhe o ponto do mapa e uma voz guia tudo, sem usar as mãos.</p></div>
   </div>
 
   <h3>Do pixel ao som, em 5 passos</h3>
@@ -702,7 +706,7 @@ dialog .tech{font-size:.82rem;color:var(--muted)}
     <li><b>A leitura.</b> Uma barra vertical percorre a imagem da esquerda para a direita e lê a cor dos pixels daquela coluna.</li>
     <li><b>A tradução.</b> Regras próprias de cada mapa dizem o que cada cor significa. Por exemplo, roxo é poeira do Saara.</li>
     <li><b>O som.</b> Cada fenômeno ganha um timbre. Mais alto na imagem soa mais agudo; mais intenso soa mais forte.</li>
-    <li><b>A voz e o toque.</b> A audiodescrição explica o que se ouve, e a vibração mostra onde o dado se concentra.</li>
+    <li><b>A voz.</b> A audiodescrição explica o que se ouve e descreve cada ponto que você explora.</li>
   </ol>
   <p>Esse método segue a abordagem da própria NASA em <a href="https://svs.gsfc.nasa.gov/13786/" target="_blank" rel="noopener">“Data Sonification: Caldwell 73” (SVS #13786)</a>: a imagem é lida como uma partitura.</p>
 
@@ -713,17 +717,17 @@ dialog .tech{font-size:.82rem;color:var(--muted)}
       <div class="box">Imagens oficiais da NASA<small>já embutidas no arquivo; funcionam sem internet</small></div>
       <div class="box">Sua foto ou vídeo<small>lidos só no seu aparelho</small></div>
       <div class="box">Mouse, dedo e teclado<small>para explorar ponto a ponto</small></div>
+      <div class="box">Câmera frontal<small>para o controle pelo olhar, processada no aparelho</small></div>
     </div>
     <div class="col" role="listitem"><b>2 · Análise</b>
       <div class="box">Leitor de pixels<small>a imagem é desenhada numa tela invisível (Canvas), e as cores de cada coluna são contadas</small></div>
       <div class="box">Regras de cada mapa<small>um dicionário cor → fenômeno, feito a partir das legendas da NASA</small></div>
       <div class="box">Reconhecimento da imagem enviada<small>descobre se é um mapa da NASA, onde está a Terra, o que se move e quais objetos aparecem</small></div>
-      <div class="box opt">Inteligência artificial opcional<small>reconhecimento de objetos e voz neural, baixados só quando usados</small></div>
+      <div class="box opt">Inteligência artificial opcional<small>reconhecimento de objetos, rastreamento do olhar e voz neural, baixados só quando usados</small></div>
     </div>
     <div class="col" role="listitem"><b>3 · Saídas</b>
       <div class="box">Som<small>sintetizado na hora pelo motor de áudio do navegador</small></div>
       <div class="box">Voz<small>audiodescrição da imagem, das regras e de cada ponto</small></div>
-      <div class="box">Vibração<small>pulsos curtos, mais fortes onde o dado é mais intenso</small></div>
       <div class="box">Tela acessível<small>leitor de tela, atalhos, texto ampliável, português e inglês</small></div>
     </div>
   </div>
@@ -740,26 +744,31 @@ dialog .tech{font-size:.82rem;color:var(--muted)}
       <tr><td>Web Speech API</td><td>Usa as vozes já instaladas no sistema.</td><td>É gratuita, imediata e não envia texto para servidores. No Microsoft Edge, as vozes Natural soam muito humanas.</td></tr>
       <tr><td>Piper (voz neural)</td><td>Voz em português que roda no próprio navegador.</td><td>Muitos aparelhos só têm vozes robóticas. O Piper é de código aberto, não cobra por uso e, depois do primeiro download, funciona sem internet.</td></tr>
       <tr><td>Human (TensorFlow.js)</td><td>Reconhece pessoas, veículos, animais e objetos nas fotos e vídeos enviados.</td><td>Biblioteca gratuita que roda na placa de vídeo do próprio aparelho: a imagem não sai do navegador.</td></tr>
-      <tr><td>Vibration API</td><td>Faz o celular vibrar quando você desliza o dedo pelo mapa.</td><td>É um padrão da web e dispensa aplicativo. Como ela só liga e desliga o motor, simulamos a força pela duração e pelo ritmo dos pulsos.</td></tr>
+      <tr><td>Human: rosto, malha e íris</td><td>Acompanha os olhos pela câmera no controle pelo olhar.</td><td>É a mesma biblioteca do reconhecimento de objetos, com modelos do MediaPipe (BlazeFace, FaceMesh e Iris) que marcam 478 pontos do rosto, íris incluídas. Roda no aparelho, sem enviar a imagem da câmera.</td></tr>
       <tr><td>Método NASA SVS #13786</td><td>Define como cor, altura e intensidade viram som.</td><td>É uma metodologia de sonificação publicada pela própria NASA, o que dá coerência científica às escolhas sonoras.</td></tr>
     </tbody>
   </table></div>
 
-  <h3>A vibração em detalhe</h3>
-  <p>Ao deslizar o dedo pelo mapa, o celular pulsa no ritmo do dado. Com o dedo parado, ele não vibra, como quando passamos a mão numa superfície com textura. Cada camada tem um nível de 0 a 5, e cores mais intensas sobem o nível dentro da camada. No mapa de florestas, o nível acompanha a altura das árvores.</p>
+  <h3 id="olhar">O controle pelo olhar em detalhe</h3>
+  <p>Para quem não pode usar as mãos, ou tem baixa visão e usa a visão que ainda tem, o Ecos da Terra pode ser comandado pelo olhar. Basta uma câmera frontal comum. Ligue pelo botão <b>Controle pelo olhar</b>, no topo, ou pela tecla <b>O</b>.</p>
+  <ol class="flow">
+    <li><b>A câmera.</b> Cerca de 20 vezes por segundo, a imagem da câmera frontal é analisada no próprio aparelho.</li>
+    <li><b>O rosto.</b> Uma IA marca 478 pontos do rosto, incluindo o centro de cada íris, os cantos dos olhos e as pálpebras.</li>
+    <li><b>Os olhos.</b> O programa mede onde a íris está dentro de cada olho, quanto as pálpebras estão abertas e para onde a cabeça aponta.</li>
+    <li><b>A calibração.</b> Uma voz guia: com a cabeça reta, você olha para o centro, para a esquerda e a direita, para cima e para baixo e para os cantos, e um bipe avisa quando pode mudar. Com isso, o app aprende como os seus olhos se movem.</li>
+    <li><b>A ação.</b> Um filtro tira o tremor natural do olhar. Fixar um lugar por um instante aciona aquele ponto.</li>
+  </ol>
   <div class="tscroll"><table class="ttable">
-    <thead><tr><th scope="col">Nível</th><th scope="col">Pulso</th><th scope="col">Exemplos</th></tr></thead>
+    <thead><tr><th scope="col">Você faz</th><th scope="col">O Ecos da Terra responde</th></tr></thead>
     <tbody>
-      <tr><td>0 · Nenhuma</td><td>sem vibração</td><td>oceano, espaço, áreas sem dado</td></tr>
-      <tr><td>1 · Muito leve</td><td>10 ms a cada 240 ms</td><td>continente sem fenômeno; branco nas fotos</td></tr>
-      <tr><td>2 · Leve</td><td>16 ms a cada 170 ms</td><td>sal marinho, luz sem mudança; azul e verde nas fotos</td></tr>
-      <tr><td>3 · Média</td><td>24 ms a cada 120 ms</td><td>poeira do Saara, luz que diminuiu; laranja e roxo nas fotos</td></tr>
-      <tr><td>4 · Forte</td><td>34 ms a cada 85 ms</td><td>fumaça de queimadas, luzes novas; vermelho e objetos nas fotos</td></tr>
-      <tr><td>5 · Muito forte</td><td>46 ms a cada 60 ms</td><td>raios e as florestas mais altas</td></tr>
+      <tr><td>Olha um ponto do mapa por 1,2 s</td><td>toca o som daquele lugar e diz o que há ali e em que região do planeta</td></tr>
+      <tr><td>Olha o canto de cima, à esquerda ou à direita</td><td>volta ao mapa anterior ou passa ao próximo</td></tr>
+      <tr><td>Olha o canto de baixo, à esquerda</td><td>toca ou pausa a varredura</td></tr>
+      <tr><td>Olha o canto de baixo, à direita</td><td>descreve a imagem inteira</td></tr>
+      <tr><td>Fecha os olhos por meio segundo</td><td>toca ou pausa (piscadas normais são ignoradas)</td></tr>
     </tbody>
   </table></div>
-  <p>Também há padrões especiais. Um toque duplo marca a passagem para outra cor ou camada, um pulso longo marca um raio, e três toques rápidos marcam um objeto reconhecido. No painel <b>Vibração</b>, você escolhe a intensidade (suave, média ou forte), liga ou desliga cada tipo de pulso e testa cada nível.</p>
-  <p><b>Onde funciona:</b> em celulares Android, no Chrome, no Edge, no Samsung Internet e no Opera. No iPhone, o Safari não deixa sites controlarem a vibração; usamos um toque simples experimental (iOS 18 ou mais novo), sem níveis. O Firefox deixou de oferecer o recurso em 2024.</p>
+  <p>Um círculo roxo mostra para onde o app acha que você está olhando, e um anel se completa durante a fixação. O tempo de fixação pode ser 0,8 s, 1,2 s ou 1,8 s. A câmera e o círculo podem ser escondidos. Funciona melhor com o rosto bem iluminado, a uns 50 cm da tela e a cabeça parada. Toda a experiência é narrada: a audiodescrição liga sozinha com o controle pelo olhar, inclusive para avisar quando o rosto sai da câmera. Se mudar de posição, recalibre: leva cerca de 45 segundos.</p>
 
   <h3>Acessibilidade em primeiro lugar</h3>
   <ul class="checks">
@@ -767,34 +776,33 @@ dialog .tech{font-size:.82rem;color:var(--muted)}
     <li><b>Audiodescrição completa:</b> descreve a imagem, as regras de som e o fenômeno do momento. A música abaixa enquanto a voz fala.</li>
     <li><b>Exploração ponto a ponto:</b> com mouse, dedo ou setas do teclado, o app diz o que há em cada lugar e em que região do planeta.</li>
     <li><b>Leitor de tela:</b> mudanças importantes são anunciadas automaticamente, e todos os botões têm nome.</li>
-    <li><b>Teclado completo:</b> todos os comandos têm atalho (Espaço, setas, L, A, D, R, E, V, U, M, 1 a 5).</li>
+    <li><b>Teclado completo:</b> todos os comandos têm atalho (Espaço, setas, L, A, D, R, E, O, U, M, 1 a 5).</li>
     <li><b>Baixa visão:</b> texto em três tamanhos, cores com bom contraste e foco sempre visível.</li>
     <li><b>Movimento reduzido:</b> animações desligadas para quem pede isso nas configurações do sistema.</li>
     <li><b>Dois idiomas:</b> português e inglês, inclusive na voz.</li>
-    <li><b>Tato:</b> vibração em níveis, para quem ouve pouco ou quer reforçar o som.</li>
+    <li><b>Sem as mãos:</b> controle pelo olhar, com fixação e piscada longa.</li>
     <li><b>Sem barreiras:</b> não pede cadastro, login nem instalação.</li>
   </ul>
 
   <h3>Privacidade</h3>
-  <p>Fotos e vídeos são analisados só no seu aparelho: nada é enviado para servidores. A internet só entra em cena, e apenas se você usar esses recursos, para baixar as bibliotecas gratuitas de IA (reconhecimento de objetos e voz neural). A voz neural fica guardada no navegador depois do primeiro download. O app não usa cookies de rastreamento e não coleta dados.</p>
+  <p>Fotos e vídeos são analisados só no seu aparelho: nada é enviado para servidores. A internet só entra em cena, e apenas se você usar esses recursos, para baixar as bibliotecas gratuitas de IA (reconhecimento de objetos e voz neural). A voz neural fica guardada no navegador depois do primeiro download. No controle pelo olhar, a imagem da câmera é analisada quadro a quadro no próprio aparelho e descartada em seguida: nada é gravado nem enviado. O app não usa cookies de rastreamento e não coleta dados.</p>
 
   <h3>Limitações deste MVP</h3>
   <ul>
     <li><b>Lemos a imagem, não os dados brutos.</b> As regras interpretam cores. Valores exatos, como a concentração de aerossol, são aproximados a partir da cor.</li>
     <li><b>Geografia simplificada.</b> Os contornos dos continentes são aproximados; um ponto colado à costa pode receber o nome da região vizinha.</li>
-    <li><b>Vibração limitada pelo navegador.</b> Não funciona no Firefox, e no iPhone há só um toque experimental. A força do motor é simulada.</li>
     <li><b>Voz neural pesada.</b> Na primeira vez, baixa cerca de 90 MB. Até terminar, fala a voz do sistema.</li>
     <li><b>Objetos precisam de internet na primeira vez.</b> O modelo reconhece 80 tipos comuns de objeto e pode errar em imagens escuras ou incomuns.</li>
     <li><b>Aparelhos simples.</b> Vídeos são analisados em resolução reduzida, e a voz neural pode levar alguns segundos para começar.</li>
+    <li><b>Controle pelo olhar em beta.</b> Uma câmera comum erra o ponto do olhar em 2 a 4 cm na tela. Por isso, os alvos são grandes (regiões do mapa e cantos da tela). Óculos com reflexo, pouca luz e mudar a cabeça de lugar pioram a precisão; nesses casos, recalibre.</li>
     <li><b>Escopo.</b> Quatro visualizações da NASA foram calibradas uma a uma. Outras imagens da NASA só são reconhecidas automaticamente quando seguem o mesmo padrão de cores.</li>
   </ul>
 
   <h3 id="roadmap">Próximas funcionalidades</h3>
   <div class="feat">
     <span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M12 12h.01"/></svg></span>
-    <div><span class="tagp soon">Em breve</span><h4 class="inl">Controle pelo olhar, com IA</h4>
-      <p>Com a câmera frontal do aparelho, um modelo de IA vai localizar a íris e estimar para onde a pessoa olha no mapa. Olhar um ponto por cerca de um segundo vai bastar para ouvir a descrição e o som daquele lugar. Olhar para os cantos ou piscar de propósito vai abrir menus, tocar, pausar e trocar de mapa, depois de uma calibração rápida de 9 pontos.</p>
-      <p>O recurso foi pensado para pessoas com mobilidade reduzida e para quem tem baixa visão e usa a visão que ainda tem. As tecnologias previstas são o MediaPipe Face Landmarker, que marca os pontos da íris, ou o WebGazer.js. Ambos rodam no próprio aparelho, sem enviar a imagem da câmera.</p></div>
+    <div><span class="tagp done">Já disponível · beta</span><h4 class="inl">Controle pelo olhar, com IA</h4>
+      <p>O controle pelo olhar já funciona (veja <a href="#olhar">como usar</a>). Os próximos passos são: calibração contínua, que se ajusta sozinha enquanto a pessoa usa; compensação do movimento da cabeça, para não precisar recalibrar; teclado e menus radiais pelo olhar; e um modelo de IA treinado especificamente para estimar o olhar, mais preciso em câmeras simples.</p></div>
   </div>
   <div class="dgrid">
     <div class="dcard wide"><span class="tagp next">Próximo</span><h4 class="inl">Sons realistas do que está no mapa</h4>
@@ -810,14 +818,6 @@ dialog .tech{font-size:.82rem;color:var(--muted)}
         <li><b>Luz que se apagou</b>cidade silenciando</li>
       </ul>
       <p>Esses sons podem ser sintetizados na hora (síntese granular, sem arquivos) ou vir de bancos de sons livres (CC0), com um seletor “musical ou realista”.</p></div>
-    <div class="dcard wide"><span class="tagp done">Já funciona no Android</span><h4 class="inl">Vibração em mais aparelhos</h4>
-      <p>A vibração em níveis já funciona em celulares Android. Os próximos passos levam o toque a outros aparelhos:</p>
-      <ul class="snd">
-        <li><b>iPhone</b>versão em aplicativo, que pode usar o motor de vibração que o Safari bloqueia para sites</li>
-        <li><b>Controles de videogame</b>força real do motor, de 0 a 100%, pela Gamepad API</li>
-        <li><b>Relógios e pulseiras</b>toques no pulso, com as mãos livres</li>
-        <li><b>Luvas e canetas hápticas</b>a textura do mapa sentida na ponta dos dedos</li>
-      </ul></div>
     <div class="dcard"><h4>Áudio 3D</h4><p>Com fones de ouvido, cada fenômeno vai soar da direção em que está no mapa, ao redor da cabeça (áudio espacial HRTF).</p></div>
     <div class="dcard"><h4>Comandos de voz</h4><p>“O que tem sobre o Brasil?”, “vá para a Amazônia”, “mais rápido”: navegação sem tela, pelo reconhecimento de fala do navegador.</p></div>
     <div class="dcard"><h4>Assistente com IA</h4><p>Perguntas livres sobre o mapa, como “onde a fumaça está mais densa?”, respondidas a partir dos dados da imagem e com a fonte citada.</p></div>
@@ -839,12 +839,12 @@ dialog .tech{font-size:.82rem;color:var(--muted)}
 <div data-lang="en" hidden>
   <div class="kicker">Open documentation</div>
   <h2>How Ecos da Terra works</h2>
-  <p class="lead">Ecos da Terra (“Earth Echoes”) turns NASA satellite images into sound, voice and vibration, so that people who are blind or have low vision can explore the same data shown on screen. This section explains, without jargon, what happens behind each sound, which technologies we use and why, what is still missing and what comes next.</p>
+  <p class="lead">Ecos da Terra (“Earth Echoes”) turns NASA satellite images into sound and voice, so that people who are blind or have low vision can explore the same data shown on screen. This section explains, without jargon, what happens behind each sound, which technologies we use and why, what is still missing and what comes next.</p>
 
   <div class="dgrid">
     <div class="dcard"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M12 12h.01"/></svg></span><h4>See</h4><p>Four official visualizations from NASA’s Scientific Visualization Studio, or your own photo or video.</p></div>
     <div class="dcard"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></span><h4>Hear</h4><p>Each color in the image becomes a sound. A voice explains each sound and describes the point you touch.</p></div>
-    <div class="dcard"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 17.5h2M3.5 9v6M20.5 9v6"/></svg></span><h4>Feel</h4><p>On Android phones, the screen vibrates harder where the data is more intense, as if the map had texture.</p></div>
+    <div class="dcard"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M12 12h.01"/></svg></span><h4>Control with your eyes</h4><p>With the front camera, your gaze picks the point on the map and a voice guides everything, hands free.</p></div>
   </div>
 
   <h3>From pixel to sound, in 5 steps</h3>
@@ -853,7 +853,7 @@ dialog .tech{font-size:.82rem;color:var(--muted)}
     <li><b>The reading.</b> A vertical bar sweeps the image from left to right and reads the color of the pixels in that column.</li>
     <li><b>The translation.</b> Rules made for each map say what each color means. For example, purple is Saharan dust.</li>
     <li><b>The sound.</b> Each phenomenon gets a timbre. Higher in the image sounds higher in pitch; more intense sounds louder.</li>
-    <li><b>Voice and touch.</b> Audio description explains what you hear, and vibration shows where the data is concentrated.</li>
+    <li><b>The voice.</b> Audio description explains what you hear and describes every point you explore.</li>
   </ol>
   <p>This method follows NASA’s own approach in <a href="https://svs.gsfc.nasa.gov/13786/" target="_blank" rel="noopener">“Data Sonification: Caldwell 73” (SVS #13786)</a>: the image is read like a musical score.</p>
 
@@ -864,17 +864,17 @@ dialog .tech{font-size:.82rem;color:var(--muted)}
       <div class="box">Official NASA images<small>built into the file; they work offline</small></div>
       <div class="box">Your photo or video<small>read only on your device</small></div>
       <div class="box">Mouse, finger and keyboard<small>to explore point by point</small></div>
+      <div class="box">Front camera<small>for eye control, processed on the device</small></div>
     </div>
     <div class="col" role="listitem"><b>2 · Analysis</b>
       <div class="box">Pixel reader<small>the image is drawn on an invisible canvas, and the colors in each column are counted</small></div>
       <div class="box">Rules for each map<small>a color → phenomenon dictionary built from NASA’s legends</small></div>
       <div class="box">Recognition of uploaded images<small>finds out whether it is a NASA map, where Earth is, what moves and which objects appear</small></div>
-      <div class="box opt">Optional artificial intelligence<small>object recognition and neural voice, downloaded only when used</small></div>
+      <div class="box opt">Optional artificial intelligence<small>object recognition, eye tracking and neural voice, downloaded only when used</small></div>
     </div>
     <div class="col" role="listitem"><b>3 · Output</b>
       <div class="box">Sound<small>synthesized on the fly by the browser’s audio engine</small></div>
       <div class="box">Voice<small>audio description of the image, the rules and each point</small></div>
-      <div class="box">Vibration<small>short pulses, stronger where the data is more intense</small></div>
       <div class="box">Accessible screen<small>screen reader, shortcuts, scalable text, Portuguese and English</small></div>
     </div>
   </div>
@@ -891,26 +891,31 @@ dialog .tech{font-size:.82rem;color:var(--muted)}
       <tr><td>Web Speech API</td><td>Uses the voices already installed on the system.</td><td>Free, instant, and it sends no text to any server. In Microsoft Edge, the Natural voices sound very human.</td></tr>
       <tr><td>Piper (neural voice)</td><td>A Portuguese voice that runs inside the browser.</td><td>Many devices only have robotic voices. Piper is open source, has no usage fees and works offline after the first download.</td></tr>
       <tr><td>Human (TensorFlow.js)</td><td>Recognizes people, vehicles, animals and objects in uploaded photos and videos.</td><td>A free library that runs on the device’s own graphics card: the image never leaves the browser.</td></tr>
-      <tr><td>Vibration API</td><td>Makes the phone vibrate as you slide your finger across the map.</td><td>It is a web standard and needs no app. Since it only turns the motor on and off, we simulate strength through pulse length and rhythm.</td></tr>
+      <tr><td>Human: face, mesh and iris</td><td>Follows the eyes through the camera for eye control.</td><td>The same library used for object recognition, with MediaPipe models (BlazeFace, FaceMesh and Iris) that mark 478 face points, irises included. It runs on the device and never sends the camera image anywhere.</td></tr>
       <tr><td>NASA SVS #13786 method</td><td>Defines how color, height and intensity become sound.</td><td>It is a sonification methodology published by NASA itself, which gives the sound design scientific consistency.</td></tr>
     </tbody>
   </table></div>
 
-  <h3>Vibration in detail</h3>
-  <p>As you slide your finger over the map, the phone pulses to the rhythm of the data. With your finger still, it does not vibrate, just like running your hand over a textured surface. Each layer has a level from 0 to 5, and more intense colors raise the level within the layer. On the forest map, the level follows tree height.</p>
+  <h3 id="olhar-en">Eye control in detail</h3>
+  <p>For people who cannot use their hands, or who have low vision and use their remaining sight, Ecos da Terra can be controlled with the eyes. All it takes is a regular front camera. Turn it on with the <b>Eye control</b> button at the top, or with the <b>O</b> key.</p>
+  <ol class="flow">
+    <li><b>The camera.</b> About 20 times per second, the front camera image is analyzed on the device itself.</li>
+    <li><b>The face.</b> An AI marks 478 face points, including the center of each iris, the corners of the eyes and the eyelids.</li>
+    <li><b>The eyes.</b> The program measures where the iris sits inside each eye, how open the eyelids are and where the head points.</li>
+    <li><b>Calibration.</b> A voice guides you: with your head straight, you look at the center, left and right, up and down, and at the corners, and a beep tells you when to move on. From that, the app learns how your eyes move.</li>
+    <li><b>Action.</b> A filter removes the natural jitter of the gaze. Resting your gaze on a place for a moment triggers that point.</li>
+  </ol>
   <div class="tscroll"><table class="ttable">
-    <thead><tr><th scope="col">Level</th><th scope="col">Pulse</th><th scope="col">Examples</th></tr></thead>
+    <thead><tr><th scope="col">You do</th><th scope="col">Ecos da Terra responds</th></tr></thead>
     <tbody>
-      <tr><td>0 · None</td><td>no vibration</td><td>ocean, space, areas with no data</td></tr>
-      <tr><td>1 · Very light</td><td>10 ms every 240 ms</td><td>land with no phenomenon; white in photos</td></tr>
-      <tr><td>2 · Light</td><td>16 ms every 170 ms</td><td>sea salt, unchanged light; blue and green in photos</td></tr>
-      <tr><td>3 · Medium</td><td>24 ms every 120 ms</td><td>Saharan dust, dimmer lights; orange and purple in photos</td></tr>
-      <tr><td>4 · Strong</td><td>34 ms every 85 ms</td><td>wildfire smoke, new lights; red and objects in photos</td></tr>
-      <tr><td>5 · Very strong</td><td>46 ms every 60 ms</td><td>lightning and the tallest forests</td></tr>
+      <tr><td>Look at a point of the map for 1.2 s</td><td>plays the sound of that place and says what is there and in which region of the planet</td></tr>
+      <tr><td>Look at a top corner, left or right</td><td>goes back to the previous map or on to the next one</td></tr>
+      <tr><td>Look at the bottom-left corner</td><td>plays or pauses the sweep</td></tr>
+      <tr><td>Look at the bottom-right corner</td><td>describes the whole image</td></tr>
+      <tr><td>Close your eyes for half a second</td><td>plays or pauses (normal blinks are ignored)</td></tr>
     </tbody>
   </table></div>
-  <p>There are special patterns too. A double tap marks the move into another color or layer, a long pulse marks lightning, and three quick taps mark a recognized object. In the <b>Vibration</b> panel you pick the strength (soft, medium or strong), turn each pulse type on or off and test every level.</p>
-  <p><b>Where it works:</b> on Android phones, in Chrome, Edge, Samsung Internet and Opera. On iPhone, Safari does not let websites control vibration; we use an experimental single tap (iOS 18 or newer), with no levels. Firefox dropped the feature in 2024.</p>
+  <p>A purple circle shows where the app thinks you are looking, and a ring fills up while you dwell. Dwell time can be 0.8 s, 1.2 s or 1.8 s. The camera image and the circle can be hidden. It works best with a well-lit face, about 50 cm from the screen, and a still head. The whole experience is narrated: audio description turns on by itself with eye control, including warnings when your face leaves the camera. If you move, recalibrate: it takes about 45 seconds.</p>
 
   <h3>Accessibility first</h3>
   <ul class="checks">
@@ -918,34 +923,33 @@ dialog .tech{font-size:.82rem;color:var(--muted)}
     <li><b>Full audio description:</b> describes the image, the sound rules and the current phenomenon. Music ducks while the voice speaks.</li>
     <li><b>Point-by-point exploration:</b> with mouse, finger or arrow keys, the app says what is at each spot and in which region of the planet.</li>
     <li><b>Screen readers:</b> important changes are announced automatically, and every button has a name.</li>
-    <li><b>Full keyboard:</b> every command has a shortcut (Space, arrows, L, A, D, R, E, V, U, M, 1 to 5).</li>
+    <li><b>Full keyboard:</b> every command has a shortcut (Space, arrows, L, A, D, R, E, O, U, M, 1 to 5).</li>
     <li><b>Low vision:</b> three text sizes, good color contrast and an always-visible focus ring.</li>
     <li><b>Reduced motion:</b> animations turn off for people who ask for that in their system settings.</li>
     <li><b>Two languages:</b> Portuguese and English, voice included.</li>
-    <li><b>Touch:</b> levelled vibration for people who hear little or want to reinforce the sound.</li>
+    <li><b>Hands free:</b> eye control, with dwell and long blink.</li>
     <li><b>No barriers:</b> no sign-up, login or installation.</li>
   </ul>
 
   <h3>Privacy</h3>
-  <p>Photos and videos are analyzed only on your device: nothing is sent to any server. The internet is used only to download the free AI libraries (object recognition and neural voice), and only if you use those features. The neural voice stays stored in the browser after the first download. The app uses no tracking cookies and collects no data.</p>
+  <p>Photos and videos are analyzed only on your device: nothing is sent to any server. The internet is used only to download the free AI libraries (object recognition and neural voice), and only if you use those features. The neural voice stays stored in the browser after the first download. For eye control, the camera image is analyzed frame by frame on the device and discarded right away: nothing is recorded or sent. The app uses no tracking cookies and collects no data.</p>
 
   <h3>Limitations of this MVP</h3>
   <ul>
     <li><b>We read the image, not the raw data.</b> The rules interpret colors. Exact values, such as aerosol concentration, are approximated from color.</li>
     <li><b>Simplified geography.</b> Continent outlines are approximate; a point right on a coast may get the name of the neighboring region.</li>
-    <li><b>Vibration limited by the browser.</b> It does not work in Firefox, and on iPhone there is only an experimental tap. Motor strength is simulated.</li>
     <li><b>Heavy neural voice.</b> The first time, it downloads about 90 MB. Until then, the system voice speaks.</li>
     <li><b>Objects need the internet the first time.</b> The model recognizes 80 common object types and can miss in dark or unusual images.</li>
     <li><b>Low-end devices.</b> Videos are analyzed at reduced resolution, and the neural voice can take a few seconds to start.</li>
+    <li><b>Eye control is in beta.</b> A regular webcam misses the gaze point by 2 to 4 cm on screen, so targets are large (map regions and screen corners). Reflective glasses, poor light and moving your head make it worse; in those cases, recalibrate.</li>
     <li><b>Scope.</b> Four NASA visualizations were calibrated one by one. Other NASA images are recognized automatically only when they follow the same color scheme.</li>
   </ul>
 
   <h3 id="roadmap-en">Coming next</h3>
   <div class="feat">
     <span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M12 12h.01"/></svg></span>
-    <div><span class="tagp soon">Coming soon</span><h4 class="inl">Eye control, powered by AI</h4>
-      <p>Using the device’s front camera, an AI model will locate the iris and estimate where the person is looking on the map. Looking at a point for about a second will be enough to hear the description and sound of that place. Looking at the corners or blinking on purpose will open menus, play, pause and switch maps, after a quick 9-point calibration.</p>
-      <p>It is designed for people with limited mobility and for people with low vision who use their remaining sight. The planned technologies are MediaPipe Face Landmarker, which tracks iris landmarks, or WebGazer.js. Both run on the device itself and never send the camera image anywhere.</p></div>
+    <div><span class="tagp done">Available now · beta</span><h4 class="inl">Eye control, powered by AI</h4>
+      <p>Eye control already works (see <a href="#olhar-en">how to use it</a>). Next steps: continuous calibration that adjusts itself during use; head-movement compensation, so you do not need to recalibrate; gaze typing and radial menus; and an AI model trained specifically for gaze estimation, more accurate on basic cameras.</p></div>
   </div>
   <div class="dgrid">
     <div class="dcard wide"><span class="tagp next">Next</span><h4 class="inl">Realistic sounds for what is on the map</h4>
@@ -961,14 +965,6 @@ dialog .tech{font-size:.82rem;color:var(--muted)}
         <li><b>Lights that dimmed</b>a city going quiet</li>
       </ul>
       <p>These sounds can be synthesized on the fly (granular synthesis, no files) or come from free sound libraries (CC0), with a “musical or realistic” switch.</p></div>
-    <div class="dcard wide"><span class="tagp done">Live on Android</span><h4 class="inl">Vibration on more devices</h4>
-      <p>Levelled vibration already works on Android phones. The next steps bring touch to other devices:</p>
-      <ul class="snd">
-        <li><b>iPhone</b>an app version, which can use the vibration motor that Safari blocks for websites</li>
-        <li><b>Game controllers</b>real motor strength, from 0 to 100%, through the Gamepad API</li>
-        <li><b>Watches and bands</b>taps on the wrist, hands free</li>
-        <li><b>Haptic gloves and pens</b>the map’s texture felt at your fingertips</li>
-      </ul></div>
     <div class="dcard"><h4>3D audio</h4><p>With headphones, each phenomenon will sound from its direction on the map, all around your head (HRTF spatial audio).</p></div>
     <div class="dcard"><h4>Voice commands</h4><p>“What is over Brazil?”, “go to the Amazon”, “faster”: screen-free navigation through the browser’s speech recognition.</p></div>
     <div class="dcard"><h4>AI assistant</h4><p>Free-form questions about the map, such as “where is the smoke densest?”, answered from the image data with the source cited.</p></div>
@@ -1009,7 +1005,7 @@ dialog .tech{font-size:.82rem;color:var(--muted)}
 
 
 <dialog id="eyeDlg" aria-labelledby="eyeTitle">
-  <div class="eyehead"><span class="eyeic" aria-hidden="true"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M12 12h.01"/></svg></span><div><div class="kicker" data-i18n="eyeKicker">Em desenvolvimento</div><h3 id="eyeTitle" data-i18n="eyeTitle">Controle pelo olhar, com IA</h3></div></div>
+  <div class="eyehead"><span class="eyeic" aria-hidden="true"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M12 12h.01"/></svg></span><div><div class="kicker" data-i18n="eyeKicker">IA no seu aparelho · beta</div><h3 id="eyeTitle" data-i18n="eyeTitle">Controle pelo olhar</h3></div></div>
   <p style="margin:0" data-i18n="eyeIntro"></p>
   <ul>
     <li data-i18n="eyeL1"></li>
@@ -1017,9 +1013,34 @@ dialog .tech{font-size:.82rem;color:var(--muted)}
     <li data-i18n="eyeL3"></li>
     <li data-i18n="eyeL4"></li>
   </ul>
+  <div class="gzopts">
+    <div class="grp" role="group" aria-labelledby="gzDwellLbl"><span class="lbl" id="gzDwellLbl" data-i18n="gzDwellLbl">Tempo de fixação</span><div class="chips" id="gzDwell"></div></div>
+    <label class="check"><input type="checkbox" id="gzBlink" checked> <span data-i18n="gzBlinkLbl">Piscada longa (meio segundo) toca ou pausa</span></label>
+    <label class="check"><input type="checkbox" id="gzCamOpt" checked> <span data-i18n="gzCamLbl">Mostrar a imagem da câmera</span></label>
+    <label class="check"><input type="checkbox" id="gzDotOpt" checked> <span data-i18n="gzDotLbl">Mostrar o ponto do olhar na tela</span></label>
+  </div>
   <p class="tech" data-i18n="eyeTech"></p>
-  <div class="dlgacts"><a class="btns" id="eyeMore" href="#roadmap" data-i18n="eyeMore">Ver o roteiro</a><button class="btnp" id="eyeClose" data-i18n="close">Fechar</button></div>
+  <div class="dlgacts"><a class="btns" id="eyeMore" href="#olhar" data-i18n="eyeMore">Como funciona</a><button class="btns" id="eyeClose" data-i18n="close">Fechar</button><button class="btns" id="eyeStop" type="button" data-i18n="gzStop" hidden>Desligar</button><button class="btnp" id="eyeStart" type="button" data-i18n="gzStart">Ligar e calibrar</button></div>
 </dialog>
+
+<!-- CONTROLE PELO OLHAR: calibração, ponto do olhar e cantos de ação -->
+<div class="gzcal" id="gzCal" role="dialog" aria-modal="true" aria-labelledby="gzCalT" aria-describedby="gzCalMsg" hidden>
+  <div class="gzbox">
+    <span class="eyeic" aria-hidden="true"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M12 12h.01"/></svg></span>
+    <h3 id="gzCalT" data-i18n="gzCalT">Calibrar o olhar</h3>
+    <p id="gzCalMsg" data-i18n="gzCalIntro">Uma voz vai dizer para onde olhar: centro, esquerda, direita, cima, baixo e os cantos. Mantenha a cabeça reta e parada e mova só os olhos. Leva cerca de 45 segundos.</p>
+    <div class="gzprev" id="gzPrev"><video id="gzPrevVid" muted playsinline></video></div>
+    <p class="gzhint" id="gzHint" role="status"></p>
+    <div class="dlgacts" style="justify-content:center"><button class="btns" id="gzCancel" type="button" data-i18n="gzCancel">Cancelar</button><button class="btnp" id="gzGo" type="button" disabled data-i18n="gzGo">Começar agora</button></div>
+  </div>
+  <div class="gzstep" id="gzStep" aria-live="polite" hidden></div>
+  <div class="gzdot" id="gzDot" hidden></div>
+</div>
+<div class="gzcur" id="gzCur" hidden><svg viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="33" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/></svg></div>
+<div class="gzcorner tl" id="gzTL" data-act="prev" hidden><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-i18n="gzPrev">Mapa anterior</span></div>
+<div class="gzcorner tr" id="gzTR" data-act="next" hidden><span data-i18n="gzNext">Próximo mapa</span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+<div class="gzcorner bl" id="gzBL" data-act="play" hidden><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5.5v13l6-6.5z" fill="currentColor" stroke="none"/><rect x="14.5" y="6" width="3" height="12" rx="1" fill="currentColor" stroke="none"/></svg><span data-i18n="gzPlay">Tocar ou pausar</span></div>
+<div class="gzcorner br" id="gzBR" data-act="describe" hidden><span data-i18n="gzDescribe">Descrever a imagem</span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 8"/></svg></div>
 
 <!-- Imagens oficiais NASA SVS embutidas (JPEG/base64): o app abre com as imagens reais mesmo sem servidor e sem os arquivos ao lado. -->
 <script>
@@ -1892,7 +1913,7 @@ const I18N = {
     voiceLbl: 'Voz', voiceAuto: 'Automática', voiceTestBtn: 'Testar', voiceTest: 'Olá! Eu sou a voz do Ecos da Terra. Passe o mouse ou o dedo sobre o mapa para ouvir cada ponto.',
     voiceHintEdge: 'Para a voz mais humana, abra o app no Microsoft Edge: as vozes Natural, como Francisca e Thalita, são gratuitas.',
     menuMaps: 'Mapas', menuPanels: 'Painéis', navNow: 'Agora no mapa', navLegend: 'Cores e sons', navAd: 'Audiodescrição', navSound: 'Som', navAbout: 'Sobre',
-    menuInfoTitle: '4 visualizações da NASA', menuInfoSub: 'Um mapa por vez, para ver, ouvir e sentir. Ou envie sua foto ou vídeo.', collapse: 'Recolher menu', expand: 'Abrir menu',
+    menuInfoTitle: '4 visualizações da NASA', menuInfoSub: 'Um mapa por vez, para ver e ouvir. Ou envie sua foto ou vídeo.', collapse: 'Recolher menu', expand: 'Abrir menu',
     kNow: 'Tradução científica', kLegend: 'Interpretação', kAd: 'Acessibilidade', kSound: 'Mixagem', kAbout: 'Contexto',
     compTitle: 'Composição desta coluna', compSub: '% dos pixels', goLegend: 'Entender cores e sons',
     legendHead: 'Da cor à percepção', legendNote: 'Toque em um item para ouvir. Associação cor → som segundo o método NASA SVS #13786.',
@@ -1906,8 +1927,8 @@ const I18N = {
     adIdle: 'Desligada. Ligue para ouvir em voz alta a descrição da imagem, as regras de som e cada fenômeno. Os botões abaixo funcionam mesmo com ela desligada.',
     exploreOn: 'Descrição do ponto ativada. Passe o mouse ou o dedo sobre o mapa.', exploreOff: 'Descrição do ponto desativada.',
     exploreHint: 'Passe o mouse ou o dedo sobre o mapa para ouvir o que há em cada ponto.', regionWord: 'Região',
-    keys: [['L', 'ouvir a legenda sonora'], ['Espaço', 'tocar ou pausar'], ['← →', 'mover a barra (Shift: salto maior)'], ['↑ ↓', 'explorar na vertical, com o mapa em foco'], ['Enter', 'descrever o ponto em foco'], ['E', 'descrever o ponto sob mouse ou dedo'], ['V', 'ligar ou desligar a vibração (celular)'], ['A', 'ligar ou desligar a audiodescrição'], ['D', 'descrever a imagem'], ['R', 'ler a tradução atual'], ['1 – 5', 'trocar de disco (5: sua foto ou vídeo)'], ['U', 'enviar foto ou vídeo'], ['M', 'abrir ou recolher o menu'], ['Esc', 'fechar o painel aberto']],
-    subtitle: 'Dados da Terra para ouvir e sentir · equipe Núcleo404 · NASA Space Apps Challenge 2026',
+    keys: [['L', 'ouvir a legenda sonora'], ['Espaço', 'tocar ou pausar'], ['← →', 'mover a barra (Shift: salto maior)'], ['↑ ↓', 'explorar na vertical, com o mapa em foco'], ['Enter', 'descrever o ponto em foco'], ['E', 'descrever o ponto sob mouse ou dedo'], ['O', 'ligar ou desligar o controle pelo olhar'], ['A', 'ligar ou desligar a audiodescrição'], ['D', 'descrever a imagem'], ['R', 'ler a tradução atual'], ['1 – 5', 'trocar de disco (5: sua foto ou vídeo)'], ['U', 'enviar foto ou vídeo'], ['M', 'abrir ou recolher o menu'], ['Esc', 'fechar o painel aberto']],
+    subtitle: 'Dados da Terra para ouvir · equipe Núcleo404 · NASA Space Apps Challenge 2026',
     tracks: 'Discos · Catálogo NASA SVS', credits: 'Citações NASA',
     play: 'Tocar', pause: 'Pausar', stop: 'Parar e voltar ao início',
     speed: 'Velocidade', speedFine: 'Ajuste fino da velocidade', scale: 'Escala musical', volume: 'Volume mestre', mixTitle: 'Volumes', volSweep: 'Varredura do mapa', volAd: 'Audiodescrição', linkOn: 'Volumes vinculados (mudar um ajusta o outro)', linkOff: 'Volumes independentes', speedSet: s => `Velocidade ${s}×`,
@@ -1972,39 +1993,51 @@ const I18N = {
     detNames: { general: 'imagem comum', earth: 'imagem da Terra', aerosols: 'GEOS Aerosols (NASA)', nightlights: 'Luzes Noturnas (NASA)', lightning: 'Raios da ISS (NASA)', gedi: 'GEDI Florestas (NASA)' },
     detLine: (n, ex) => `Reconhecido: ${n}${ex ? ' · ' + ex : ''}`, geoEq: 'mapa-múndi plano', geoOrth: 'globo terrestre',
     objLoading: 'reconhecendo objetos…', objOff: 'objetos: precisa de internet', objCount: n => n ? `${n} ${n === 1 ? 'objeto' : 'objetos'}` : 'nenhum objeto reconhecido',
-    eyeBtn: 'Controle pelo olhar', eyeBtnFull: 'Controle pelo olhar, com IA: em breve. Saiba mais', soon: 'em breve', eyeKicker: 'Em desenvolvimento · próxima versão', eyeTitle: 'Controle pelo olhar, com IA',
-    eyeIntro: 'Com a câmera frontal do aparelho, uma IA vai localizar a íris dos olhos e estimar para onde você está olhando no mapa. Sem tocar em nada, o Ecos da Terra vai descrever e tocar o som daquele ponto.',
-    eyeL1: 'Olhar um ponto por cerca de um segundo: ouvir a descrição e o som daquele lugar.',
-    eyeL2: 'Olhar para os cantos ou piscar de propósito: abrir menus, tocar, pausar e trocar de mapa.',
-    eyeL3: 'Calibração rápida de 9 pontos, ajustada à distância e à luz do ambiente.',
-    eyeL4: 'Pensado para pessoas com mobilidade reduzida e para quem tem baixa visão e usa a visão que ainda tem.',
-    eyeTech: 'Tudo vai rodar no próprio aparelho, como a análise de fotos e vídeos de hoje: a imagem da câmera não sai do navegador. Tecnologias previstas: MediaPipe Face Landmarker (pontos da íris) ou WebGazer.js.',
-    eyeMore: 'Ver o roteiro', docsLink: 'Como funciona', docsAria: 'Como funciona o Ecos da Terra: documentação', recommended: 'recomendada',
-    navVib: 'Vibração', kVib: 'Tato', vibSwitchLbl: 'Vibrar ao tocar o mapa', vibStrength: 'Intensidade',
-    vibStrNames: { soft: 'Suave', medium: 'Média', strong: 'Forte' },
-    vibTexture: 'Textura: pulsa no ritmo do dado enquanto o dedo desliza', vibBorders: 'Bordas: toque duplo ao mudar de cor ou de camada',
-    vibEvents: 'Eventos: padrão próprio para raios e objetos', vibSweep: 'Vibrar também durante a reprodução',
-    vibLevelsT: 'Níveis de vibração', vibLevelsSub: 'Cada nível é um pulso curto repetido: mais longo e mais frequente quanto mais intenso o dado. Toque em Testar para sentir.',
-    vibMapT: 'Neste mapa', vibNote: 'O navegador só liga e desliga o motor. A força é simulada pela duração e pelo ritmo dos pulsos (modulação por largura de pulso).',
-    vibLvNames: ['Nenhuma', 'Muito leve', 'Leve', 'Média', 'Forte', 'Muito forte'],
-    vibLvDesc: (on, gap) => on ? `pulso de ${on} ms a cada ${gap} ms` : 'sem vibração',
-    vibSpecial: { border: ['Borda', 'toque duplo: mudou a cor ou a camada'], flash: ['Raio', 'pulso longo e forte'], obj: ['Objeto', 'três toques rápidos'] },
-    vibTest: 'Testar', vibByHeight: 'de 1 a 5, conforme a altura das árvores', vibVaries: 'sobe com a intensidade da cor', vibNone: 'sem vibração',
-    vibPatFlash: 'pulso longo ao encontrar um raio', vibPatObj: 'três toques ao encontrar um objeto',
-    vibOn: 'Vibração ligada.', vibOff: 'Vibração desligada.', vibTesting: n => `Testando: ${n}.`,
-    vibStatus: {
-      api: 'Pronto: deslize o dedo pelo mapa e sinta os dados. A primeira vibração acontece depois do primeiro toque na página.',
-      nomotor: 'Este aparelho não parece ter motor de vibração. Abra o Ecos da Terra num celular Android, no Chrome, Edge, Samsung Internet ou Opera.',
-      ios: 'No iPhone, o Safari não deixa sites controlarem a vibração. Usamos um toque simples experimental (iOS 18 ou mais novo), sem níveis.',
-      none: 'Este navegador não permite vibração. No Android, use o Chrome, o Edge, o Samsung Internet ou o Opera.'
-    }
+    eyeBtn: 'Controle pelo olhar', eyeBtnFull: 'Controle pelo olhar, com IA (beta). Tecla O', soon: 'beta', eyeKicker: 'IA no seu aparelho · beta', eyeTitle: 'Controle pelo olhar',
+    eyeIntro: 'A câmera frontal acompanha seus olhos, e o Ecos da Terra descreve o ponto do mapa para onde você olha, sem usar as mãos.',
+    eyeL1: 'Olhe um ponto do mapa por um instante: você ouve o som e a descrição daquele lugar.',
+    eyeL2: 'Olhe para os cantos da tela: em cima, trocar de mapa; embaixo, tocar ou pausar e descrever a imagem.',
+    eyeL3: 'Feche os olhos por meio segundo (piscada longa) para tocar ou pausar.',
+    eyeL4: 'Antes, uma calibração de cerca de 45 segundos guiada por voz: com a cabeça reta e parada, você olha para o centro, para a esquerda e a direita, para cima e para baixo e para os cantos da tela.',
+    eyeTech: 'Tudo roda no navegador: a imagem da câmera não sai do aparelho. Funciona melhor com boa luz, o rosto a uns 50 cm da tela e a cabeça parada. Na primeira vez, baixa cerca de 5 MB de modelos de IA (rosto, malha facial e íris).',
+    eyeMore: 'Como funciona',
+    gzStart: 'Ligar e calibrar', gzStop: 'Desligar', gzRecal: 'Recalibrar', gzCancel: 'Cancelar', gzGo: 'Começar agora', gzCardT: 'Controle pelo olhar',
+    gzDwellLbl: 'Tempo de fixação', gzBlinkLbl: 'Piscada longa (meio segundo) toca ou pausa', gzCamLbl: 'Mostrar a imagem da câmera', gzDotLbl: 'Mostrar o ponto do olhar na tela',
+    gzCalT: 'Calibrar o olhar', gzCalIntro: 'Uma voz vai dizer para onde olhar: centro, esquerda, direita, cima, baixo e os cantos. Mantenha a cabeça reta e parada e mova só os olhos. Leva cerca de 45 segundos.',
+    eyeStartHint: 'Para ligar, pressione a tecla O ou o botão Ligar e calibrar.',
+    gzPrepSay: 'Ligando a câmera. Fique de frente para a tela, a uns 50 centímetros, com o rosto iluminado.',
+    gzFindSay: 'Procurando seu rosto. Fique de frente para a tela e mantenha a cabeça reta.',
+    gzLost: 'Não encontro mais seu rosto. Volte a ficar de frente para a tela.', gzBack: 'Rosto encontrado de novo.',
+    gzDir: {
+      c: 'Olhe para o centro da tela, bem à sua frente.',
+      l: 'Agora, sem virar a cabeça, vire os olhos para a esquerda, até a borda da tela.',
+      r: 'Vire os olhos para a direita, até a outra borda da tela.',
+      u: 'Volte ao meio e olhe para cima, para a parte de cima da tela.',
+      d: 'Agora olhe para baixo, para a parte de baixo da tela.',
+      ul: 'Olhe para o canto de cima, à esquerda.',
+      ur: 'Olhe para o canto de cima, à direita.',
+      dl: 'Olhe para o canto de baixo, à esquerda.',
+      dr: 'Por último, olhe para o canto de baixo, à direita.'
+    },
+    gzDoneSay: q => `Calibração concluída. Precisão ${q}.`,
+    gzPrep: 'Ligando a câmera e carregando a IA…', gzFind: 'Procurando seu rosto…', gzFound: 'Rosto encontrado. A calibração começa agora.',
+    gzNoFace: 'Não encontrei seu rosto. Olhe para a tela, aproxime-se e melhore a luz.', gzTip: 'Fique a uns 50 cm da tela, com o rosto bem iluminado.',
+        gzCalSay: 'Calibração do olhar. Mantenha a cabeça reta e parada, de frente para a tela. Mova só os olhos. Vou dizer para onde olhar; mantenha o olhar lá até ouvir um bipe.',
+    gzQ: ['boa', 'média', 'baixa'], gzDone: (q, px) => `Pronto! Precisão estimada: ${q}, cerca de ${px} pixels.`, gzLowTip: 'Para melhorar, recalibre com mais luz e a cabeça parada.',
+    gzOnSay: 'Controle pelo olhar ligado. Olhe um ponto do mapa por um instante para ouvi-lo. Cantos de cima: trocar de mapa. Cantos de baixo: tocar ou pausar, e descrever a imagem.',
+    gzOff: 'Controle pelo olhar desligado.', gzFail: 'Não consegui ver seus olhos em alguns pontos. Vamos tentar de novo: olhe para a tela e melhore a luz.',
+    gzSlow: 'Este aparelho analisou poucas imagens por segundo para acompanhar o olhar. Feche outros programas ou use um computador com placa de vídeo.',
+    gzCamErr: 'Não foi possível usar a câmera. Verifique a permissão do navegador.', gzNetErr: 'O controle pelo olhar precisa de internet na primeira vez, para baixar a IA.',
+    gzPrev: 'Mapa anterior', gzNext: 'Próximo mapa', gzPlay: 'Tocar ou pausar', gzDescribe: 'Descrever a imagem',
+    gzState: { on: 'Ativo', noface: 'Rosto fora da câmera', closed: 'Olhos fechados' },
+    gzInfo: (fps, q, px) => `${fps} leituras por segundo · precisão ${q} (≈ ${px} px)`, gzSec: s => `${String(s).replace('.', ',')} s`, docsLink: 'Como funciona', docsAria: 'Como funciona o Ecos da Terra: documentação', recommended: 'recomendada'
   },
   en: {
     skip: 'Skip to the sound map',
     voiceLbl: 'Voice', voiceAuto: 'Automatic', voiceTestBtn: 'Test', voiceTest: 'Hello! I am the voice of Ecos da Terra. Move the mouse or your finger over the map to hear each point.',
     voiceHintEdge: 'For the most human voice, open the app in Microsoft Edge: its Natural voices are free.',
     menuMaps: 'Maps', menuPanels: 'Panels', navNow: 'Now on the map', navLegend: 'Colors and sounds', navAd: 'Audio description', navSound: 'Sound', navAbout: 'About',
-    menuInfoTitle: '4 NASA visualizations', menuInfoSub: 'One map at a time, to see, hear and feel. Or upload your own photo or video.', collapse: 'Collapse menu', expand: 'Open menu',
+    menuInfoTitle: '4 NASA visualizations', menuInfoSub: 'One map at a time, to see and hear. Or upload your own photo or video.', collapse: 'Collapse menu', expand: 'Open menu',
     kNow: 'Scientific translation', kLegend: 'Interpretation', kAd: 'Accessibility', kSound: 'Mixing', kAbout: 'Context',
     compTitle: 'Composition of this column', compSub: '% of pixels', goLegend: 'Understand colors and sounds',
     legendHead: 'From color to perception', legendNote: 'Tap an item to listen. Color → sound mapping follows the NASA SVS #13786 method.',
@@ -2018,8 +2051,8 @@ const I18N = {
     adIdle: 'Off. Turn it on to hear the image description, the sound rules and each phenomenon read aloud. The buttons below work even while it is off.',
     exploreOn: 'Point description on. Move the mouse or your finger over the map.', exploreOff: 'Point description off.',
     exploreHint: 'Move the mouse or your finger over the map to hear what is at each point.', regionWord: 'Region',
-    keys: [['L', 'play the sound legend'], ['Space', 'play or pause'], ['← →', 'move the playhead (Shift: bigger jump)'], ['↑ ↓', 'explore vertically, with the map focused'], ['Enter', 'describe the focused point'], ['E', 'describe the point under mouse or finger'], ['V', 'turn vibration on or off (phone)'], ['A', 'turn audio description on or off'], ['D', 'describe the image'], ['R', 'read the current translation'], ['1 – 5', 'switch record (5: your photo or video)'], ['U', 'upload photo or video'], ['M', 'open or collapse the menu'], ['Esc', 'close the open panel']],
-    subtitle: 'Earth data to hear and feel · team Núcleo404 · NASA Space Apps Challenge 2026',
+    keys: [['L', 'play the sound legend'], ['Space', 'play or pause'], ['← →', 'move the playhead (Shift: bigger jump)'], ['↑ ↓', 'explore vertically, with the map focused'], ['Enter', 'describe the focused point'], ['E', 'describe the point under mouse or finger'], ['O', 'turn eye control on or off'], ['A', 'turn audio description on or off'], ['D', 'describe the image'], ['R', 'read the current translation'], ['1 – 5', 'switch record (5: your photo or video)'], ['U', 'upload photo or video'], ['M', 'open or collapse the menu'], ['Esc', 'close the open panel']],
+    subtitle: 'Earth data you can hear · team Núcleo404 · NASA Space Apps Challenge 2026',
     tracks: 'Records · NASA SVS Catalog', credits: 'NASA Citations',
     play: 'Play', pause: 'Pause', stop: 'Stop and rewind',
     speed: 'Speed', speedFine: 'Fine speed adjustment', scale: 'Musical scale', volume: 'Master volume', mixTitle: 'Volumes', volSweep: 'Map sweep', volAd: 'Audio description', linkOn: 'Linked volumes (changing one adjusts the other)', linkOff: 'Independent volumes', speedSet: s => `Speed ${s}×`,
@@ -2084,32 +2117,44 @@ const I18N = {
     detNames: { general: 'ordinary image', earth: 'image of Earth', aerosols: 'GEOS Aerosols (NASA)', nightlights: 'Night Lights (NASA)', lightning: 'ISS Lightning (NASA)', gedi: 'GEDI Forests (NASA)' },
     detLine: (n, ex) => `Recognized: ${n}${ex ? ' · ' + ex : ''}`, geoEq: 'flat world map', geoOrth: 'globe',
     objLoading: 'recognizing objects…', objOff: 'objects: needs internet', objCount: n => n ? `${n} ${n === 1 ? 'object' : 'objects'}` : 'no objects recognized',
-    eyeBtn: 'Eye control', eyeBtnFull: 'AI-powered eye control: coming soon. Learn more', soon: 'soon', eyeKicker: 'In development · next version', eyeTitle: 'Eye control, powered by AI',
-    eyeIntro: 'Using the device’s front camera, an AI will locate your irises and estimate where you are looking on the map. Without touching anything, Ecos da Terra will describe that point and play its sound.',
-    eyeL1: 'Look at a point for about a second: hear the description and the sound of that place.',
-    eyeL2: 'Look at the corners or blink on purpose: open menus, play, pause and switch maps.',
-    eyeL3: 'Quick 9-point calibration, adjusted to distance and room lighting.',
-    eyeL4: 'Designed for people with limited mobility and for people with low vision who use their remaining sight.',
-    eyeTech: 'Everything will run on the device itself, like today’s photo and video analysis: the camera image never leaves the browser. Planned technologies: MediaPipe Face Landmarker (iris landmarks) or WebGazer.js.',
-    eyeMore: 'See the roadmap', docsLink: 'How it works', docsAria: 'How Ecos da Terra works: documentation', recommended: 'recommended',
-    navVib: 'Vibration', kVib: 'Touch', vibSwitchLbl: 'Vibrate when touching the map', vibStrength: 'Strength',
-    vibStrNames: { soft: 'Soft', medium: 'Medium', strong: 'Strong' },
-    vibTexture: 'Texture: pulses to the rhythm of the data as your finger slides', vibBorders: 'Edges: double tap when the color or layer changes',
-    vibEvents: 'Events: special patterns for lightning and objects', vibSweep: 'Also vibrate during playback',
-    vibLevelsT: 'Vibration levels', vibLevelsSub: 'Each level is a short repeated pulse: longer and more frequent the more intense the data. Tap Test to feel it.',
-    vibMapT: 'On this map', vibNote: 'The browser can only switch the motor on and off. Strength is simulated through pulse length and rhythm (pulse-width modulation).',
-    vibLvNames: ['None', 'Very light', 'Light', 'Medium', 'Strong', 'Very strong'],
-    vibLvDesc: (on, gap) => on ? `${on} ms pulse every ${gap} ms` : 'no vibration',
-    vibSpecial: { border: ['Edge', 'double tap: the color or layer changed'], flash: ['Lightning', 'long, strong pulse'], obj: ['Object', 'three quick taps'] },
-    vibTest: 'Test', vibByHeight: '1 to 5, following tree height', vibVaries: 'rises with color intensity', vibNone: 'no vibration',
-    vibPatFlash: 'long pulse when it finds lightning', vibPatObj: 'three taps when it finds an object',
-    vibOn: 'Vibration on.', vibOff: 'Vibration off.', vibTesting: n => `Testing: ${n}.`,
-    vibStatus: {
-      api: 'Ready: slide your finger over the map and feel the data. The first vibration happens after your first tap on the page.',
-      nomotor: 'This device does not seem to have a vibration motor. Open Ecos da Terra on an Android phone, in Chrome, Edge, Samsung Internet or Opera.',
-      ios: 'On iPhone, Safari does not let websites control vibration. We use an experimental single tap (iOS 18 or newer), with no levels.',
-      none: 'This browser does not allow vibration. On Android, use Chrome, Edge, Samsung Internet or Opera.'
-    }
+    eyeBtn: 'Eye control', eyeBtnFull: 'AI-powered eye control (beta). O key', soon: 'beta', eyeKicker: 'AI on your device · beta', eyeTitle: 'Eye control',
+    eyeIntro: 'The front camera follows your eyes, and Ecos da Terra describes the point of the map you are looking at, hands free.',
+    eyeL1: 'Look at a point of the map for a moment: you hear the sound and the description of that place.',
+    eyeL2: 'Look at the corners of the screen: at the top, switch maps; at the bottom, play or pause and describe the image.',
+    eyeL3: 'Close your eyes for half a second (long blink) to play or pause.',
+    eyeL4: 'First, a voice-guided calibration of about 45 seconds: with your head straight and still, you look at the center, left and right, up and down, and at the corners of the screen.',
+    eyeTech: 'Everything runs in the browser: the camera image never leaves your device. It works best with good light, your face about 50 cm from the screen and your head still. The first time, it downloads about 5 MB of AI models (face, face mesh and iris).',
+    eyeMore: 'How it works',
+    gzStart: 'Turn on and calibrate', gzStop: 'Turn off', gzRecal: 'Recalibrate', gzCancel: 'Cancel', gzGo: 'Start now', gzCardT: 'Eye control',
+    gzDwellLbl: 'Dwell time', gzBlinkLbl: 'Long blink (half a second) plays or pauses', gzCamLbl: 'Show the camera image', gzDotLbl: 'Show the gaze point on screen',
+    gzCalT: 'Calibrate your gaze', gzCalIntro: 'A voice will tell you where to look: center, left, right, up, down and the corners. Keep your head straight and still and move only your eyes. It takes about 45 seconds.',
+    eyeStartHint: 'To turn it on, press the O key or the Turn on and calibrate button.',
+    gzPrepSay: 'Turning on the camera. Face the screen, about 50 centimeters away, with your face well lit.',
+    gzFindSay: 'Looking for your face. Face the screen and keep your head straight.',
+    gzLost: 'I cannot find your face anymore. Face the screen again.', gzBack: 'Face found again.',
+    gzDir: {
+      c: 'Look at the center of the screen, straight ahead.',
+      l: 'Now, without turning your head, move your eyes to the left, to the edge of the screen.',
+      r: 'Move your eyes to the right, to the other edge of the screen.',
+      u: 'Come back to the middle and look up, at the top of the screen.',
+      d: 'Now look down, at the bottom of the screen.',
+      ul: 'Look at the top left corner.',
+      ur: 'Look at the top right corner.',
+      dl: 'Look at the bottom left corner.',
+      dr: 'Finally, look at the bottom right corner.'
+    },
+    gzDoneSay: q => `Calibration complete. Accuracy ${q}.`,
+    gzPrep: 'Turning on the camera and loading the AI…', gzFind: 'Looking for your face…', gzFound: 'Face found. Calibration starts now.',
+    gzNoFace: 'I cannot find your face. Look at the screen, move closer and improve the light.', gzTip: 'Stay about 50 cm from the screen, with your face well lit.',
+        gzCalSay: 'Gaze calibration. Keep your head straight and still, facing the screen. Move only your eyes. I will tell you where to look; keep looking there until you hear a beep.',
+    gzQ: ['good', 'fair', 'low'], gzDone: (q, px) => `Done! Estimated accuracy: ${q}, about ${px} pixels.`, gzLowTip: 'To improve it, recalibrate with more light and your head still.',
+    gzOnSay: 'Eye control on. Look at a point of the map for a moment to hear it. Top corners: switch maps. Bottom corners: play or pause, and describe the image.',
+    gzOff: 'Eye control off.', gzFail: 'I could not see your eyes at some points. Let us try again: look at the screen and improve the light.',
+    gzSlow: 'This device analyzed too few images per second to follow your gaze. Close other programs or use a computer with a graphics card.',
+    gzCamErr: 'Could not use the camera. Check the browser permission.', gzNetErr: 'Eye control needs the internet the first time, to download the AI.',
+    gzPrev: 'Previous map', gzNext: 'Next map', gzPlay: 'Play or pause', gzDescribe: 'Describe the image',
+    gzState: { on: 'Active', noface: 'Face out of view', closed: 'Eyes closed' },
+    gzInfo: (fps, q, px) => `${fps} reads per second · accuracy ${q} (≈ ${px} px)`, gzSec: s => `${s} s`, docsLink: 'How it works', docsAria: 'How Ecos da Terra works: documentation', recommended: 'recommended'
   }
 };
 const tr = k => I18N[state.lang][k];
@@ -2519,7 +2564,6 @@ function sonifyAt(x, manual = false) {
     state.markers.push({ x, y: n.y, color: t.cats[n.cat].color, t: performance.now() });
   });
   updateTelemetry(a, res, manual);
-  if (!manual) Haptics.sweep(res.dom, res);
 }
 
 const isFlash = (r, g, b) => TRACKS[2].classify(r, g, b) === 'flash';
@@ -2542,7 +2586,6 @@ function scanLightning(x0, x1, force = false) {
         AudioEngine.perc(nf, 0.32, (x / w) * 1.6 - 0.8);
         state.markers.push({ x, y: yc, color: '#facc15', t: performance.now(), big: true });
         state.lastFlash = { f: nf, t: performance.now() };
-        if (!force) Haptics.sweepEvent('flash');
       }
     }
   }
@@ -2640,7 +2683,7 @@ function frame(ts) {
       if (state.acc >= stepDur) { state.acc -= stepDur; sonifyAt(state.x); }
     }
     if (state.track === CUSTOM && CUSTOM.objects && CUSTOM.rid === 'general' && !state.muted.has('obj') && state.x >= prev) {
-      for (const o of CUSTOM.objects) if (prev < o.x && state.x >= o.x) { objCrossed(o); Haptics.sweepEvent('obj'); }
+      for (const o of CUSTOM.objects) if (prev < o.x && state.x >= o.x) objCrossed(o);
     }
     if (lm && state.track.rid === 'general' && !state.muted.has('motion')) {
       state.motAcc += dt;
@@ -3429,7 +3472,7 @@ function updateLegend() {
     });
     box.appendChild(li);
   });
-  updateMini(); buildComp(); renderVibMap();
+  updateMini(); buildComp();
 }
 function highlight(k) { document.querySelectorAll('#legend .litem').forEach(li => li.classList.toggle('now', li.dataset.cat === k)); }
 /* um item: diz nome + cor + som e, em seguida, toca o som */
@@ -3524,8 +3567,8 @@ function applyLang() {
   $('#docs').setAttribute('aria-label', D.docsAria);
   $('#docsBtn').setAttribute('aria-label', D.docsAria); $('#docsBtn').title = D.docsAria;
   $('#eyeBtn').setAttribute('aria-label', D.eyeBtnFull); $('#eyeBtn').title = D.eyeBtnFull;
-  $('#eyeMore').href = L === 'pt' ? '#roadmap' : '#roadmap-en';
-  renderVib();
+  renderGazeDlg(); Gaze.paint();
+  $('#eyeMore').href = L === 'pt' ? '#olhar' : '#olhar-en';
   $('#ruleSel').innerHTML = RULE_IDS.map(r => `<option value="${r}">${esc(D.ruleNames[r])}</option>`).join('');
   updateMediaCard();
   applyUI();
@@ -3566,7 +3609,7 @@ function stop() {
   const m = CUSTOM.media; if (m && m.kind === 'video') { m.video.pause(); m.video.currentTime = 0; m.lastT = -1; }
   if (state.src) { const a = analyzeColumn(0); updateTelemetry(a, state.track.sonify(a, 1), true); updateClock(true); }
 }
-function setAD(on) {
+function setAD(on, quiet) {
   state.ad = on;
   $('#adBtn').setAttribute('aria-pressed', String(on));
   $('#adSwitch').setAttribute('aria-checked', String(on));
@@ -3575,7 +3618,7 @@ function setAD(on) {
   $('#adNote').hidden = Speech.ok;
   document.body.classList.toggle('ad-on', on);
   if (!state.exploreTouched) setExplore(on, false);   // acompanha a audiodescrição até o usuário escolher
-  if (on) { AudioEngine.init(); const id = Speech.neuralId(); if (id && !Neural.st[id]) Neural.load(id); Speech.speak(`${tr('adOn')} ${trackNarration()}`); }
+  if (on) { AudioEngine.init(); const id = Speech.neuralId(); if (id && !Neural.st[id]) Neural.load(id); if (!quiet) Speech.speak(`${tr('adOn')} ${trackNarration()}`); }
   else { Speech.stop(); $('#adText').textContent = tr('adIdle'); announce(tr('adOff')); }
 }
 function setExplore(on, user) {
@@ -3776,11 +3819,9 @@ function pointInfo(x, y, touch = false) {
   const reg = geoOk ? regionAt(xi, yi, hint) : null;
   const muted = !!k && state.muted.has(k);
   const sem = t.custom && t.rid === 'general' && k ? semanticOf(k, yi / h, (r * 0.299 + g * 0.587 + b * 0.114) / 255) : null;
-  const mxc = Math.max(r, g, b), mnc = Math.min(r, g, b);   // intensidade da cor no ponto (0 a 1): base da força da vibração
-  const amt = t.rid === 'nightlights' ? mxc / 255 : clamp((mxc - mnc) / 170, 0, 1);
   if (sem) extra = L === 'pt' ? `provavelmente ${sem.pt}` : `probably ${sem.en}`;
   return {
-    k, c, name, extra, hn, amt, muted, reg: reg ? reg[L] : '', regPos: !!(reg && reg.pos),
+    k, c, name, extra, hn, muted, reg: reg ? reg[L] : '', regPos: !!(reg && reg.pos),
     color: c ? c.color : `rgb(${r},${g},${b})`, fx: xi / w, fy: yi / h,
     key: `${k}|${reg ? reg.pt : ''}|${k === 'forest' ? Math.round(hn * 5) : ''}`,
     spoken: pointSpeech(k, c, reg, hn, muted, name, sem)
@@ -3903,7 +3944,7 @@ stage.addEventListener('pointerdown', e => {
   dragging = true; stage.setPointerCapture(e.pointerId);
   const p = canvasPos(e); lastScrub = performance.now(); scrubAt(p.x, p.y);
   state.exKbd = false; state.ex = { x: p.x, y: p.y };
-  if (e.pointerType !== 'mouse') { clearTimeout(tipHide); exKey = ''; const bp = boxPos(e); Haptics.start(exploreAt(p.x, p.y, bp.x, bp.y, true)); }
+  if (e.pointerType !== 'mouse') { clearTimeout(tipHide); exKey = ''; const bp = boxPos(e); exploreAt(p.x, p.y, bp.x, bp.y, true); }
 });
 stage.addEventListener('pointermove', e => {
   const touch = e.pointerType !== 'mouse';
@@ -3912,8 +3953,7 @@ stage.addEventListener('pointermove', e => {
   state.exKbd = false; state.ex = { x: p.x, y: p.y };
   hover = { x: p.x, y: p.y, bx: bp.x, by: bp.y, touch }; hoverTs = performance.now();
   if (dragging) { const now = performance.now(); if (now - lastScrub >= 90) { lastScrub = now; scrubAt(p.x, p.y); } }
-  const info = exploreAt(p.x, p.y, bp.x, bp.y, touch);
-  if (touch) Haptics.feel(info);   // dedo deslizando: o dado vira vibração
+  exploreAt(p.x, p.y, bp.x, bp.y, touch);
 });
 ['pointerup', 'pointercancel'].forEach(ev => stage.addEventListener(ev, e => {
   if (dragging && !state.explore) narrateSoon();
@@ -4014,6 +4054,7 @@ $('#voiceTest').addEventListener('click', () => {
 
 document.addEventListener('keydown', e => {
   if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (!$('#gzCal').hidden) { if (e.key === 'Escape') { e.preventDefault(); Gaze.stop(true); } return; }   // calibrando: só Esc (cancelar)
   const tag = (e.target.tagName || '').toLowerCase();
   const inForm = ['input', 'select', 'textarea'].includes(tag);
   if (e.code === 'Space') {
@@ -4032,20 +4073,23 @@ document.addEventListener('keydown', e => {
   else if (k === 'r') { if (!state.ad) setAD(true); Speech.speak(readCurrent()); }
   else if (['1', '2', '3', '4', '5'].includes(k)) { AudioEngine.init(); selectTrack(TRACKS[+k - 1].id); }
   else if (k === 'u') { AudioEngine.wake(); $('#fileInput').click(); }
-  else if (k === 'v') setVib(!Haptics.on, true);
+  else if (k === 'o') Gaze.st === 'off' ? Gaze.start() : Gaze.stop(true);
 });
 
 const dlg = $('#creditsDlg');
 $('#creditsBtn').addEventListener('click', () => { if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', ''); });
 $('#credClose').addEventListener('click', () => { if (dlg.close) dlg.close(); else dlg.removeAttribute('open'); });
-/* controle pelo olhar: ainda não implementado; o botão explica o que vem e leva ao roteiro */
+/* controle pelo olhar: o botão abre a configuração (o motor está na seção 11d) */
 const eyeDlg = $('#eyeDlg'), closeEye = () => { if (eyeDlg.close) eyeDlg.close(); else eyeDlg.removeAttribute('open'); };
 $('#eyeBtn').addEventListener('click', () => {
+  renderGazeDlg();
   if (eyeDlg.showModal) eyeDlg.showModal(); else eyeDlg.setAttribute('open', '');
-  if (state.ad) Speech.speak(`${tr('eyeTitle')}. ${tr('soon')}. ${tr('eyeIntro')}`);
+  if (Gaze.st === 'off') Gaze.say(`${tr('eyeTitle')}. ${tr('eyeIntro')} ${tr('eyeStartHint')}`);
 });
-$('#eyeClose').addEventListener('click', () => { closeEye(); if (state.ad) Speech.stop(); });
+$('#eyeClose').addEventListener('click', () => { closeEye(); Speech.stop(); });
 $('#eyeMore').addEventListener('click', closeEye);
+$('#eyeStart').addEventListener('click', () => { closeEye(); Gaze.st === 'on' ? Gaze.recalibrate() : Gaze.start(); });
+$('#eyeStop').addEventListener('click', () => { closeEye(); Gaze.stop(true); });
 
 /* ============================================================
    11c. INTERFACE "SONORA": menu, gavetas, encaixe do mapa e cards
@@ -4057,7 +4101,7 @@ const SCOPE = {
   gedi: { pt: 'África, Europa e Ásia', en: 'Africa, Europe and Asia' }
 };
 const ui = { menu: 'open', panel: null };
-const PANELS = { now: 'dNow', legend: 'legendPanel', ad: 'adPanel', sound: 'dSound', vib: 'dVib', about: 'dAbout' };
+const PANELS = { now: 'dNow', legend: 'legendPanel', ad: 'adPanel', sound: 'dSound', about: 'dAbout' };
 const isNarrow = () => window.matchMedia('(max-width:1000px)').matches;
 function applyUI() {
   document.body.classList.toggle('ui-open', ui.menu === 'open');
@@ -4171,155 +4215,369 @@ window.addEventListener('resize', layoutMap);
 if (window.ResizeObserver) new ResizeObserver(() => layoutMap()).observe($('#stageArea'));
 
 /* ============================================================
-   11d. VIBRAÇÃO: o dado vira toque (Vibration API)
+   11d. CONTROLE PELO OLHAR — IA no próprio aparelho
+   Human (TensorFlow.js) com os modelos BlazeFace + FaceMesh + Iris (MediaPipe): 478 pontos do rosto, íris incluídas.
+   Posição da íris dentro de cada olho + abertura das pálpebras + rotação da cabeça → regressão calibrada em 9 pontos
+   → filtro 1€ (suaviza sem atrasar os saltos do olhar) → fixação (dwell) → descrever o ponto ou acionar um canto.
    ============================================================ */
-// O navegador só liga e desliga o motor: a "força" é simulada pela duração do pulso e pelo intervalo entre pulsos (PWM).
-// Dedo parado não vibra; deslizando, o celular pulsa no ritmo do nível do ponto, como uma textura.
-const HAP = {
-  levels: [null, { on: 10, gap: 240 }, { on: 16, gap: 170 }, { on: 24, gap: 120 }, { on: 34, gap: 85 }, { on: 46, gap: 60 }],
-  str: { soft: { on: 0.65, gap: 1.2 }, medium: { on: 1, gap: 1 }, strong: { on: 1.45, gap: 0.85 } },
-  border: [12, 40, 12],                                        // mudou de cor ou de camada: toque duplo
-  events: { flash: [60, 40, 90], obj: [22, 40, 22, 40, 22] }   // raio: pulso longo · objeto: três toques
+const GZ = {
+  pts: [[0.5, 0.5, 'c'], [0.1, 0.5, 'l'], [0.9, 0.5, 'r'], [0.5, 0.12, 'u'], [0.5, 0.88, 'd'], [0.1, 0.12, 'ul'], [0.9, 0.12, 'ur'], [0.1, 0.88, 'dl'], [0.9, 0.88, 'dr']],   // a voz guia: centro, lados, cima, baixo e cantos
+  settle: 700, collect: 1200, maxCollect: 4000, minSamples: 5, lambda: 0.08,
+  dwells: [0.8, 1.2, 1.8],
+  // pontos da malha (topologia MediaPipe): cantos do olho, íris e pálpebras de cada olho, da esquerda para a direita na imagem
+  eyes: [{ c0: 33, c1: 133, iris: 473, up: 159, lo: 145 }, { c0: 362, c1: 263, iris: 468, up: 386, lo: 374 }]
 };
-const VIB_LV = {   // nível de cada camada (0 a 5); 'h' = conforme a altura da floresta
-  aerosols: { ocean: 0, land: 1, green: 2, purple: 3, red: 4 },
-  nightlights: { ocean: 0, land: 1, neutral: 2, orange: 3, purple: 4 },
-  lightning: { ocean: 0, land: 1, flash: 5 },
-  gedi: { ocean: 0, forest: 'h' },
-  general: { cWhite: 1, cBlue: 2, cGreen: 2, cWarm: 3, cPurple: 3, cRed: 4, edges: 3, motion: 3, obj: 4 }
-};
-// faixa típica da intensidade de cor de cada camada (percentis 10 e 90 medidos nas imagens da NASA):
-// no quarto mais intenso o nível sobe 1; no quarto mais fraco, desce 1
-const VIB_AMT = {
-  aerosols: { green: [0.24, 0.75], purple: [0.23, 0.39], red: [0.56, 0.8] },
-  nightlights: { orange: [0.51, 0.88], purple: [0.44, 0.75], neutral: [0.65, 0.97] }
-};
-const Haptics = {
-  api: typeof navigator.vibrate === 'function',
-  ios: /iP(hone|ad|od)/.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1),
-  touch: (navigator.maxTouchPoints || 0) > 0 || !!(window.matchMedia && matchMedia('(pointer: coarse)').matches),
-  on: true, strength: 'medium', opts: { texture: true, borders: true, events: true, sweep: false },
-  last: 0, busyUntil: 0, lastKey: null, pend: null, lastBorder: 0, sw: null,
+function oneEuro(minCut, beta, dCut = 1) {   // filtro 1€ (Casiez et al., 2012): parado, suaviza muito; em movimento, acompanha rápido
+  let xp = null, dxp = 0, tp = 0;
+  const al = (cut, dt) => { const r = 2 * Math.PI * cut * dt; return r / (r + 1); };
+  const f = (x, t) => {
+    if (xp === null) { xp = x; tp = t; return x; }
+    const dt = Math.max(0.001, (t - tp) / 1000); tp = t;
+    const dx = (x - xp) / dt; dxp += al(dCut, dt) * (dx - dxp);
+    xp += al(minCut + beta * Math.abs(dxp), dt) * (x - xp);
+    return xp;
+  };
+  f.reset = () => { xp = null; dxp = 0; };
+  return f;
+}
+function ridge(X, Y, lam) {   // mínimos quadrados com regularização (o 1º atributo é a constante e não é penalizado)
+  const k = X[0].length, A = Array.from({ length: k }, () => new Float64Array(k + 1));
+  X.forEach((x, n) => { for (let i = 0; i < k; i++) { for (let j = 0; j < k; j++) A[i][j] += x[i] * x[j]; A[i][k] += x[i] * Y[n]; } });
+  for (let i = 1; i < k; i++) A[i][i] += lam;
+  for (let c = 0; c < k; c++) {   // eliminação de Gauss-Jordan com pivô
+    let p = c; for (let r = c + 1; r < k; r++) if (Math.abs(A[r][c]) > Math.abs(A[p][c])) p = r;
+    const tmp = A[c]; A[c] = A[p]; A[p] = tmp;
+    const d = A[c][c] || 1e-9;
+    for (let r = 0; r < k; r++) if (r !== c) { const f = A[r][c] / d; if (f) for (let j = c; j <= k; j++) A[r][j] -= f * A[c][j]; }
+  }
+  return A.map((row, i) => row[k] / (row[i] || 1e-9));
+}
+const median = a => { const v = a.slice().sort((p, q) => p - q), n = v.length; return n ? (n % 2 ? v[n >> 1] : (v[n / 2 - 1] + v[n / 2]) / 2) : 0; };
+const Gaze = {
+  st: 'off',   // off · loading · positioning · calibrating · done · on
+  H: null, hp: null, stream: null, video: null, gen: 0, model: null, err: 0, base: 0.25,
+  prefs: { dwell: 1.2, blink: true, cam: true, dot: true },
+  cal: [], collecting: null, faceSince: 0, lostSince: 0, closedAt: 0, anchor: null, hotKey: null, lastHover: 0,
+  frames: 0, fps: 0, fpsT: 0, face: false, fx: oneEuro(0.4, 0.003), fy: oneEuro(0.4, 0.003), autoT: 0,
   init() {
-    try { const v = JSON.parse(store.get('eij.vib') || 'null'); if (v) { this.on = v.on !== false; if (HAP.str[v.strength]) this.strength = v.strength; Object.assign(this.opts, v.opts || {}); } } catch (e) {}
+    try { const v = JSON.parse(store.get('eij.gaze') || 'null'); if (v) Object.assign(this.prefs, v); } catch (e) {}
+    if (!GZ.dwells.includes(this.prefs.dwell)) this.prefs.dwell = 1.2;
   },
-  save() { store.set('eij.vib', JSON.stringify({ on: this.on, strength: this.strength, opts: this.opts })); },
-  get mode() { return this.api ? (this.touch ? 'api' : 'nomotor') : this.ios ? 'ios' : 'none'; },
-  // iPhone (Safari 18+): o seletor nativo <input switch> dá um toque do sistema; é o único caminho sem app (experimental)
-  tick() {
-    if (!this.sw) {
-      const l = document.createElement('label'), i = document.createElement('input');
-      i.type = 'checkbox'; i.setAttribute('switch', ''); i.tabIndex = -1;
-      l.setAttribute('aria-hidden', 'true'); l.style.cssText = 'position:fixed;left:-9999px;top:0;opacity:0;pointer-events:none';
-      l.appendChild(i); document.body.appendChild(l); this.sw = l;
+  save() { store.set('eij.gaze', JSON.stringify(this.prefs)); },
+  cfg(backend) {   // só rosto, malha e íris: o resto da biblioteca fica desligado
+    return { modelBasePath: OBJ.base + 'models/', backend, debug: false, async: true, warmup: 'none', cacheSensitivity: 0,
+      face: { enabled: true, detector: { rotation: true, maxDetected: 1, return: false }, mesh: { enabled: true }, iris: { enabled: true },
+        attention: { enabled: false }, emotion: { enabled: false }, description: { enabled: false }, antispoof: { enabled: false }, liveness: { enabled: false } },
+      body: { enabled: false }, hand: { enabled: false }, object: { enabled: false }, gesture: { enabled: false }, segmentation: { enabled: false }, filter: { enabled: false } };
+  },
+  loadAI() {
+    if (this.H) return Promise.resolve(true);
+    return this.hp || (this.hp = (async () => {
+      if (!window.Human) await loadScript(OBJ.base + 'dist/human.js');
+      let H;
+      try { H = new Human.Human(this.cfg('webgl')); await H.load(); }
+      catch (e) { H = new Human.Human(this.cfg('cpu')); await H.load(); }
+      this.H = H; return true;
+    })().catch(e => { this.hp = null; throw e; }));
+  },
+  async camera() {
+    if (this.stream) return true;
+    const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }, audio: false });
+    this.stream = s;
+    for (const v of [$('#gzVid'), $('#gzPrevVid')]) { v.srcObject = s; try { await v.play(); } catch (e) {} }
+    this.video = $('#gzVid');
+    return true;
+  },
+  // ------------------------------------------------ ligar · calibrar · desligar
+  async start() {
+    if (this.st !== 'off') return;
+    AudioEngine.wake();
+    if (!state.ad) setAD(true, true);   // no controle pelo olhar, a audiodescrição é automática
+    this.say(tr('gzPrepSay'));
+    this.st = 'loading'; this.showCal('prep'); this.paint();
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { this.stop(); notify(tr('gzCamErr')); return this.say(tr('gzCamErr')); }
+    try { await this.camera(); } catch (e) { this.stop(); notify(tr('gzCamErr')); return this.say(tr('gzCamErr')); }
+    try { await this.loadAI(); } catch (e) { this.stop(); notify(tr('gzNetErr')); return this.say(tr('gzNetErr')); }
+    if (this.st !== 'loading') return;   // cancelado enquanto carregava
+    this.position();
+    const g = ++this.gen; this.loop(g);
+  },
+  position() {   // espera o rosto aparecer; a calibração começa sozinha (sem precisar das mãos)
+    this.st = 'positioning'; this.faceSince = 0; this.autoT = performance.now(); this.lastNoFace = 0;
+    this.showCal('prep'); this.hint(tr('gzFind'));
+    this.say(tr('gzFindSay'));
+  },
+  recalibrate() { if (this.st === 'on' || this.st === 'done') { this.hideGaze(); this.position(); this.paint(); } },
+  say(t, interrupt = true) { $('#adText').textContent = t; return Promise.race([Speech.speak(t, interrupt), sleep(Math.min(12000, 1500 + t.length * 90))]); },
+  stop(user) {
+    const was = this.st;
+    this.gen++; this.st = 'off'; this.collecting = null;
+    if (this.stream) { this.stream.getTracks().forEach(t => t.stop()); this.stream = null; }
+    [$('#gzVid'), $('#gzPrevVid')].forEach(v => { v.srcObject = null; });
+    $('#gzCal').hidden = true; this.hideGaze(); this.paint();
+    if (user && was !== 'off') this.say(tr('gzOff'));
+    $('#eyeBtn').focus({ preventScroll: true });
+  },
+  async loop(g) {
+    while (this.gen === g) {
+      const t0 = performance.now();
+      let ft = null;
+      try { ft = await this.sample(); } catch (e) { ft = null; }
+      if (this.gen !== g) return;
+      this.tickFps(t0);
+      this.process(ft, performance.now());
+      await sleep(Math.max(5, 50 - (performance.now() - t0)));   // até ~20 leituras por segundo
     }
-    try { this.sw.click(); } catch (e) {}
   },
-  raw(p) {   // p = [vibra, pausa, vibra, ...] em ms
-    if (this.api) { try { return navigator.vibrate(p); } catch (e) { return false; } }
-    if (this.ios) { let t = 0; p.forEach((ms, i) => { if (!(i % 2)) setTimeout(() => this.tick(), t); t += Math.max(ms, 60); }); return true; }
-    return false;
+  async sample() {
+    const v = this.video; if (!v || v.readyState < 2 || !v.videoWidth) return null;
+    const r = await this.H.detect(v), f = r && r.face && r.face[0];
+    return f ? this.features(f, v.videoWidth, v.videoHeight) : null;
   },
-  scaled(p) { const k = HAP.str[this.strength]; return p.map((ms, i) => i % 2 ? Math.round(ms * k.gap) : Math.max(8, Math.round(ms * k.on))); },
-  fire(p, now = performance.now()) {
-    const q = this.scaled(p);
-    this.last = now; this.busyUntil = now + q.reduce((a, b) => a + b, 0);
-    return this.raw(q);
+  features(f, W, H) {   // atributos do olhar: íris no sistema de coordenadas de cada olho + pálpebras + cabeça
+    const raw = f.meshRaw && f.meshRaw.length >= 478 ? f.meshRaw.map(p => [p[0] * W, p[1] * H]) : f.mesh;
+    if (!raw || raw.length < 478) return null;
+    const eye = o => {
+      const a = raw[o.c0], b = raw[o.c1], c = raw[o.iris], ax = b[0] - a[0], ay = b[1] - a[1], L2 = ax * ax + ay * ay || 1e-6;
+      const dx = c[0] - a[0], dy = c[1] - a[1];
+      return { u: (dx * ax + dy * ay) / L2, v: (ax * dy - ay * dx) / L2, open: Math.hypot(raw[o.up][0] - raw[o.lo][0], raw[o.up][1] - raw[o.lo][1]) / Math.sqrt(L2) };
+    };
+    const A = eye(GZ.eyes[0]), B = eye(GZ.eyes[1]), rot = (f.rotation && f.rotation.angle) || { yaw: 0, pitch: 0 };
+    const open = (A.open + B.open) / 2;
+    return { raw: [(A.u + B.u) / 2, (A.v + B.v) / 2, open, rot.yaw || 0, rot.pitch || 0], open };
   },
-  level(k, info) {   // nível 0 a 5 do ponto: o da camada, ajustado pela intensidade da cor
-    const base = (VIB_LV[state.track.rid] || {})[k];
-    if (base === 'h') return 1 + Math.round(clamp(info ? info.hn : 0.5, 0, 1) * 4);
-    if (!base) return 0;
-    if (!info || info.amt == null || base <= 1 || k === 'obj' || k === 'flash') return base;
-    const [lo, hi] = (VIB_AMT[state.track.rid] || {})[k] || [0.15, 0.8], n = clamp((info.amt - lo) / (hi - lo), 0, 1);
-    return clamp(base + (n > 0.75 ? 1 : n < 0.25 ? -1 : 0), 1, 5);
+  tickFps(t) {
+    this.frames++;
+    if (t - this.fpsT > 1000) { const r = this.frames * 1000 / (t - this.fpsT); this.fps = r < 3 ? Math.round(r * 10) / 10 : Math.round(r); this.frames = 0; this.fpsT = t; this.paintCard(); }
   },
-  keyOf(info) { return info.k ? info.k + (info.obj ? '|' + info.key : '') : ''; },
-  start(info) {   // dedo encostou: um pulso do nível do ponto, sem "borda"
-    if (!info) return;
-    this.lastKey = this.keyOf(info); this.pend = null; this.last = 0; this.busyUntil = 0;
-    this.feel(info, true);
-  },
-  feel(info, first = false) {
-    if (!this.on || !info || this.mode === 'none') return;
-    const now = performance.now(), key = this.keyOf(info);
-    if (key !== this.lastKey) { this.lastKey = key; this.pend = info.obj ? 'obj' : info.k === 'flash' ? 'flash' : 'border'; }
-    if (now < this.busyUntil) return;
-    if (this.pend) {
-      const p = this.pend; this.pend = null;
-      if (p !== 'border' && this.opts.events) return this.fire(HAP.events[p], now);
-      if (this.opts.borders && now - this.lastBorder > 90) { this.lastBorder = now; return this.fire(HAP.border, now); }
+  process(ft, now) {
+    this.face = !!ft;
+    if (this.st === 'positioning') return this.positioning(ft, now);
+    if (this.st === 'calibrating') { if (ft && this.collecting) this.cal.push({ i: this.collecting.i, tx: this.collecting.x, ty: this.collecting.y, raw: ft.raw, open: ft.open }); return; }
+    if (this.st !== 'on') return;
+    const cur = $('#gzCur');
+    if (!ft) {   // rosto fora da câmera: congela o ponto e a fixação
+      if (!this.lostSince) { this.lostSince = now; this.paintCard(); }
+      if (!this.lostSaid && now - this.lostSince > 2500) { this.lostSaid = true; this.say(tr('gzLost')); }
+      cur.classList.add('lost'); this.anchor = null; this.ring(0); return;
     }
-    const lv = this.level(info.k, info);
-    if (!this.opts.texture || !lv) return;
-    const L = HAP.levels[lv];
-    if (first || now - this.last >= L.gap * HAP.str[this.strength].gap) this.fire([L.on], now);
+    if (this.lostSince) { this.lostSince = 0; this.paintCard(); if (this.lostSaid) { this.lostSaid = false; this.say(tr('gzBack')); } }
+    cur.classList.remove('lost');
+    // piscada longa (meio segundo a dois segundos) = tocar ou pausar; piscadas normais são ignoradas
+    if (ft.open < this.base * 0.55) { if (!this.closedAt) { this.closedAt = now; this.paintCard(); } this.anchor = null; this.ring(0); return; }
+    if (this.closedAt) {
+      const d = now - this.closedAt; this.closedAt = 0; this.paintCard();
+      if (this.prefs.blink && d >= 450 && d <= 2000) { this.action('play', null); return; }
+    }
+    const p = this.predict(ft.raw), W = window.innerWidth, H = window.innerHeight;
+    const x = clamp(this.fx(clamp(p[0], -0.08, 1.08) * W, now), 0, W - 1), y = clamp(this.fy(clamp(p[1], -0.08, 1.08) * H, now), 0, H - 1);
+    this.cur = { x, y };
+    cur.style.transform = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`;
+    this.dwell(x, y, now);
+    if (now - this.lastHover > 220) { this.lastHover = now; this.hover(x, y); }
   },
-  sweep(dom, res) {   // reprodução automática (opcional): um pulso por passo, no nível do fenômeno dominante
-    if (!this.on || !this.opts.sweep || !dom || this.mode === 'none') return;
-    const now = performance.now(); if (now < this.busyUntil) return;
-    const lv = dom === 'forest' && res && res.meters !== undefined ? 1 + Math.round(clamp(res.meters / 55, 0, 1) * 4) : this.level(dom);
-    if (lv) this.fire([HAP.levels[lv].on], now);
+  positioning(ft, now) {
+    const pv = $('#gzPrev'); pv.classList.toggle('ok', !!ft);
+    $('#gzGo').disabled = !ft;
+    if (ft) {
+      if (!this.faceSince) { this.faceSince = now; this.hint(`${tr('gzFound')} ${tr('gzTip')}`, 'good'); }
+      if (now - this.faceSince > 1500) this.calibrate();
+    } else {
+      if (this.faceSince) { this.faceSince = 0; this.autoT = now; this.hint(tr('gzFind')); }
+      else if (now - this.autoT > 8000) {
+        this.hint(tr('gzNoFace'), 'warn');
+        if (now - (this.lastNoFace || 0) > 12000) { this.lastNoFace = now; this.say(tr('gzNoFace')); }   // repete a orientação de tempos em tempos
+      }
+    }
   },
-  sweepEvent(kind) { if (this.on && this.opts.sweep && this.opts.events && this.mode !== 'none') this.fire(HAP.events[kind]); },
-  pattern(lv) { const L = HAP.levels[lv], p = []; for (let t = 0; t < 1300; t += L.gap) p.push(L.on, L.gap - L.on); p.pop(); return p; },
-  test(id) { return this.fire(typeof id === 'number' ? this.pattern(id) : id === 'border' ? HAP.border : HAP.events[id]); }
+  async calibrate() {
+    if (this.st !== 'positioning') return;
+    this.st = 'calibrating'; this.cal = []; this.showCal('run');
+    const g = this.gen, dot = $('#gzDot'), stp = $('#gzStep');
+    await this.say(tr('gzCalSay'));
+    for (let i = 0; i < GZ.pts.length; i++) {
+      if (this.gen !== g || this.st !== 'calibrating') return;
+      const [px, py, dir] = GZ.pts[i], pan = px * 1.6 - 0.8, text = tr('gzDir')[dir];
+      dot.classList.remove('collect'); dot.style.left = px * 100 + '%'; dot.style.top = py * 100 + '%';
+      stp.textContent = `${i + 1}/${GZ.pts.length} · ${text}`;
+      await this.say(text);   // a pessoa não precisa ver o ponto: a voz diz para onde olhar
+      if (this.gen !== g) return;
+      AudioEngine.note({ f: scaleFreq(1 - py, 60, 2), type: 'sine', g: 0.12, a: 0.02, d: 0.1, s: 0.6, hold: 0.25, r: 0.3 }, pan);   // tom do lado e da altura do ponto
+      await sleep(GZ.settle);   // tempo do olho chegar e parar
+      if (this.gen !== g) return;
+      dot.classList.add('collect'); this.collecting = { i, x: px, y: py };
+      const t0 = performance.now();
+      await sleep(GZ.collect);
+      // aparelho lento: espera um pouco mais até ter leituras suficientes deste ponto
+      while (this.gen === g && this.cal.filter(c => c.i === i).length < GZ.minSamples && performance.now() - t0 < GZ.maxCollect) await sleep(100);
+      this.collecting = null;
+      AudioEngine.perc(scaleFreq(0.7, 69, 1), 0.25, pan); AudioEngine.perc(scaleFreq(0.7, 69, 1, 2), 0.18, pan, 0.12);   // bipe: pode mudar o olhar
+      await sleep(250);
+    }
+    if (this.gen !== g) return;
+    const r = this.fit();
+    if (!r.ok) { const m = tr(this.fps < 3 ? 'gzSlow' : 'gzFail'); notify(m); await this.say(m); this.position(); return; }
+    this.err = r.err; this.st = 'done';
+    const q = this.quality(), msg = tr('gzDone')(tr('gzQ')[q], Math.round(r.err)) + (q === 2 ? ' ' + tr('gzLowTip') : '');
+    this.showCal('prep'); $('#gzPrev').classList.add('ok'); $('#gzGo').disabled = true;
+    this.hint(msg, q === 2 ? 'warn' : 'good');
+    await this.say(tr('gzDoneSay')(tr('gzQ')[q]) + (q === 2 ? ' ' + tr('gzLowTip') : ''));
+    if (this.gen !== g || this.st !== 'done') return;
+    this.begin();
+  },
+  quality() { return this.err <= 130 ? 0 : this.err <= 230 ? 1 : 2; },
+  fit() {   // regressão por ponto da tela, com descarte de amostras ruins e validação "deixa um ponto de fora"
+    const byPt = GZ.pts.map(() => []);
+    this.cal.forEach(c => byPt[c.i].push(c));
+    if (byPt.some(a => a.length < GZ.minSamples)) return { ok: false };
+    this.base = median(this.cal.map(c => c.open));
+    const kept = [], meds = [];
+    byPt.forEach(arr => {
+      const ok = arr.filter(c => c.open > this.base * 0.6);   // sem piscadas
+      if (ok.length < 3) return;
+      const m = ok[0].raw.map((_, j) => median(ok.map(c => c.raw[j])));
+      const sc = m.map((_, j) => median(ok.map(c => Math.abs(c.raw[j] - m[j]))) || 1e-6);
+      const d = c => c.raw.reduce((a, v, j) => a + Math.abs(v - m[j]) / sc[j], 0);
+      const keep = ok.slice().sort((p, q) => d(p) - d(q)).slice(0, Math.max(3, Math.ceil(ok.length * 0.7)));
+      kept.push(...keep); meds.push({ i: keep[0].i, tx: keep[0].tx, ty: keep[0].ty, raw: m });
+    });
+    if (meds.length < GZ.pts.length) return { ok: false };
+    const k = kept[0].raw.length, mu = [], sd = [];
+    for (let j = 0; j < k; j++) { const v = kept.map(c => c.raw[j]), m = v.reduce((a, b) => a + b, 0) / v.length; mu.push(m); sd.push(Math.sqrt(v.reduce((a, b) => a + (b - m) ** 2, 0) / v.length) || 1e-6); }
+    const z = r => [1].concat(r.map((v, j) => (v - mu[j]) / sd[j]));
+    const train = rows => { const X = rows.map(c => z(c.raw)), lam = GZ.lambda * rows.length; return { wx: ridge(X, rows.map(c => c.tx), lam), wy: ridge(X, rows.map(c => c.ty), lam) }; };
+    const W = window.innerWidth, H = window.innerHeight;
+    let e = 0;
+    meds.forEach(p => {   // erro estimado: treina sem o ponto e tenta acertá-lo
+      const m = train(kept.filter(c => c.i !== p.i)), x = z(p.raw);
+      const dot = (w, v) => w.reduce((a, b, j) => a + b * v[j], 0);
+      e += Math.hypot((dot(m.wx, x) - p.tx) * W, (dot(m.wy, x) - p.ty) * H);
+    });
+    this.model = Object.assign(train(kept), { z });
+    return { ok: true, err: e / meds.length };
+  },
+  predict(raw) { const m = this.model, x = m.z(raw), dot = w => w.reduce((a, b, j) => a + b * x[j], 0); return [dot(m.wx), dot(m.wy)]; },
+  begin() {
+    this.st = 'on'; this.fx.reset(); this.fy.reset(); this.anchor = null; this.lostSince = 0; this.closedAt = 0;
+    $('#gzCal').hidden = true;
+    $('#gzCur').hidden = false; ['#gzTL', '#gzTR', '#gzBL', '#gzBR'].forEach(q => { $(q).hidden = false; });
+    this.layout();
+    this.paint();
+    this.say(tr('gzOnSay'));
+  },
+  layout() {   // os cantos de cima ficam logo abaixo da barra superior, sem cobrir os botões
+    const tb = document.querySelector('.topbar').getBoundingClientRect();
+    document.documentElement.style.setProperty('--gzTop', Math.max(10, Math.round(tb.bottom) + 8) + 'px');
+  },
+  hideGaze() { $('#gzCur').hidden = true; ['#gzTL', '#gzTR', '#gzBL', '#gzBR'].forEach(q => { $(q).hidden = true; $(q).classList.remove('hot', 'fire'); }); this.anchor = null; },
+  // ------------------------------------------------ fixação e ações
+  zoneAt(x, y) {   // cantos: áreas generosas (o olhar perto da borda da tela é o menos preciso); depois, o mapa
+    if (this.st === 'on') {
+      const W = window.innerWidth, H = window.innerHeight, cw = clamp(W * 0.18, 150, 280), ch = clamp(H * 0.16, 110, 180);
+      const chT = Math.max(ch, $('#gzTL').getBoundingClientRect().bottom + 30), chB = Math.max(ch, H - $('#gzBL').getBoundingClientRect().top + 30);
+      const L = x < cw, Rt = x > W - cw, T = y < chT, B = y > H - chB;
+      if ((L || Rt) && (T || B)) return T ? (L ? '#gzTL' : '#gzTR') : (L ? '#gzBL' : '#gzBR');
+    }
+    const s = stage.getBoundingClientRect();
+    return x >= s.left && x <= s.right && y >= s.top && y <= s.bottom && state.src ? 'map' : null;
+  },
+  dwell(x, y, now) {   // fixação: nos cantos vale a área toda; no mapa, um raio do tamanho do erro medido na calibração
+    const z = this.zoneAt(x, y), a = this.anchor, R = clamp(this.err * 1.2, 70, 180);
+    this.hot(z && z !== 'map' ? z : null);
+    const inside = a && a.key === z && (z !== 'map' || Math.hypot(x - a.x, y - a.y) <= R);
+    if (!inside) {
+      if (a && ++a.out < 3) return;   // tolera duas leituras fora: o olhar treme
+      this.anchor = z ? { key: z, x, y, t: now, fired: false, out: 0 } : null; this.ring(0); return;
+    }
+    a.out = 0;
+    if (z === 'map') { a.x += (x - a.x) * 0.1; a.y += (y - a.y) * 0.1; }   // o centro da fixação acompanha devagar
+    if (a.fired) return;
+    const f = (now - a.t) / (this.prefs.dwell * 1000);
+    this.ring(Math.min(1, f));
+    if (f >= 1) { a.fired = true; setTimeout(() => this.ring(0), 250); this.select(a); }
+  },
+  ring(f) { const c = $('#gzCur circle'); if (c) c.style.strokeDashoffset = String(100 - f * 100); },
+  hot(q) {
+    if (q === this.hotKey) return;
+    if (this.hotKey) $(this.hotKey).classList.remove('hot');
+    this.hotKey = q; if (q) $(q).classList.add('hot');
+  },
+  select(a) {
+    if (a.key !== 'map') return this.action($(a.key).dataset.act, a.key);
+    const x = a.x, y = a.y, p = canvasPos({ clientX: x, clientY: y }), br = $('#canvasbox').getBoundingClientRect();
+    const info = pointInfo(p.x, p.y, true);   // vizinhança maior: o olhar é menos preciso que o mouse
+    showTip(info, x - br.left, y - br.top, false); updatePointCard(info, p.x, p.y);
+    state.ex = { x: p.x, y: p.y }; exKey = info.key;
+    AudioEngine.wake(); pointSound(info, p.x, p.y);
+    clearTimeout(exTimer); exTimer = setTimeout(() => Speech.speak(info.spoken), info.k ? 250 : 0);
+  },
+  hover(x, y) {   // o balão acompanha o olhar sobre o mapa (sem som); o som e a voz vêm com a fixação
+    if (this.zoneAt(x, y) !== 'map') return;
+    const p = canvasPos({ clientX: x, clientY: y }), br = $('#canvasbox').getBoundingClientRect(), info = pointInfo(p.x, p.y, true);
+    showTip(info, x - br.left, y - br.top, false); updatePointCard(info, p.x, p.y);
+  },
+  action(kind, q) {
+    AudioEngine.wake();
+    AudioEngine.note({ f: 988, type: 'sine', g: 0.12, a: 0.004, d: 0.06, s: 0.2, hold: 0, r: 0.12 });   // confirmação curta
+    if (q) { const el = $(q); el.classList.add('fire'); setTimeout(() => el.classList.remove('fire'), 600); }
+    if (kind === 'play') { togglePlay(); return; }
+    if (kind === 'describe') { Speech.speak(describeImage()); return; }
+    const list = TRACKS.filter(t => !t.custom || t.media), i = list.indexOf(state.track);
+    const t = list[(Math.max(0, i) + (kind === 'next' ? 1 : -1) + list.length) % list.length];
+    AudioEngine.init(); selectTrack(t.id);
+  },
+  // ------------------------------------------------ interface
+  showCal(mode) {
+    const c = $('#gzCal'), first = c.hidden;
+    c.hidden = false; c.classList.toggle('run', mode === 'run');
+    $('#gzDot').hidden = mode !== 'run'; $('#gzStep').hidden = mode !== 'run';
+    $('#gzPrev').classList.remove('ok');
+    if (mode !== 'run') { $('#gzGo').disabled = true; this.hint(this.st === 'loading' ? tr('gzPrep') : tr('gzFind')); }
+    if (first) setTimeout(() => $('#gzCancel').focus({ preventScroll: true }), 30);
+  },
+  hint(t, cls = '') { const h = $('#gzHint'); h.textContent = t; h.className = 'gzhint' + (cls ? ' ' + cls : ''); },
+  paint() {
+    const on = this.st !== 'off';
+    $('#eyeBtn').setAttribute('aria-pressed', String(on));
+    $('#gazeCard').hidden = !(this.st === 'on' || this.st === 'done' || this.st === 'positioning' || this.st === 'calibrating');
+    $('#rightcol').classList.toggle('gz', !$('#gazeCard').hidden);
+    $('#gzCamBox').hidden = !this.prefs.cam;
+    $('#gzCur').classList.toggle('nodot', !this.prefs.dot);
+    this.paintCard();
+  },
+  paintCard() {
+    if ($('#gazeCard').hidden) return;
+    const S = tr('gzState'), st = this.closedAt ? 'closed' : (this.lostSince || !this.face) && this.st === 'on' ? 'noface' : 'on';
+    $('#gzState').textContent = this.st === 'on' || this.st === 'done' ? S[st] : this.st === 'calibrating' ? tr('gzCalT') : tr('gzFind');
+    $('#gzDotSt').className = st === 'on' && this.st === 'on' ? '' : 'off';
+    $('#gzInfo').textContent = this.model ? tr('gzInfo')(this.fps, tr('gzQ')[this.quality()], Math.round(this.err)) : '';
+  }
 };
-function patSvg(p) {   // desenho do padrão: barras = motor ligado (janela de 700 ms)
-  const W = 112, T = 700; let x = 0, out = '';
-  p.forEach((ms, i) => { if (!(i % 2) && x < T) out += `<rect x="${(x / T * W).toFixed(1)}" y="2" width="${Math.max(1.5, ms / T * W).toFixed(1)}" height="13" rx="1"/>`; x += ms; });
-  return `<svg class="vpat" viewBox="0 0 ${W} 18" aria-hidden="true"><line x1="0" y1="17.5" x2="${W}" y2="17.5"/>${out}</svg>`;
+function renderGazeDlg() {
+  const D = I18N[state.lang], on = Gaze.st !== 'off';
+  $('#gzDwell').innerHTML = GZ.dwells.map(s => `<button class="chip" type="button" data-s="${s}" aria-pressed="${Gaze.prefs.dwell === s}">${D.gzSec(s)}</button>`).join('');
+  $('#gzBlink').checked = Gaze.prefs.blink; $('#gzCamOpt').checked = Gaze.prefs.cam; $('#gzDotOpt').checked = Gaze.prefs.dot;
+  $('#eyeStart').textContent = on ? D.gzRecal : D.gzStart;
+  $('#eyeStop').hidden = !on;
 }
-function renderVib() {
-  const D = I18N[state.lang], m = Haptics.mode;
-  $('#vibSwitch').setAttribute('aria-checked', String(Haptics.on));
-  $('#vibSwitchTxt').textContent = Haptics.on ? D.adSwitchOn : D.adSwitchOff;
-  const st = $('#vibStatus'); st.textContent = D.vibStatus[m]; st.className = 'vstat ' + (m === 'api' ? 'ok' : 'warn');
-  $('#vibChips').innerHTML = Object.keys(HAP.str).map(k => `<button class="chip" data-s="${k}" aria-pressed="${Haptics.strength === k}">${D.vibStrNames[k]}</button>`).join('');
-  ['texture', 'borders', 'events', 'sweep'].forEach(o => { $('#vib' + o[0].toUpperCase() + o.slice(1)).checked = !!Haptics.opts[o]; });
-  const rows = HAP.levels.map((L, lv) => `<li class="vrow" data-t="${lv}"><span class="vlv">${lv}</span><div class="vtx"><b>${D.vibLvNames[lv]}</b><small>${D.vibLvDesc(L ? L.on : 0, L ? L.gap : 0)}</small></div>${L ? patSvg(Haptics.pattern(lv)) + `<button class="btns vtest" aria-label="${D.vibTest}: ${D.vibLvNames[lv]}">${D.vibTest}</button>` : ''}</li>`);
-  Object.entries(D.vibSpecial).forEach(([k, [n, d]]) => rows.push(`<li class="vrow" data-t="${k}"><span class="vlv sp">${svgMini(k)}</span><div class="vtx"><b>${n}</b><small>${d}</small></div>${patSvg(k === 'border' ? HAP.border : HAP.events[k])}<button class="btns vtest" aria-label="${D.vibTest}: ${n}">${D.vibTest}</button></li>`));
-  $('#vibLevels').innerHTML = rows.join('');
-  renderVibMap();
-}
-const svgMini = k => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width:16px;height:16px">${{ border: '<path d="M4 12h16M8 8l-4 4 4 4M16 8l4 4-4 4"/>', flash: '<path d="M13 3L5 13.5h6L10 21l8-10.5h-6z"/>', obj: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/>' }[k] || ''}</svg>`;
-function renderVibMap() {
-  const box = $('#vibMap'); if (!box || !state.track) return;
-  const t = state.track, L = state.lang, D = I18N[L], tab = VIB_LV[t.rid] || {};
-  box.innerHTML = Object.entries(t.cats).map(([k, c]) => {
-    const b = tab[k] || 0, h = b === 'h';
-    const txt = h ? D.vibByHeight : !b ? D.vibNone : `${b} · ${D.vibLvNames[b]}` + (k === 'flash' ? ' · ' + D.vibPatFlash : k === 'obj' ? ' · ' + D.vibPatObj : b > 1 && k !== 'edges' && k !== 'motion' ? ' · ' + D.vibVaries : '');
-    const dots = `<span class="vdots${h ? ' h' : ''}" aria-hidden="true">${[1, 2, 3, 4, 5].map(i => `<i class="${!h && i <= b ? 'on' : ''}"></i>`).join('')}</span>`;
-    return `<li><span class="lsw" style="background:${c.color}" aria-hidden="true"></span><div class="ltx"><b>${esc(c.name[L])}</b><small>${txt}</small></div>${dots}</li>`;
-  }).join('');
-}
-function setVib(on, user) {
-  Haptics.on = on; Haptics.save(); renderVib();
-  if (!user) return;
-  const msg = tr(on ? 'vibOn' : 'vibOff'); state.ad ? Speech.speak(msg) : announce(msg);
-  if (on) Haptics.test('border');
-}
-$('#vibSwitch').addEventListener('click', () => setVib(!Haptics.on, true));
-['texture', 'borders', 'events', 'sweep'].forEach(o => $('#vib' + o[0].toUpperCase() + o.slice(1)).addEventListener('change', e => { Haptics.opts[o] = e.target.checked; Haptics.save(); }));
-$('#vibChips').addEventListener('click', e => {
+$('#gzDwell').addEventListener('click', e => {
   const b = e.target.closest('.chip'); if (!b) return;
-  Haptics.strength = b.dataset.s; Haptics.save(); renderVib(); Haptics.test(3);
-  const nb = $(`#vibChips .chip[data-s="${b.dataset.s}"]`); if (nb) nb.focus();
+  Gaze.prefs.dwell = +b.dataset.s; Gaze.save(); renderGazeDlg();
+  const nb = $(`#gzDwell .chip[data-s="${b.dataset.s}"]`); if (nb) nb.focus();
 });
-$('#vibLevels').addEventListener('click', e => {
-  const b = e.target.closest('.vtest'); if (!b) return;
-  const row = b.closest('.vrow'), id = /^\d$/.test(row.dataset.t) ? +row.dataset.t : row.dataset.t;
-  Haptics.test(id);
-  row.classList.remove('buzz'); void row.offsetWidth; row.classList.add('buzz');
-  setTimeout(() => row.classList.remove('buzz'), 1300);
-  announce(tr('vibTesting')(row.querySelector('b').textContent));
-});
+[['#gzBlink', 'blink'], ['#gzCamOpt', 'cam'], ['#gzDotOpt', 'dot']].forEach(([q, k]) => $(q).addEventListener('change', e => { Gaze.prefs[k] = e.target.checked; Gaze.save(); Gaze.paint(); }));
+$('#gzCancel').addEventListener('click', () => Gaze.stop(true));
+$('#gzGo').addEventListener('click', () => Gaze.calibrate());
+$('#gzRecal').addEventListener('click', () => Gaze.recalibrate());
+$('#gzOffBtn').addEventListener('click', () => Gaze.stop(true));
+window.addEventListener('resize', () => { if (Gaze.st === 'on') { Gaze.anchor = null; Gaze.layout(); } });
+window.addEventListener('scroll', () => { if (Gaze.st === 'on') Gaze.layout(); }, { passive: true });
 
 /* ============================================================
    12. BOOT
    ============================================================ */
 Speech.init();
-Haptics.init();
+Gaze.init();
 buildLandMask();
 buildCards();
 buildChips('#chips', '', setSpeed);
