@@ -10,34 +10,36 @@
 :root{
   --bg:#0b0f19;--panel:#111827;--panel2:#0d1424;--line:#1e293b;--line2:#2b3a52;
   --cyan:#38bdf8;--amber:#f59e0b;--text:#f1f5f9;--muted:#a8b5c8;--dim:#8193aa;
-  --radius:16px;
+  --radius:16px;--gap:16px;
 }
 html{font-size:17px}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 body{margin:0;color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:1rem;line-height:1.55;min-height:100vh;background:
-  radial-gradient(1100px 520px at 85% -10%,rgba(56,189,248,.13),transparent 60%),
-  radial-gradient(800px 480px at -10% 105%,rgba(245,158,11,.08),transparent 60%),var(--bg)}
+  radial-gradient(1100px 520px at 85% -10%,rgba(56,189,248,.12),transparent 60%),
+  radial-gradient(800px 480px at -10% 105%,rgba(245,158,11,.07),transparent 60%),var(--bg)}
 a{color:var(--cyan)}
 button,select,input{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--amber);outline-offset:3px;border-radius:6px}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
 .skip{position:absolute;left:-999px;top:8px;background:var(--amber);color:#111;padding:8px 14px;border-radius:8px;z-index:99;font-weight:700}
 .skip:focus{left:8px}
+.wrap{max-width:1560px;margin:0 auto;padding:0 24px}
+@media (max-width:640px){.wrap{padding:0 12px}}
 
-/* ---------- header ---------- */
-header{display:flex;align-items:center;gap:16px;padding:14px 24px;border-bottom:1px solid var(--line);background:rgba(11,15,25,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:20;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:14px;flex:1;min-width:280px}
-.logo{width:44px;height:44px;border-radius:50%;background:conic-gradient(from 0deg,var(--cyan),#4ade80,#c084fc,var(--amber),var(--cyan));position:relative;flex:none;animation:spin 8s linear infinite;animation-play-state:paused}
-.logo::after{content:"";position:absolute;inset:15px;border-radius:50%;background:var(--bg)}
+/* ---------- cabeçalho ---------- */
+header{border-bottom:1px solid var(--line);background:rgba(11,15,25,.92);backdrop-filter:blur(8px);position:sticky;top:0;z-index:20}
+header .wrap{display:flex;align-items:center;gap:16px;padding-top:12px;padding-bottom:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:14px;flex:1;min-width:260px}
+.logo{width:42px;height:42px;border-radius:50%;background:conic-gradient(from 0deg,var(--cyan),#4ade80,#c084fc,var(--amber),var(--cyan));position:relative;flex:none;animation:spin 8s linear infinite;animation-play-state:paused}
+.logo::after{content:"";position:absolute;inset:14px;border-radius:50%;background:var(--bg)}
 body.playing .logo{animation-play-state:running}
-.brand h1{font-size:1.35rem;margin:0;line-height:1.2}
+.brand h1{font-size:1.3rem;margin:0;line-height:1.2}
 .brand p{margin:0;font-size:.85rem;color:var(--muted)}
 .hbtns{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.btn{background:var(--panel);border:1px solid var(--line2);border-radius:12px;padding:10px 16px;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;font-size:.95rem;min-height:44px}
+.btn{background:var(--panel);border:1px solid var(--line2);border-radius:12px;padding:9px 16px;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;font-size:.95rem;min-height:44px}
 .btn:hover{border-color:var(--cyan);background:#13203a}
-.btn[aria-pressed="true"]{border-color:var(--cyan);background:#0c2a44;color:#e0f2fe}
-.btn.ad{font-weight:800;font-size:1.05rem;padding:10px 20px;background:linear-gradient(135deg,#0ea5e9,#2563eb);border:2px solid #7dd3fc;box-shadow:0 0 0 0 rgba(56,189,248,.6)}
+.btn.ad{font-weight:800;font-size:1.05rem;padding:9px 20px;background:linear-gradient(135deg,#0ea5e9,#2563eb);border:2px solid #7dd3fc}
 .btn.ad:hover{filter:brightness(1.1)}
 .btn.ad[aria-pressed="true"]{background:linear-gradient(135deg,#f59e0b,#ea580c);border-color:#fde68a;color:#111;animation:pulse 2.2s infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(245,158,11,.55)}70%{box-shadow:0 0 0 12px rgba(245,158,11,0)}100%{box-shadow:0 0 0 0 rgba(245,158,11,0)}}
@@ -46,313 +48,350 @@ body.playing .logo{animation-play-state:running}
 .seg button+button{border-left:1px solid var(--line2)}
 .seg button[aria-pressed="true"]{background:#0c2a44;color:var(--cyan)}
 
-/* ---------- layout ---------- */
-main{display:grid;grid-template-columns:minmax(330px,21rem) 1fr;gap:20px;padding:20px 24px;max-width:1640px;margin:0 auto}
-@media (max-width:1080px){main{grid-template-columns:1fr}}
-.panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);padding:18px}
-.panel h2{font-size:.82rem;text-transform:uppercase;letter-spacing:1.4px;color:var(--muted);margin:0 0 12px;font-weight:700}
-aside{display:flex;flex-direction:column;gap:16px}
-section.stagewrap{display:flex;flex-direction:column;gap:16px;min-width:0}
-
-/* ---------- tracks ---------- */
-.tracks{display:flex;flex-direction:column;gap:10px}
-.track{display:flex;gap:12px;align-items:center;text-align:left;background:#0c1322;border:1px solid var(--line);border-radius:14px;padding:12px;cursor:pointer;transition:.15s;width:100%}
+/* ---------- discos ---------- */
+.tracksbar{padding-top:14px}
+.label{font-size:.8rem;text-transform:uppercase;letter-spacing:1.4px;color:var(--muted);margin:0 0 10px;font-weight:700}
+.tracks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:960px){.tracks{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.track{display:flex;gap:12px;align-items:center;text-align:left;background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:14px;padding:9px 14px;cursor:pointer;transition:.15s;width:100%;min-height:66px}
 .track:hover{border-color:var(--line2);background:#101a2e}
 .track[aria-pressed="true"]{border-color:var(--cyan);box-shadow:0 0 0 1px var(--cyan) inset,0 0 24px rgba(56,189,248,.15)}
-.vinyl{width:50px;height:50px;border-radius:50%;flex:none;position:relative;background:repeating-radial-gradient(circle at 50% 50%,#0a0a0a 0 2px,#1b1b1b 2px 3px)}
+.vinyl{width:48px;height:48px;border-radius:50%;flex:none;position:relative;background:repeating-radial-gradient(circle at 50% 50%,#0a0a0a 0 2px,#1b1b1b 2px 3px)}
 .vinyl::after{content:"";position:absolute;inset:15px;border-radius:50%;background:var(--c,#38bdf8);box-shadow:0 0 0 2px #000}
 .track[aria-pressed="true"] .vinyl{animation:spin 2.2s linear infinite;animation-play-state:paused}
 body.playing .track[aria-pressed="true"] .vinyl{animation-play-state:running}
 .tmeta{flex:1;min-width:0}
-.tmeta b{display:block;font-size:.98rem;line-height:1.3}
-.tmeta span{font-size:.82rem;color:var(--muted)}
-.key{display:inline-block;font-size:.72rem;border:1px solid var(--line2);border-radius:5px;padding:0 5px;margin-right:6px;color:var(--dim)}
-.badge{font-size:.72rem;padding:2px 8px;border-radius:99px;border:1px solid var(--line2);color:var(--muted);margin-left:6px;white-space:nowrap}
+.tmeta b{display:block;font-size:1.02rem;line-height:1.25}
+.tmeta .tag{display:block;font-size:.84rem;color:#cbd5e1;line-height:1.3}
+.tmeta .sub{display:block;font-size:.76rem;color:var(--dim);margin-top:2px}
+.key{display:inline-block;font-size:.72rem;border:1px solid var(--line2);border-radius:5px;padding:0 5px;margin-right:6px;color:var(--dim);font-weight:700;vertical-align:1px}
+.badge{font-size:.7rem;padding:1px 7px;border-radius:99px;border:1px solid var(--line2);color:var(--muted);margin-left:6px;white-space:nowrap}
 .badge.real{color:#4ade80;border-color:rgba(74,222,128,.45)}
 .badge.proc{color:var(--amber);border-color:rgba(245,158,11,.45)}
 .badge.manual{color:var(--cyan);border-color:rgba(56,189,248,.45)}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ---------- deck ---------- */
-.deck{display:flex;flex-direction:column;align-items:center;gap:14px}
-#disc{width:220px;height:220px}
-.field{width:100%}
-.field label{font-size:.9rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;margin-bottom:6px}
-.field output{color:var(--text);font-variant-numeric:tabular-nums;font-weight:600}
-input[type=range]{width:100%;accent-color:var(--cyan);height:28px;cursor:pointer}
-select{width:100%;background:#0c1322;border:1px solid var(--line2);border-radius:12px;padding:10px 12px;min-height:44px}
+/* ---------- grade principal ---------- */
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;padding-top:14px;padding-bottom:28px;align-items:start}
+@media (max-width:1180px){.layout{grid-template-columns:1fr}}
+.col{display:flex;flex-direction:column;gap:var(--gap);min-width:0}
+.panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.phead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.phead h2{font-size:.82rem;text-transform:uppercase;letter-spacing:1.4px;color:var(--muted);margin:0;font-weight:700;display:flex;align-items:center;gap:8px}
+.phead h2 .ico{font-size:1rem;letter-spacing:0}
 
-/* ---------- track header + upload ---------- */
-.trackhead{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start}
-@media (max-width:820px){.trackhead{grid-template-columns:1fr}}
-.trackhead h2{font-size:1.5rem;margin:0;text-transform:none;letter-spacing:0;color:var(--text);line-height:1.25}
-.src{font-size:.88rem;color:var(--muted);margin-top:6px}
-.desc{font-size:1.02rem;color:#d6dee9;margin:12px 0 0}
-.upload{display:flex;flex-direction:column;align-items:stretch;gap:6px;min-width:280px}
-.upload-btn{position:relative;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 20px;border-radius:14px;cursor:pointer;font-weight:800;font-size:1.08rem;color:#111;background:linear-gradient(135deg,#fbbf24,#f59e0b 50%,#ea580c);border:2px solid #fde68a;box-shadow:0 8px 28px rgba(245,158,11,.25);transition:.15s}
-.upload-btn:hover{filter:brightness(1.07);transform:translateY(-1px)}
-.upload-btn:focus-within{outline:3px solid #fff;outline-offset:3px}
+/* ---------- cartão do mapa ---------- */
+.mapcard{padding:0;overflow:hidden}
+.maphead{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center;padding:14px 18px}
+@media (max-width:760px){.maphead{grid-template-columns:1fr}.upload{align-items:flex-start!important}}
+.maphead h2{font-size:1.3rem;margin:0;line-height:1.25}
+.srcline{font-size:.86rem;color:var(--muted);margin-top:4px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.upload{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.upload-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:11px 20px;border-radius:12px;cursor:pointer;font-weight:800;font-size:1rem;color:#0b0f19;background:#f8fafc;border:2px solid #fff;box-shadow:0 6px 22px rgba(255,255,255,.12);transition:.15s;min-height:46px}
+.upload-btn:hover{background:#e0f2fe;transform:translateY(-1px)}
+.upload-btn:focus-within{outline:3px solid var(--amber);outline-offset:3px}
 .upload-btn input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
-.upload small{font-size:.8rem;color:var(--muted);text-align:center}
-.linkbtn{background:none;border:none;color:var(--cyan);cursor:pointer;text-decoration:underline;font-size:.88rem;padding:4px}
-.svs{font-size:.9rem;text-align:center}
+.upload small{font-size:.78rem;color:var(--dim)}
+.linkbtn{background:none;border:none;color:var(--cyan);cursor:pointer;text-decoration:underline;font-size:.86rem;padding:2px}
+.canvasbox{position:relative;background:#000;line-height:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+#stage{width:100%;height:auto;display:block;cursor:crosshair;touch-action:none;max-height:max(280px,calc(100vh - 470px));object-fit:contain}
+.overlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(11,15,25,.78);font-size:1.1rem;color:var(--cyan);line-height:1.4;text-align:center;padding:20px}
+.overlay.on{display:flex}
+.overlay.drop{border:3px dashed #f8fafc;color:#f8fafc;font-weight:700}
+.tip{position:absolute;z-index:5;pointer-events:none;display:none;line-height:1.35;background:rgba(11,15,25,.95);border:1px solid var(--line2);border-left:4px solid var(--amber);border-radius:12px;padding:9px 13px;font-size:.9rem;max-width:320px;box-shadow:0 10px 28px rgba(0,0,0,.55)}
+.tip.on{display:block}
+.tip b{display:flex;align-items:center;gap:8px;font-size:1rem}
+.tip b i{width:13px;height:13px;border-radius:3px;flex:none;border:1px solid rgba(255,255,255,.35)}
+.tip small{display:block;color:#cbd5e1;font-size:.84rem}
+.tip small.pos{color:var(--dim);font-size:.76rem;margin-top:2px}
 
-/* ---------- audio description ---------- */
-.adpanel{border:2px solid var(--amber);background:linear-gradient(180deg,#1c1608,#111827)}
-.adpanel h2{color:var(--amber)}
-.adtext{font-size:1.2rem;line-height:1.6;color:#fff7e6;background:#0b0f19;border-radius:12px;padding:14px 16px;border:1px solid #3a2f12;min-height:64px}
-.adrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;align-items:center}
-.adrow .field{flex:1;min-width:220px}
-.adnote{font-size:.88rem;color:var(--amber);margin-top:8px}
+/* ---------- controles ---------- */
+.transport{display:flex;flex-direction:column;gap:12px;padding:14px 18px 16px}
+.trow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.ibtn{width:50px;height:50px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line2);background:var(--panel);cursor:pointer;font-size:1.15rem;flex:none}
+.ibtn:hover{border-color:var(--cyan)}
+.ibtn.main{width:62px;height:62px;font-size:1.45rem;background:linear-gradient(135deg,#0ea5e9,#2563eb);border:none}
+.seekwrap{flex:1;min-width:180px}
+input[type=range]{width:100%;accent-color:var(--cyan);height:28px;cursor:pointer}
+.time{font-variant-numeric:tabular-nums;font-size:1rem;color:#d6dee9;min-width:104px;text-align:right}
+.grp{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.grp .lbl{font-size:.88rem;color:var(--muted);font-weight:600}
+.chips{display:inline-flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:#0c1322;border-radius:99px;padding:6px 13px;cursor:pointer;font-weight:700;min-height:40px;font-variant-numeric:tabular-nums}
+.chip[aria-pressed="true"]{background:var(--cyan);color:#06243a;border-color:var(--cyan)}
+.chip.amb[aria-pressed="true"]{background:var(--amber);color:#1a1205;border-color:var(--amber)}
+.spacer{flex:1}
+.pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line2);background:#0c1322;border-radius:99px;padding:6px 14px;cursor:pointer;font-weight:700;min-height:40px;font-size:.9rem}
+.pill[aria-pressed="true"]{border-color:var(--amber);color:#fde68a;background:#2a1d05}
+.pill .dot{width:10px;height:10px;border-radius:50%;background:var(--dim)}
+.pill[aria-pressed="true"] .dot{background:var(--amber);box-shadow:0 0 8px var(--amber)}
 .check{display:flex;align-items:center;gap:8px;font-size:.92rem;color:#d6dee9;cursor:pointer}
 .check input{width:20px;height:20px;accent-color:var(--amber)}
 
-/* ---------- stage ---------- */
-.canvasbox{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line2);background:#000;line-height:0}
-#stage{width:100%;height:auto;display:block;cursor:crosshair;touch-action:none;max-height:64vh;object-fit:contain}
-.overlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(11,15,25,.78);font-size:1.1rem;color:var(--cyan);line-height:1.4;text-align:center;padding:20px}
-.overlay.on{display:flex}
-.overlay.drop{border:3px dashed var(--amber);color:var(--amber);font-weight:700}
-
-/* ---------- transport ---------- */
-.transport{display:flex;flex-direction:column;gap:14px}
-.trow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.ibtn{width:52px;height:52px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line2);background:var(--panel);cursor:pointer;font-size:1.2rem;flex:none}
-.ibtn:hover{border-color:var(--cyan)}
-.ibtn.main{width:64px;height:64px;font-size:1.5rem;background:linear-gradient(135deg,#0ea5e9,#2563eb);border:none}
-.seekwrap{flex:1;min-width:200px}
-.time{font-variant-numeric:tabular-nums;font-size:1rem;color:#d6dee9;min-width:110px;text-align:right}
-.speedgrp{display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex:1}
-.speedgrp .lbl{font-size:.9rem;color:var(--muted);font-weight:600}
-.chips{display:inline-flex;gap:6px;flex-wrap:wrap}
-.chip{border:1px solid var(--line2);background:#0c1322;border-radius:99px;padding:6px 14px;cursor:pointer;font-weight:700;min-height:40px;font-variant-numeric:tabular-nums}
-.chip[aria-pressed="true"]{background:var(--cyan);color:#06243a;border-color:var(--cyan)}
-.mixer{width:100%;display:flex;flex-direction:column;gap:12px;background:#0b1220;border:1px solid var(--line);border-radius:14px;padding:14px}
-.mixer h3{margin:0;font-size:.82rem;text-transform:uppercase;letter-spacing:1.4px;color:var(--muted)}
-.mixer .field label span i{font-style:normal;margin-right:6px}
-#volSweep{accent-color:var(--cyan)}
-#volAd{accent-color:var(--amber)}
-.linkbtn2{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;border-radius:12px;border:1px solid var(--line2);background:#0c1322;cursor:pointer;font-weight:700;font-size:.9rem}
-.linkbtn2[aria-pressed="true"]{border-color:var(--cyan);color:var(--cyan);background:#0c2a44}
-.chip.amb[aria-pressed="true"]{background:var(--amber);color:#1a1205;border-color:var(--amber)}
-.hint{font-size:.88rem;color:var(--dim)}
-.hint kbd{border:1px solid var(--line2);border-radius:5px;padding:0 6px;font-family:inherit;color:#cbd5e1}
-
-/* ---------- telemetry ---------- */
-.tele{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+/* ---------- agora no mapa ---------- */
+.phen{background:linear-gradient(90deg,rgba(56,189,248,.08),rgba(245,158,11,.05));border:1px solid var(--line2);border-left:4px solid var(--cyan);border-radius:12px;padding:14px 16px;font-size:1.18rem;min-height:56px}
+body.ad-on .phen{border-left-color:var(--amber)}
+.tele{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}
 @media (max-width:820px){.tele{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.metric{background:#0b1220;border:1px solid var(--line);border-radius:12px;padding:12px 14px;min-width:0}
-.metric small{display:block;font-size:.74rem;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700}
-.metric div{font-size:1.15rem;font-variant-numeric:tabular-nums;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.swatch{display:inline-block;width:16px;height:16px;border-radius:4px;vertical-align:-2px;margin-right:8px;border:1px solid rgba(255,255,255,.3)}
-.phen{margin-top:12px;background:linear-gradient(90deg,rgba(56,189,248,.08),rgba(245,158,11,.06));border:1px solid var(--line2);border-left:4px solid var(--cyan);border-radius:12px;padding:14px 16px;font-size:1.15rem;min-height:56px}
+.metric{background:#0b1220;border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-width:0}
+.metric small{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700}
+.metric div{font-size:1.05rem;font-variant-numeric:tabular-nums;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.swatch{display:inline-block;width:15px;height:15px;border-radius:4px;vertical-align:-2px;margin-right:8px;border:1px solid rgba(255,255,255,.3)}
 
-/* ---------- layers ---------- */
-.layers{display:flex;flex-wrap:wrap;gap:10px}
-.layer{display:flex;align-items:center;gap:10px;background:#0c1322;border:1px solid var(--line2);border-radius:12px;padding:10px 14px;cursor:pointer;text-align:left;min-height:48px}
-.layer i{width:14px;height:14px;border-radius:50%;flex:none}
-.layer em{color:var(--muted);font-style:normal;font-size:.88rem}
-.layer .st{font-size:.75rem;font-weight:700;border-radius:99px;padding:1px 8px;background:#123b22;color:#86efac}
-.layer[aria-pressed="false"]{opacity:.55}
-.layer[aria-pressed="false"] .st{background:#3b1212;color:#fca5a5}
-.layer[aria-pressed="false"] span:first-of-type{text-decoration:line-through}
-.layer:disabled{cursor:default;opacity:.7}
-.layers-hint{font-size:.85rem;color:var(--dim);margin:10px 0 0}
-.legendpanel{border:2px solid #7dd3fc;background:linear-gradient(180deg,#0b1d33,#111827)}
-.legendpanel h2{color:#7dd3fc}
-.legendtop{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:14px}
-.legendtop p{margin:0;flex:1;min-width:240px;color:#d6dee9;font-size:.98rem}
-.btn.big{font-weight:800;font-size:1.05rem;padding:12px 20px;background:linear-gradient(135deg,#0ea5e9,#2563eb);border:2px solid #7dd3fc}
-.llist{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:10px}
+/* ---------- legenda sonora ---------- */
+.legendpanel{border-color:#1e4b6e}
+.legendpanel .phead h2{color:#7dd3fc}
+.lsub{margin:0 0 12px;color:#d6dee9;font-size:.96rem}
+.btn.primary{font-weight:800;background:linear-gradient(135deg,#0ea5e9,#2563eb);border:2px solid #7dd3fc}
+.llist{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:10px}
+@media (max-width:640px){.llist{grid-template-columns:1fr}}
 .litem{display:flex;align-items:center;gap:12px;background:#0b1220;border:1px solid var(--line2);border-radius:14px;padding:12px 14px;transition:.2s}
 .litem.now{border-color:var(--amber);box-shadow:0 0 0 2px var(--amber) inset,0 0 26px rgba(245,158,11,.25)}
 .litem.off{opacity:.55}
 .lsw{width:34px;height:34px;border-radius:10px;flex:none;border:2px solid rgba(255,255,255,.25)}
 .ltx{flex:1;min-width:0}
-.ltx b{display:block;font-size:1.05rem;line-height:1.3}
-.ltx small{display:block;font-size:.88rem;color:var(--muted);line-height:1.4}
+.ltx b{display:block;font-size:1.02rem;line-height:1.3}
+.ltx small{display:block;font-size:.86rem;color:var(--muted);line-height:1.4}
 .ltx small em{font-style:normal;color:#e2e8f0}
 .lbtns{display:flex;flex-direction:column;gap:6px}
-.lbtns button{min-height:40px;min-width:96px;border-radius:10px;border:1px solid var(--line2);background:var(--panel);cursor:pointer;font-weight:700;font-size:.85rem;padding:4px 10px}
+.lbtns button{min-height:38px;min-width:96px;border-radius:10px;border:1px solid var(--line2);background:var(--panel);cursor:pointer;font-weight:700;font-size:.84rem;padding:4px 10px}
 .lbtns button:hover{border-color:var(--cyan)}
 .lbtns .mute[aria-pressed="true"]{color:#fca5a5;border-color:#7f1d1d}
-.amb-tag{font-size:.7rem;font-weight:700;color:#7dd3fc;border:1px solid #1e4b6e;border-radius:99px;padding:0 7px;margin-left:6px;vertical-align:2px}
-details{font-size:1rem;color:#d6dee9}
-details summary{cursor:pointer;color:var(--text);font-weight:700;padding:4px 0}
-details p{margin:10px 0 0}
+.amb-tag{font-size:.68rem;font-weight:700;color:#7dd3fc;border:1px solid #1e4b6e;border-radius:99px;padding:0 7px;margin-left:6px;vertical-align:2px}
+.lfoot{margin-top:12px}
 
-/* ---------- footer + dialog ---------- */
-footer{border-top:1px solid var(--line);padding:18px 24px;font-size:.88rem;color:var(--muted);text-align:center}
+/* ---------- audiodescrição ---------- */
+.adpanel{border-color:#4a3a12}
+.adpanel .phead h2{color:var(--amber)}
+.adpanel.on{border:2px solid var(--amber);background:linear-gradient(180deg,#1c1608,#111827)}
+.switch{display:inline-flex;align-items:center;gap:10px;background:none;border:1px solid var(--line2);border-radius:99px;padding:5px 14px 5px 6px;cursor:pointer;font-weight:700;min-height:42px}
+.switch .trk{width:44px;height:26px;border-radius:99px;background:#334155;position:relative;transition:.2s;flex:none}
+.switch .trk::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#e2e8f0;transition:.2s}
+.switch[aria-checked="true"]{border-color:var(--amber);color:#fde68a}
+.switch[aria-checked="true"] .trk{background:var(--amber)}
+.switch[aria-checked="true"] .trk::after{left:21px;background:#111}
+.adtext{font-size:1.12rem;line-height:1.6;color:#fff7e6;background:#0b0f19;border-radius:12px;padding:12px 16px;border:1px solid #3a2f12;min-height:56px}
+.adpanel:not(.on) .adtext{color:var(--muted);font-size:1rem}
+.adrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;align-items:center}
+.adopts{display:flex;flex-wrap:wrap;gap:10px 24px;margin-top:14px;align-items:center}
+.adnote{font-size:.88rem;color:var(--amber);margin-top:8px}
+
+/* ---------- lateral ---------- */
+.deck{display:flex;justify-content:center}
+#disc{width:190px;height:190px}
+.field{width:100%}
+.field label{font-size:.9rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;margin-bottom:4px}
+.field label i{font-style:normal;margin-right:6px}
+.field output{color:var(--text);font-variant-numeric:tabular-nums;font-weight:600}
+select{width:100%;background:#0c1322;border:1px solid var(--line2);border-radius:12px;padding:10px 12px;min-height:44px}
+.stack{display:flex;flex-direction:column;gap:12px}
+#volSweep{accent-color:var(--cyan)}
+#volAd{accent-color:var(--amber)}
+.linkbtn2{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;border-radius:12px;border:1px solid var(--line2);background:#0c1322;cursor:pointer;font-weight:700;font-size:.88rem;text-align:center}
+.linkbtn2[aria-pressed="true"]{border-color:var(--cyan);color:var(--cyan);background:#0c2a44}
+.about p{margin:0 0 12px;font-size:.95rem;color:#d6dee9}
+.about .row{display:flex;gap:8px;flex-wrap:wrap}
+details{font-size:.95rem;color:#d6dee9;margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+details summary{cursor:pointer;color:var(--text);font-weight:700;padding:4px 0}
+details p{margin:8px 0 0}
+.keys{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px;font-size:.9rem;color:#d6dee9}
+.keys li{display:flex;gap:10px;align-items:baseline}
+.keys kbd{flex:none;min-width:58px;text-align:center;border:1px solid var(--line2);border-radius:6px;padding:1px 6px;font-family:inherit;font-weight:700;color:#e2e8f0;background:#0c1322;font-size:.82rem}
+
+/* ---------- rodapé e diálogo ---------- */
+footer{border-top:1px solid var(--line);padding:18px 0;font-size:.86rem;color:var(--muted);text-align:center}
 footer a{color:var(--muted)}
 dialog{background:var(--panel);color:var(--text);border:1px solid var(--line2);border-radius:18px;max-width:680px;width:calc(100% - 32px);padding:24px}
 dialog::backdrop{background:rgba(2,6,23,.75);backdrop-filter:blur(3px)}
 dialog h3{margin:0 0 8px;font-size:1.3rem}
 dialog ul{padding-left:20px;margin:12px 0}
 dialog li{margin:8px 0}
-
-body.ad-on .phen{font-size:1.3rem;border-left-color:var(--amber)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 <a class="skip" href="#stage" data-i18n="skip">Pular para o mapa sonoro</a>
 <header>
-  <div class="brand">
-    <div class="logo" aria-hidden="true"></div>
-    <div>
-      <h1>Earth Information Jukebox</h1>
-      <p data-i18n="subtitle">NASA Space Apps Challenge 2026 · Dados da Terra para ouvir</p>
+  <div class="wrap">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>Earth Information Jukebox</h1>
+        <p data-i18n="subtitle">NASA Space Apps Challenge 2026 · Dados da Terra para ouvir</p>
+      </div>
     </div>
-  </div>
-  <div class="hbtns">
-    <button class="btn ad" id="adBtn" aria-pressed="false" aria-keyshortcuts="A"><span aria-hidden="true">🔊</span> <span data-i18n="adBtn">Audiodescrição</span></button>
-    <div class="seg" role="group" aria-label="Tamanho do texto" id="sizeGrp">
-      <button data-size="17" aria-pressed="true" aria-label="Texto normal">A</button>
-      <button data-size="19" aria-pressed="false" aria-label="Texto grande">A+</button>
-      <button data-size="21" aria-pressed="false" aria-label="Texto muito grande">A++</button>
+    <div class="hbtns">
+      <button class="btn ad" id="adBtn" aria-pressed="false" aria-keyshortcuts="A"><span aria-hidden="true">🔊</span> <span data-i18n="adBtn">Audiodescrição</span></button>
+      <div class="seg" role="group" id="sizeGrp">
+        <button data-size="17" aria-pressed="true">A</button>
+        <button data-size="19" aria-pressed="false">A+</button>
+        <button data-size="21" aria-pressed="false">A++</button>
+      </div>
+      <button class="btn" id="langBtn">EN</button>
     </div>
-    <button class="btn" id="creditsBtn" data-i18n="credits">Citações NASA</button>
-    <button class="btn" id="langBtn">EN</button>
   </div>
 </header>
 
-<main>
-  <aside>
-    <div class="panel">
-      <h2 data-i18n="tracks">Discos · Catálogo NASA SVS</h2>
-      <div class="tracks" id="tracks" role="group"></div>
-    </div>
-    <div class="panel deck">
-      <canvas id="disc" width="440" height="440" aria-hidden="true"></canvas>
-      <div class="field">
-        <label for="scale"><span data-i18n="scale">Escala musical</span></label>
-        <select id="scale">
-          <option value="majPent" data-i18n="majPent">Pentatônica Maior</option>
-          <option value="minPent" data-i18n="minPent">Pentatônica Menor</option>
-          <option value="lydian" data-i18n="lydian">Lídio</option>
-        </select>
-      </div>
-      <div class="mixer" role="group" aria-labelledby="mixTitle">
-        <h3 id="mixTitle" data-i18n="mixTitle">Volumes</h3>
-        <div class="field">
-          <label for="volSweep"><span><i aria-hidden="true">🗺️</i><span data-i18n="volSweep">Varredura do mapa</span></span><output id="volSweepOut">80%</output></label>
-          <input type="range" id="volSweep" min="0" max="1" step="0.01" value="0.8">
+<div class="wrap">
+  <nav class="tracksbar" aria-labelledby="tracksLbl">
+    <h2 class="label" id="tracksLbl" data-i18n="tracksPick">Escolha um disco · catálogo NASA SVS</h2>
+    <div class="tracks" id="tracks"></div>
+  </nav>
+
+  <main class="layout">
+    <div class="col">
+      <!-- MAPA + CONTROLES -->
+      <section class="panel mapcard" aria-labelledby="trackTitle">
+        <div class="maphead">
+          <div>
+            <h2 id="trackTitle">—</h2>
+            <div class="srcline"><span id="srcInfo">—</span><a id="svsLink" href="#" target="_blank" rel="noopener">NASA SVS ↗</a></div>
+          </div>
+          <div class="upload">
+            <label class="upload-btn"><span aria-hidden="true">📂</span> <span data-i18n="loadTitle">Carregar imagem real</span>
+              <input type="file" id="fileInput" accept="image/*">
+            </label>
+            <small data-i18n="loadSub">PNG ou JPG · ou arraste sobre o mapa</small>
+            <button class="linkbtn" id="restoreBtn" hidden data-i18n="restore">↺ Voltar à imagem padrão</button>
+          </div>
         </div>
-        <div class="field">
-          <label for="volAd"><span><i aria-hidden="true">🔊</i><span data-i18n="volAd">Audiodescrição</span></span><output id="volAdOut">60%</output></label>
-          <input type="range" id="volAd" min="0" max="1" step="0.01" value="0.6">
+        <div class="canvasbox" id="canvasbox">
+          <canvas id="stage" width="1280" height="720" tabindex="0" role="img" aria-describedby="imgDesc"></canvas>
+          <div class="tip" id="tip" aria-hidden="true"></div>
+          <div class="overlay" id="loading" data-i18n="generating">Gerando réplica procedural…</div>
+          <div class="overlay drop" id="dropOv" data-i18n="dropHere">Solte a imagem aqui</div>
         </div>
-        <button class="linkbtn2" id="volLink" aria-pressed="true"><span aria-hidden="true">🔗</span> <span id="volLinkTxt"></span></button>
-      </div>
-    </div>
-  </aside>
-
-  <section class="stagewrap">
-    <div class="panel">
-      <div class="trackhead">
-        <div>
-          <h2 id="trackTitle">—</h2>
-          <div class="src" id="srcInfo">—</div>
-          <p class="desc" id="trackDesc"></p>
+        <p class="sr-only" id="imgDesc"></p>
+        <div class="transport" role="group">
+          <div class="trow">
+            <button class="ibtn" id="stopBtn">■</button>
+            <button class="ibtn main" id="playBtn" aria-keyshortcuts="Space">▶</button>
+            <div class="seekwrap">
+              <label for="seek" class="sr-only" data-i18n="seekLabel">Posição da varredura no mapa</label>
+              <input type="range" id="seek" min="0" max="1000" step="1" value="0">
+            </div>
+            <div class="time" id="time" aria-hidden="true">0:00 / 0:40</div>
+          </div>
+          <div class="trow">
+            <div class="grp" role="group" aria-labelledby="speedLbl">
+              <span class="lbl" id="speedLbl" data-i18n="speed">Velocidade</span>
+              <div class="chips" id="chips"></div>
+            </div>
+            <span class="spacer"></span>
+            <button class="pill" id="exploreBtn" aria-pressed="false" aria-keyshortcuts="E"><span class="dot" aria-hidden="true"></span><span data-i18n="explore">👆 Descrever ponto (mouse/toque)</span></button>
+            <label class="check"><input type="checkbox" id="loop" checked> <span data-i18n="loop">Repetir</span></label>
+          </div>
         </div>
-        <div class="upload">
-          <label class="upload-btn"><span aria-hidden="true">📂</span> <span data-i18n="loadTitle">Carregar imagem real</span>
-            <input type="file" id="fileInput" accept="image/*">
-          </label>
-          <small data-i18n="loadSub">PNG ou JPG · ou arraste sobre o mapa · vale para a faixa selecionada</small>
-          <button class="linkbtn" id="restoreBtn" hidden data-i18n="restore">↺ Voltar à imagem padrão</button>
-          <a class="svs" id="svsLink" href="#" target="_blank" rel="noopener">NASA SVS ↗</a>
+      </section>
+
+      <!-- AGORA NO MAPA -->
+      <section class="panel" aria-labelledby="nowTitle">
+        <div class="phead"><h2 id="nowTitle"><span class="ico" aria-hidden="true">🔬</span><span data-i18n="nowTitle">Agora no mapa · tradução científica</span></h2></div>
+        <div class="phen" id="tPhen" aria-hidden="true">—</div>
+        <div class="tele">
+          <div class="metric"><small data-i18n="feature">Fenômeno</small><div id="tFeat">—</div></div>
+          <div class="metric"><small data-i18n="sound">Som</small><div id="tSound">—</div></div>
+          <div class="metric"><small data-i18n="position">Posição</small><div id="tPos">0.0%</div></div>
+          <div class="metric"><small data-i18n="color">Cor média</small><div id="tRgb"><span class="swatch"></span>—</div></div>
         </div>
-      </div>
-    </div>
+        <div class="sr-only" id="live" aria-live="polite" aria-atomic="true"></div>
+      </section>
 
-    <section class="panel legendpanel" id="legendPanel" aria-labelledby="legendTitle">
-      <h2 id="legendTitle"><span aria-hidden="true">🎧</span> <span data-i18n="legendTitle">Legenda sonora · ouça antes do mapa</span></h2>
-      <div class="legendtop">
-        <button class="btn big" id="legendAll" aria-keyshortcuts="L">▶ <span data-i18n="legendAll">Ouvir legenda completa</span></button>
-        <button class="btn" id="legendStop" hidden>⏹ <span data-i18n="legendStop">Parar legenda</span></button>
-        <p data-i18n="legendSub">Cada cor da imagem tem um som. A legenda diz o nome do item, a cor e toca o som associado.</p>
-      </div>
-      <ul class="llist" id="legend"></ul>
-      <label class="check" style="margin-top:12px"><input type="checkbox" id="legendFirst" checked> <span data-i18n="legendFirst">Tocar a legenda automaticamente antes da primeira varredura de cada faixa</span></label>
-    </section>
-
-    <div class="panel adpanel" id="adPanel" hidden>
-      <h2><span aria-hidden="true">🔊</span> <span data-i18n="adTitle">Audiodescrição ativa</span></h2>
-      <div class="adtext" id="adText">—</div>
-      <div class="adrow">
-        <button class="btn" id="adDescribe" aria-keyshortcuts="D">🖼️ <span data-i18n="adDescribe">Descrever imagem</span></button>
-        <button class="btn" id="adRules">📏 <span data-i18n="adRules">Ler regras de som</span></button>
-        <button class="btn" id="adCurrent" aria-keyshortcuts="R">🔬 <span data-i18n="adCurrent">Ler tradução atual</span></button>
-        <button class="btn" id="adStop">⏹ <span data-i18n="adStop">Parar narração</span></button>
-      </div>
-      <div class="adrow">
-        <div class="speedgrp" role="group" aria-labelledby="adRateLbl">
-          <span class="lbl" id="adRateLbl" data-i18n="adRate">Velocidade da narração</span>
-          <div class="chips" id="adChips"></div>
+      <!-- LEGENDA SONORA -->
+      <section class="panel legendpanel" id="legendPanel" aria-labelledby="legendTitle">
+        <div class="phead">
+          <h2 id="legendTitle"><span class="ico" aria-hidden="true">🎧</span><span data-i18n="legendTitle">Legenda sonora</span></h2>
+          <div class="hbtns">
+            <button class="btn" id="legendStop" hidden>⏹ <span data-i18n="legendStop">Parar legenda</span></button>
+            <button class="btn primary" id="legendAll" aria-keyshortcuts="L">▶ <span data-i18n="legendAll">Ouvir legenda completa</span></button>
+          </div>
         </div>
-        <label class="check"><input type="checkbox" id="adAuto" checked> <span data-i18n="adAuto">Narrar mudanças durante a reprodução</span></label>
-      </div>
-      <div class="adnote" id="adNote" hidden></div>
-    </div>
+        <p class="lsub" data-i18n="legendSub">Cada cor da imagem tem um som. A legenda diz o nome do item e a cor, depois toca o som associado.</p>
+        <ul class="llist" id="legend"></ul>
+        <label class="check lfoot"><input type="checkbox" id="legendFirst" checked> <span data-i18n="legendFirst">Tocar a legenda antes da primeira varredura de cada disco</span></label>
+      </section>
 
-    <div class="canvasbox" id="canvasbox">
-      <canvas id="stage" width="1280" height="720" tabindex="0" role="img" aria-describedby="imgDesc"></canvas>
-      <div class="overlay" id="loading" data-i18n="generating">Gerando réplica procedural…</div>
-      <div class="overlay drop" id="dropOv" data-i18n="dropHere">Solte a imagem aqui</div>
-    </div>
-    <p class="sr-only" id="imgDesc"></p>
-
-    <div class="panel transport" role="group" aria-label="Controles de reprodução">
-      <div class="trow">
-        <button class="ibtn" id="stopBtn">■</button>
-        <button class="ibtn main" id="playBtn" aria-keyshortcuts="Space">▶</button>
-        <div class="seekwrap">
-          <label for="seek" class="sr-only" data-i18n="seekLabel">Posição da varredura no mapa</label>
-          <input type="range" id="seek" min="0" max="1000" step="1" value="0">
+      <!-- AUDIODESCRIÇÃO -->
+      <section class="panel adpanel" id="adPanel" aria-labelledby="adTitle">
+        <div class="phead">
+          <h2 id="adTitle"><span class="ico" aria-hidden="true">🔊</span><span data-i18n="adBtn">Audiodescrição</span></h2>
+          <button class="switch" id="adSwitch" role="switch" aria-checked="false" aria-labelledby="adTitle adSwitchTxt"><span class="trk" aria-hidden="true"></span><span id="adSwitchTxt">Desligada</span></button>
         </div>
-        <div class="time" id="time" aria-hidden="true">0:00 / 0:40</div>
-      </div>
-      <div class="trow">
-        <div class="speedgrp" role="group" aria-labelledby="speedLbl">
-          <span class="lbl" id="speedLbl" data-i18n="speed">Velocidade da varredura</span>
-          <div class="chips" id="chips"></div>
+        <div class="adtext" id="adText">—</div>
+        <div class="adrow">
+          <button class="btn" id="adDescribe" aria-keyshortcuts="D">🖼️ <span data-i18n="adDescribe">Descrever imagem</span></button>
+          <button class="btn" id="adRules">📏 <span data-i18n="adRules">Ler regras de som</span></button>
+          <button class="btn" id="adCurrent" aria-keyshortcuts="R">🔬 <span data-i18n="adCurrent">Ler tradução atual</span></button>
+          <button class="btn" id="adStop">⏹ <span data-i18n="adStop">Parar narração</span></button>
         </div>
-        <label class="check"><input type="checkbox" id="loop" checked> <span data-i18n="loop">Repetir</span></label>
-      </div>
-      <div class="hint" id="hint"></div>
+        <div class="adopts">
+          <label class="check"><input type="checkbox" id="adExplore"> <span data-i18n="adExplore">Descrever o ponto sob o mouse ou o dedo</span></label>
+          <label class="check"><input type="checkbox" id="adAuto" checked> <span data-i18n="adAuto">Narrar mudanças durante a reprodução</span></label>
+          <div class="grp" role="group" aria-labelledby="adRateLbl">
+            <span class="lbl" id="adRateLbl" data-i18n="adRate">Velocidade da narração</span>
+            <div class="chips" id="adChips"></div>
+          </div>
+        </div>
+        <div class="adnote" id="adNote" hidden></div>
+      </section>
     </div>
 
-    <div class="panel">
-      <h2 data-i18n="telemetry">Tradução científica ao vivo</h2>
-      <div class="tele">
-        <div class="metric"><small data-i18n="position">Posição no mapa</small><div id="tPos">0.0%</div></div>
-        <div class="metric"><small data-i18n="color">Cor média detectada</small><div id="tRgb"><span class="swatch"></span>—</div></div>
-        <div class="metric"><small data-i18n="sound">Frequência / instrumento</small><div id="tSound">—</div></div>
-        <div class="metric"><small data-i18n="feature">Fenômeno dominante</small><div id="tFeat">—</div></div>
-      </div>
-      <div class="phen" id="tPhen" aria-hidden="true">—</div>
-      <div class="sr-only" id="live" aria-live="polite" aria-atomic="true"></div>
-    </div>
+    <aside class="col">
+      <!-- SOM -->
+      <section class="panel" aria-labelledby="soundTitle">
+        <div class="phead"><h2 id="soundTitle"><span class="ico" aria-hidden="true">🎚️</span><span data-i18n="soundTitle">Som</span></h2></div>
+        <div class="deck"><canvas id="disc" width="400" height="400" aria-hidden="true"></canvas></div>
+        <div class="stack" role="group" aria-labelledby="soundTitle">
+          <div class="field">
+            <label for="volSweep"><span><i aria-hidden="true">🗺️</i><span data-i18n="volSweep">Varredura do mapa</span></span><output id="volSweepOut">80%</output></label>
+            <input type="range" id="volSweep" min="0" max="1" step="0.01" value="0.8">
+          </div>
+          <div class="field">
+            <label for="volAd"><span><i aria-hidden="true">🔊</i><span data-i18n="volAd">Audiodescrição</span></span><output id="volAdOut">60%</output></label>
+            <input type="range" id="volAd" min="0" max="1" step="0.01" value="0.6">
+          </div>
+          <button class="linkbtn2" id="volLink" aria-pressed="true"><span aria-hidden="true">🔗</span> <span id="volLinkTxt"></span></button>
+          <div class="field">
+            <label for="scale"><span data-i18n="scale">Escala musical</span></label>
+            <select id="scale">
+              <option value="majPent" data-i18n="majPent">Pentatônica Maior</option>
+              <option value="minPent" data-i18n="minPent">Pentatônica Menor</option>
+              <option value="lydian" data-i18n="lydian">Lídio</option>
+            </select>
+          </div>
+        </div>
+      </section>
 
+      <!-- SOBRE -->
+      <section class="panel about" aria-labelledby="aboutTitle">
+        <div class="phead"><h2 id="aboutTitle"><span class="ico" aria-hidden="true">ℹ️</span><span data-i18n="aboutTitle">Sobre esta imagem</span></h2></div>
+        <p id="trackDesc"></p>
+        <div class="row"><button class="btn" id="creditsBtn" data-i18n="credits">Citações NASA</button></div>
+        <details>
+          <summary data-i18n="methodTitle">Metodologia (NASA SVS #13786)</summary>
+          <p data-i18n="methodBody"></p>
+        </details>
+      </section>
 
-    <div class="panel">
-      <details>
-        <summary data-i18n="methodTitle">Metodologia: framework NASA “Data Sonification: Caldwell 73” (SVS #13786)</summary>
-        <p data-i18n="methodBody"></p>
-      </details>
-    </div>
-  </section>
-</main>
+      <!-- ATALHOS -->
+      <section class="panel" aria-labelledby="keysTitle">
+        <div class="phead"><h2 id="keysTitle"><span class="ico" aria-hidden="true">⌨️</span><span data-i18n="keysTitle">Atalhos de teclado</span></h2></div>
+        <ul class="keys" id="keys"></ul>
+      </section>
+    </aside>
+  </main>
+</div>
 
 <footer>
-  <span data-i18n="footer">Visualizações: NASA Goddard Space Flight Center · Scientific Visualization Studio (SVS).</span>
-  <a href="https://svs.gsfc.nasa.gov/gallery/earth-information-center/" target="_blank" rel="noopener">svs.gsfc.nasa.gov/gallery/earth-information-center</a> ·
-  <a href="https://svs.gsfc.nasa.gov/13786/" target="_blank" rel="noopener">#13786</a> ·
-  <a href="https://svs.gsfc.nasa.gov/5669/" target="_blank" rel="noopener">#5669</a> ·
-  <a href="https://svs.gsfc.nasa.gov/5313/" target="_blank" rel="noopener">#5313</a> ·
-  <a href="https://svs.gsfc.nasa.gov/5011/" target="_blank" rel="noopener">#5011</a> ·
-  <a href="https://svs.gsfc.nasa.gov/4950/" target="_blank" rel="noopener">#4950</a>
+  <div class="wrap">
+    <span data-i18n="footer">Visualizações: NASA Goddard Space Flight Center · Scientific Visualization Studio (SVS).</span>
+    <a href="https://svs.gsfc.nasa.gov/gallery/earth-information-center/" target="_blank" rel="noopener">svs.gsfc.nasa.gov/gallery/earth-information-center</a> ·
+    <a href="https://svs.gsfc.nasa.gov/13786/" target="_blank" rel="noopener">#13786</a> ·
+    <a href="https://svs.gsfc.nasa.gov/5669/" target="_blank" rel="noopener">#5669</a> ·
+    <a href="https://svs.gsfc.nasa.gov/5313/" target="_blank" rel="noopener">#5313</a> ·
+    <a href="https://svs.gsfc.nasa.gov/5011/" target="_blank" rel="noopener">#5011</a> ·
+    <a href="https://svs.gsfc.nasa.gov/4950/" target="_blank" rel="noopener">#4950</a>
+  </div>
 </footer>
 
 <dialog id="creditsDlg" aria-labelledby="credTitle">
@@ -594,31 +633,39 @@ function drawLights(ctx, proj, bb, density, seed, dot) {
   ctx.restore();
 }
 function genNightlights() {
-  const W = 1600, H = 450, LAT0 = 80, LAT1 = -60;
+  // o original (SVS #5313) tem dois mapas-múndi lado a lado, cada um com dois quadros ampliados
+  const W = 1600, H = 450, HW = W / 2, LAT0 = 83.6, LAT1 = -75.4, LON0 = -168.75;
   const c = mk(W, H), x = ctx2d(c);
-  const proj = (lo, la) => [(lo + 180) / 360 * W, (LAT0 - la) / (LAT0 - LAT1) * H];
+  const base = (lo, la) => [(lo - LON0) / 360 * HW, (LAT0 - la) / (LAT0 - LAT1) * H];
+  const proj = k => (lo, la) => { const [px, py] = base(lo, la); return [k * HW + px, py]; };
   x.fillStyle = '#06070a'; x.fillRect(0, 0, W, H);
-  x.fillStyle = '#2a2b2e'; pathPolys(x, proj);
-  drawLights(x, proj, [-180, 180, LAT1, LAT0], 1, 5313, 1.6);
+  for (let k = 0; k < 2; k++) {
+    x.save(); x.beginPath(); x.rect(k * HW, 0, HW, H); x.clip();
+    for (const off of [k * HW, k * HW + HW]) {   // segunda cópia cobre a costura do antimeridiano
+      x.save(); x.translate(off, 0);
+      x.fillStyle = '#2a2b2e'; pathPolys(x, base);
+      drawLights(x, base, [-180, 180, LAT1, LAT0], 0.75, 5313 + k, 1.4);
+      x.restore();
+    }
+    x.restore();
+  }
   const INS = [
-    { name: 'Western Europe', r: [0.088, 0.33, 0.28, 0.62], bb: [-11, 18, 34, 60] },
-    { name: 'Eastern Mediterranean', r: [0.285, 0.035, 0.175, 0.56], bb: [24, 40, 22, 40] },
-    { name: 'Ukraine *', r: [0.6, 0.035, 0.17, 0.39], bb: [22, 42, 43, 53] },
-    { name: 'India', r: [0.785, 0.36, 0.185, 0.6], bb: [66, 92, 6, 36] }
+    { name: 'Western Europe', r: [0.088, 0.33, 0.28, 0.62], bb: [-11, 18, 34, 60], half: 0 },
+    { name: 'Eastern Mediterranean', r: [0.285, 0.035, 0.175, 0.56], bb: [24, 40, 22, 40], half: 0 },
+    { name: 'Ukraine *', r: [0.6, 0.035, 0.17, 0.39], bb: [22, 42, 43, 53], half: 1 },
+    { name: 'India', r: [0.785, 0.36, 0.185, 0.6], bb: [66, 92, 6, 36], half: 1 }
   ];
   INS.forEach((ins, k) => {
-    const rx = ins.r[0] * W, ry = ins.r[1] * H, rw = ins.r[2] * W, rh = ins.r[3] * H;
+    const rx = ins.r[0] * W, ry = ins.r[1] * H, rw = ins.r[2] * W, rh = ins.r[3] * H, P = proj(ins.half);
     let [lo0, lo1, la0, la1] = ins.bb;
     const mid = (la0 + la1) / 2, cosm = Math.cos(mid * DEG), asp = rw / rh;
     const lonSpan = (lo1 - lo0) * cosm, latSpan = la1 - la0;
     if (lonSpan / latSpan < asp) { const need = latSpan * asp / cosm, cx = (lo0 + lo1) / 2; lo0 = cx - need / 2; lo1 = cx + need / 2; }
     else { const need = lonSpan / asp, cy = (la0 + la1) / 2; la0 = cy - need / 2; la1 = cy + need / 2; }
-    // retângulo de origem + linhas de conexão
-    const [sx0, sy0] = proj(lo0, la1), [sx1, sy1] = proj(lo1, la0);
+    const [sx0, sy0] = P(ins.bb[0], ins.bb[3]), [sx1, sy1] = P(ins.bb[1], ins.bb[2]);
     x.strokeStyle = 'rgba(200,200,200,0.55)'; x.lineWidth = 1;
     x.strokeRect(sx0, sy0, sx1 - sx0, sy1 - sy0);
     x.beginPath(); x.moveTo(sx0, sy0); x.lineTo(rx, ry); x.moveTo(sx1, sy1); x.lineTo(rx + rw, ry + rh); x.stroke();
-    // inset
     x.save(); x.shadowColor = 'rgba(0,0,0,.8)'; x.shadowBlur = 14;
     x.fillStyle = '#06070a'; x.fillRect(rx, ry, rw, rh); x.restore();
     x.save(); x.beginPath(); x.rect(rx, ry, rw, rh); x.clip();
@@ -630,15 +677,15 @@ function genNightlights() {
     x.strokeStyle = '#a3a3a3'; x.lineWidth = 1.5; x.strokeRect(rx, ry, rw, rh);
     x.fillStyle = '#f1f5f9'; x.font = 'bold 12px system-ui,sans-serif'; x.fillText(ins.name, rx + 8, ry + 17);
   });
-  // barra de cores
-  const bx = W * 0.475, by = H * 0.48, bw = 150;
-  x.fillStyle = 'rgba(255,255,255,.85)'; x.font = '8px system-ui,sans-serif'; x.textAlign = 'center';
+  // barra de cores, entre os dois mapas
+  const bx = W * 0.487, by = H * 0.555, bw = W * 0.08;
+  x.fillStyle = 'rgba(255,255,255,.85)'; x.font = '7px system-ui,sans-serif'; x.textAlign = 'center';
   x.fillText('Change in Lighting Intensity from 2012 to 2023', bx + bw / 2, by - 5);
   const g = x.createLinearGradient(bx, 0, bx + bw, 0);
   g.addColorStop(0, 'rgb(245,150,60)'); g.addColorStop(0.5, 'rgb(240,238,230)'); g.addColorStop(1, 'rgb(165,120,250)');
   x.fillStyle = g; x.fillRect(bx, by, bw, 6);
-  x.fillStyle = 'rgba(200,200,200,.8)'; x.font = '7px system-ui,sans-serif';
-  x.fillText('lights out', bx + 12, by + 15); x.fillText('no change', bx + bw / 2, by + 15); x.fillText('new lights', bx + bw - 12, by + 15);
+  x.fillStyle = 'rgba(200,200,200,.8)'; x.font = '6px system-ui,sans-serif';
+  x.fillText('lights out', bx + 12, by + 14); x.fillText('no change', bx + bw / 2, by + 14); x.fillText('new lights', bx + bw - 12, by + 14);
   x.textAlign = 'start';
   return c;
 }
@@ -646,7 +693,7 @@ function genNightlights() {
 // 3.3 Lightning from the ISS — SVS #5011
 function genISS() {
   const W = 1024, H = 576, c = mk(W, H), x = ctx2d(c), id = x.createImageData(W, H), D = id.data;
-  const cx = 430, cy = 335, R = 385, lon0 = 33 * DEG, lat0 = 2 * DEG;
+  const cx = 660, cy = 382, R = 584, lon0 = 62.82 * DEG, lat0 = -11.7 * DEG;   // ajustado por pontos de referência do original
   for (let py = 0; py < H; py++) for (let px = 0; px < W; px++) {
     const i = (py * W + px) * 4, dx = (px - cx) / R, dy = (cy - py) / R;
     const p = orthoInverse(dx, dy, lon0, lat0);
@@ -657,7 +704,7 @@ function genISS() {
       const base = land ? 120 + 50 * (n - 0.5) : 60 + 8 * n;
       const cloud = smooth(0.56, 0.74, fbm(p.lon * 0.18 + 3, p.lat * 0.25 + 8, 5));
       v = base * (1 - cloud) + 205 * cloud;
-      const shade = 0.95 - 0.8 * smooth(-0.15, 0.85, dx * 0.95 + dy * 0.15);
+      const shade = 0.95 - 0.86 * smooth(-0.02, 0.3, dx + 0.12 * dy);   // lado noturno à direita
       v = Math.max(v * shade * (0.75 + 0.25 * p.z), 12); b = v + 4;
     }
     D[i] = v; D[i + 1] = v; D[i + 2] = b; D[i + 3] = 255;
@@ -666,7 +713,7 @@ function genISS() {
   const r = rng(5011);
   for (let k = 0; k < 320; k++) {
     const sx = r() * W, sy = r() * H;
-    if (Math.hypot(sx - cx, sy - cy) < R + 2) continue;
+    if (Math.hypot(sx - cx, sy - cy) < R + 2 && (sx - cx) / R < 0.3) continue;   // estrelas fora do globo e luzes no lado noturno
     const a = 0.25 + r() * 0.6; x.fillStyle = `rgba(215,215,225,${a})`; x.fillRect(sx, sy, r() < 0.1 ? 2 : 1, r() < 0.1 ? 2 : 1);
   }
   // órbita
@@ -821,7 +868,7 @@ const TRACKS = [
     pt: 'Variação da intensidade luminosa noturna (VIIRS/Black Marble) entre 2012 e 2023, com zooms na Europa Ocidental, Mediterrâneo Oriental, Ucrânia e Índia. O fundo escuro é ignorado; o contraste das luzes controla o volume e o ritmo.',
     en: 'Change in nighttime light intensity (VIIRS/Black Marble) between 2012 and 2023, with zooms over Western Europe, the Eastern Mediterranean, Ukraine and India. The dark background is ignored; light contrast drives volume and rhythm.'
   },
-  visual: { pt: "Mapa-múndi noturno muito escuro, mais largo do que alto. Pontos de luz marcam as cidades: âmbar onde a luz diminuiu e violeta onde surgiram luzes novas. Quatro quadros ampliados destacam a Europa Ocidental, quase toda âmbar; o Mediterrâneo Oriental, com o vale do Nilo em âmbar; a Ucrânia; e a Índia, quase toda violeta. No centro há uma barra de cores que vai do âmbar, luzes apagadas, ao violeta, luzes novas.", en: "A very dark night-time world map, wider than tall. Points of light mark cities: amber where light decreased and violet where new lights appeared. Four zoomed frames highlight Western Europe, mostly amber; the Eastern Mediterranean, with the Nile valley in amber; Ukraine; and India, mostly violet. In the middle, a color bar runs from amber, lights out, to violet, new lights." },
+  visual: { pt: "Dois mapas-múndi noturnos, muito escuros, lado a lado. Pontos de luz marcam as cidades: âmbar onde a luz diminuiu e violeta onde surgiram luzes novas. No mapa da esquerda, dois quadros ampliados destacam a Europa Ocidental, quase toda âmbar, e o Mediterrâneo Oriental, com o vale do Nilo em âmbar. No mapa da direita, outros dois mostram a Ucrânia e a Índia, quase toda violeta. Entre os mapas, uma barra de cores vai do âmbar, luzes apagadas, ao violeta, luzes novas.", en: "Two very dark night-time world maps side by side. Points of light mark cities: amber where light decreased and violet where new lights appeared. On the left map, two zoomed frames highlight Western Europe, mostly amber, and the Eastern Mediterranean, with the Nile valley in amber. On the right map, two more show Ukraine and India, mostly violet. Between the maps, a color bar runs from amber, lights out, to violet, new lights." },
   rules: { pt: "O fundo preto e cinza-escuro fica em silêncio. Âmbar, luz que diminuiu, vira notas graves e suaves. Violeta, luzes novas, vira notas agudas e brilhantes. Quanto mais luzes na coluna, mais rápido o ritmo; quanto mais brilho, mais volume.", en: "The black and dark-gray background stays silent. Amber, light that decreased, becomes soft low notes. Violet, new lights, becomes bright high notes. The more lights in the column, the faster the rhythm; the brighter they are, the louder." },
   step: () => 0.16,
   cats: {
@@ -865,7 +912,7 @@ const TRACKS = [
     pt: 'Flashes registrados pelo LIS (Lightning Imaging Sensor) a bordo da Estação Espacial Internacional. Sonificação pontuada: cada flash amarelo-dourado cruzado pela barra dispara um pulso percussivo; a trajetória branca da ISS, o texto “ISS”, o globo cinza e o espaço são ignorados.',
     en: 'Flashes recorded by LIS (Lightning Imaging Sensor) aboard the International Space Station. Pointillistic sonification: each golden flash crossed by the playhead fires a percussive pulse; the white ISS track, the “ISS” label, the gray globe and space are ignored.'
   },
-  visual: { pt: "Globo terrestre cinza visto do espaço, mostrando o leste da África, a Península Arábica e Madagascar, com nuvens brancas e o lado direito na sombra da noite. Uma linha branca diagonal desce do topo até um ponto marcado ISS, sobre a costa do Quênia e da Tanzânia. Pequenos aglomerados amarelo-dourados indicam raios perto do Lago Vitória, no norte do Egito e numa faixa vertical na borda direita da imagem.", en: "A gray Earth seen from space, showing East Africa, the Arabian Peninsula and Madagascar, with white clouds and the right side in night shadow. A white diagonal line runs from the top down to a point labeled ISS, over the coast of Kenya and Tanzania. Small golden-yellow clusters mark lightning near Lake Victoria, over northern Egypt and in a vertical strip at the right edge of the image." },
+  visual: { pt: "Globo terrestre cinza visto do espaço, bem de perto, mostrando o leste da África, a Península Arábica e Madagascar, com nuvens brancas e o lado direito na sombra da noite. Uma linha branca diagonal desce do topo até um ponto marcado ISS, sobre a costa do Quênia e da Tanzânia. Pequenos aglomerados amarelo-dourados indicam raios perto do Lago Vitória, no norte do Mar Vermelho e, à direita, já no lado noturno, perto de Sumatra.", en: "A gray Earth seen from space, showing East Africa, the Arabian Peninsula and Madagascar, with white clouds and the right side in night shadow. A white diagonal line runs from the top down to a point labeled ISS, over the coast of Kenya and Tanzania. Small golden-yellow clusters mark lightning near Lake Victoria, over the northern Red Sea and, on the right, on the night side near Sumatra." },
   rules: { pt: "Só os flashes amarelo-dourados de raio tocam, como pulsos curtos de marimba, no instante em que a barra os cruza. A linha branca da órbita, o texto ISS, o globo cinza e o espaço ficam em silêncio. Raios mais ao norte soam mais agudos.", en: "Only the golden-yellow lightning flashes play, as short marimba pulses, at the moment the playhead crosses them. The white orbit line, the ISS label, the gray globe and space stay silent. Lightning farther north sounds higher." },
   step: () => 0.15,
   cats: {
@@ -896,7 +943,7 @@ const TRACKS = [
     forest: { color: '#a3e635', name: { pt: 'Cobertura florestal', en: 'Forest cover' }, inst: { pt: 'sine + triangle (altura → pitch)', en: 'sine + triangle (height → pitch)' },
       phrase: { pt: '', en: '' } }
   },
-  silence: { pt: 'Oceano, espaço ou área de legenda: ignorados.', en: 'Ocean, space or legend area: ignored.' },
+  silence: { pt: 'Espaço ou área da legenda: sem som.', en: 'Space or legend area: no sound.' },
   classify(r, g, b, y, h) {
     if (y > h * 0.82) return null;                  // barra "Height Above Ground"
     if (r + g + b < 30) return null;                // espaço
@@ -921,6 +968,13 @@ const TRACKS = [
 }
 ];
 TRACKS.forEach(t => t.cache = {});
+const TAGS = {
+  aerosols: { pt: 'Partículas no ar', en: 'Particles in the air' },
+  nightlights: { pt: 'Mudança 2012–2023', en: 'Change 2012–2023' },
+  lightning: { pt: 'Raios vistos do espaço', en: 'Lightning seen from space' },
+  gedi: { pt: 'Altura do dossel', en: 'Canopy height' }
+};
+TRACKS.forEach(t => { t.tag = TAGS[t.id]; });
 
 /* --- Legenda sonora: cor, descrição do som e demonstração de cada item --- */
 const seq = (fn, times) => times.forEach((at, i) => fn(at, i));
@@ -981,7 +1035,7 @@ const AMB_CFG = {
   lightning: {
     ocean: AMB.ocean('cinza-escuro', 'dark gray', 'Oceano sob a órbita da ISS, sem raios: som regular de fundo.', 'Ocean under the ISS orbit, no lightning: regular background sound.'),
     land: AMB.land('cinza-claro', 'light gray', 'Terra e nuvens sem raios nesta coluna: tom grave da terra.', 'Land and clouds with no lightning in this column: low hum of land.'),
-    base(r, g, b) { const s = r + g + b; if (s < 50 || b > 170 || !isGray(r, g, b, 20)) return null; return s < 230 ? 'ocean' : 'land'; }
+    base(r, g, b, y, h, x, w) { const s = r + g + b; if (s < 50 || b > 170 || !isGray(r, g, b, 20)) return null; const p = lonLatAt('lightning', x, y, w, h); return p ? (isLand(p.lon, p.lat) ? 'land' : 'ocean') : null; }
   },
   gedi: {
     ocean: AMB.ocean('azul', 'blue', 'Oceano: só o som regular de fundo do mar.', 'Ocean: just the regular sea background sound.'),
@@ -1003,24 +1057,32 @@ TRACKS.forEach(t => {
 const I18N = {
   pt: {
     skip: 'Pular para o mapa sonoro',
+    tracksPick: 'Escolha um disco · catálogo NASA SVS', nowTitle: 'Agora no mapa · tradução científica', soundTitle: 'Som',
+    aboutTitle: 'Sobre esta imagem', keysTitle: 'Atalhos de teclado',
+    explore: '👆 Descrever ponto (mouse/toque)', adExplore: 'Descrever o ponto sob o mouse ou o dedo',
+    adSwitchOn: 'Ligada', adSwitchOff: 'Desligada',
+    adIdle: 'Desligada. Ligue para ouvir em voz alta a descrição da imagem, as regras de som e cada fenômeno. Os botões abaixo funcionam mesmo com ela desligada.',
+    exploreOn: 'Descrição do ponto ativada. Passe o mouse ou o dedo sobre o mapa.', exploreOff: 'Descrição do ponto desativada.',
+    exploreHint: 'Passe o mouse ou o dedo sobre o mapa para ouvir o que há em cada ponto.', regionWord: 'Região',
+    keys: [['L', 'ouvir a legenda sonora'], ['Espaço', 'tocar ou pausar'], ['← →', 'mover a barra (Shift: salto maior)'], ['↑ ↓', 'explorar na vertical, com o mapa em foco'], ['Enter', 'descrever o ponto em foco'], ['E', 'descrever o ponto sob mouse ou dedo'], ['A', 'ligar ou desligar a audiodescrição'], ['D', 'descrever a imagem'], ['R', 'ler a tradução atual'], ['1 – 4', 'trocar de disco']],
     subtitle: 'NASA Space Apps Challenge 2026 · Dados da Terra para ouvir',
     tracks: 'Discos · Catálogo NASA SVS', credits: 'Citações NASA',
     play: 'Tocar', pause: 'Pausar', stop: 'Parar e voltar ao início',
-    speed: 'Velocidade da varredura', speedFine: 'Ajuste fino da velocidade', scale: 'Escala musical', volume: 'Volume mestre', mixTitle: 'Volumes', volSweep: 'Varredura do mapa', volAd: 'Audiodescrição', linkOn: 'Volumes vinculados (mudar um ajusta o outro)', linkOff: 'Volumes independentes', speedSet: s => `Velocidade ${s}×`,
+    speed: 'Velocidade', speedFine: 'Ajuste fino da velocidade', scale: 'Escala musical', volume: 'Volume mestre', mixTitle: 'Volumes', volSweep: 'Varredura do mapa', volAd: 'Audiodescrição', linkOn: 'Volumes vinculados (mudar um ajusta o outro)', linkOff: 'Volumes independentes', speedSet: s => `Velocidade ${s}×`,
     majPent: 'Pentatônica Maior', minPent: 'Pentatônica Menor', lydian: 'Lídio', loop: 'Repetir',
-    loadTitle: 'Carregar imagem real', loadSub: 'PNG ou JPG · ou arraste sobre o mapa · vale para a faixa selecionada',
+    loadTitle: 'Carregar imagem real', loadSub: 'PNG ou JPG · ou arraste sobre o mapa',
     restore: '↺ Voltar à imagem padrão', dropHere: 'Solte a imagem aqui para sonificá-la',
     generating: 'Gerando réplica procedural…',
     hint: '<kbd>L</kbd> legenda sonora · <kbd>Espaço</kbd> toca/pausa · <kbd>←</kbd><kbd>→</kbd> movem a barra · <kbd>A</kbd> audiodescrição · <kbd>D</kbd> descreve a imagem · <kbd>R</kbd> lê a tradução · <kbd>1</kbd>–<kbd>4</kbd> trocam a faixa · clique ou arraste no mapa para ouvir um ponto',
-    telemetry: 'Tradução científica ao vivo', position: 'Posição no mapa', color: 'Cor média detectada', sound: 'Frequência / instrumento', feature: 'Fenômeno dominante',
-    legendTitle: 'Legenda sonora · ouça antes do mapa', legendAll: 'Ouvir legenda completa', legendStop: 'Parar legenda',
-    legendSub: 'Cada cor da imagem tem um som. A legenda diz o nome do item, a cor e toca o som associado.',
-    legendFirst: 'Tocar a legenda automaticamente antes da primeira varredura de cada faixa',
+    telemetry: 'Tradução científica ao vivo', position: 'Posição', color: 'Cor média', sound: 'Som', feature: 'Fenômeno',
+    legendTitle: 'Legenda sonora', legendAll: 'Ouvir legenda completa', legendStop: 'Parar legenda',
+    legendSub: 'Ouça antes de tocar o mapa: cada cor da imagem tem um som. A legenda diz o nome do item e a cor, depois toca o som associado.',
+    legendFirst: 'Tocar a legenda antes da primeira varredura de cada disco',
     listen: '▶ Ouvir', mute: '🔇 Silenciar', unmute: '🔊 Reativar', colorWord: 'cor', soundWord: 'Som', bg: 'fundo',
     legendIntro: t => `Legenda sonora: ${t}. Cada cor tem um som.`, legendEnd: 'Fim da legenda. Agora o mapa.',
     layersTitle: 'Camadas sonoras desta faixa', layersHint: 'Toque numa camada para silenciá-la ou reativá-la e ouvir cada fenômeno isolado.',
     layerOn: 'ativa', layerOff: 'muda', infoOnly: 'só informação',
-    methodTitle: 'Metodologia: framework NASA “Data Sonification: Caldwell 73” (SVS #13786)',
+    methodTitle: 'Metodologia (NASA SVS #13786)',
     methodBody: 'Seguindo a abordagem do NASA SVS em “Data Sonification: Caldwell 73” (#13786), cada imagem é lida como uma partitura: uma barra vertical varre o mapa da esquerda para a direita. A posição vertical do pixel define a altura da nota (pitch), com o topo mais agudo. O brilho e a densidade definem o volume. A faixa de cor (espectro) escolhe o timbre ou instrumento, e a distribuição espacial das feições cria o ritmo. Todas as notas são encaixadas na escala escolhida e moldadas por envelope ADSR exponencial, que evita estalos. A audiodescrição narra a imagem, as regras e cada fenômeno ouvido, e abaixa a música enquanto fala.',
     footer: 'Visualizações: NASA Goddard Space Flight Center · Scientific Visualization Studio (SVS).',
     citationsTitle: 'Citações oficiais da NASA',
@@ -1045,24 +1107,32 @@ const I18N = {
   },
   en: {
     skip: 'Skip to the sound map',
+    tracksPick: 'Pick a record · NASA SVS catalog', nowTitle: 'Now on the map · scientific translation', soundTitle: 'Sound',
+    aboutTitle: 'About this image', keysTitle: 'Keyboard shortcuts',
+    explore: '👆 Describe point (mouse/touch)', adExplore: 'Describe the point under the mouse or finger',
+    adSwitchOn: 'On', adSwitchOff: 'Off',
+    adIdle: 'Off. Turn it on to hear the image description, the sound rules and each phenomenon read aloud. The buttons below work even while it is off.',
+    exploreOn: 'Point description on. Move the mouse or your finger over the map.', exploreOff: 'Point description off.',
+    exploreHint: 'Move the mouse or your finger over the map to hear what is at each point.', regionWord: 'Region',
+    keys: [['L', 'play the sound legend'], ['Space', 'play or pause'], ['← →', 'move the playhead (Shift: bigger jump)'], ['↑ ↓', 'explore vertically, with the map focused'], ['Enter', 'describe the focused point'], ['E', 'describe the point under mouse or finger'], ['A', 'turn audio description on or off'], ['D', 'describe the image'], ['R', 'read the current translation'], ['1 – 4', 'switch record']],
     subtitle: 'NASA Space Apps Challenge 2026 · Earth data you can hear',
     tracks: 'Records · NASA SVS Catalog', credits: 'NASA Citations',
     play: 'Play', pause: 'Pause', stop: 'Stop and rewind',
-    speed: 'Sweep speed', speedFine: 'Fine speed adjustment', scale: 'Musical scale', volume: 'Master volume', mixTitle: 'Volumes', volSweep: 'Map sweep', volAd: 'Audio description', linkOn: 'Linked volumes (changing one adjusts the other)', linkOff: 'Independent volumes', speedSet: s => `Speed ${s}×`,
+    speed: 'Speed', speedFine: 'Fine speed adjustment', scale: 'Musical scale', volume: 'Master volume', mixTitle: 'Volumes', volSweep: 'Map sweep', volAd: 'Audio description', linkOn: 'Linked volumes (changing one adjusts the other)', linkOff: 'Independent volumes', speedSet: s => `Speed ${s}×`,
     majPent: 'Major Pentatonic', minPent: 'Minor Pentatonic', lydian: 'Lydian', loop: 'Loop',
-    loadTitle: 'Load real image', loadSub: 'PNG or JPG · or drop it on the map · applies to the selected track',
+    loadTitle: 'Load real image', loadSub: 'PNG or JPG · or drop it on the map',
     restore: '↺ Back to default image', dropHere: 'Drop the image here to sonify it',
     generating: 'Generating procedural replica…',
     hint: '<kbd>L</kbd> sound legend · <kbd>Space</kbd> play/pause · <kbd>←</kbd><kbd>→</kbd> move the playhead · <kbd>A</kbd> audio description · <kbd>D</kbd> describe image · <kbd>R</kbd> read translation · <kbd>1</kbd>–<kbd>4</kbd> switch track · click or drag on the map to hear a point',
-    telemetry: 'Live scientific translation', position: 'Map position', color: 'Detected mean color', sound: 'Frequency / instrument', feature: 'Dominant phenomenon',
-    legendTitle: 'Sound legend · listen before the map', legendAll: 'Play full legend', legendStop: 'Stop legend',
-    legendSub: 'Each color in the image has a sound. The legend says the item name and its color, then plays the matching sound.',
-    legendFirst: 'Play the legend automatically before each track’s first sweep',
+    telemetry: 'Live scientific translation', position: 'Position', color: 'Mean color', sound: 'Sound', feature: 'Phenomenon',
+    legendTitle: 'Sound legend', legendAll: 'Play full legend', legendStop: 'Stop legend',
+    legendSub: 'Listen before playing the map: each color in the image has a sound. The legend says the item name and its color, then plays the matching sound.',
+    legendFirst: 'Play the legend before each record’s first sweep',
     listen: '▶ Listen', mute: '🔇 Mute', unmute: '🔊 Unmute', colorWord: 'color', soundWord: 'Sound', bg: 'background',
     legendIntro: t => `Sound legend: ${t}. Each color has a sound.`, legendEnd: 'End of legend. Now the map.',
     layersTitle: 'Sound layers in this track', layersHint: 'Tap a layer to mute or unmute it and hear each phenomenon on its own.',
     layerOn: 'on', layerOff: 'muted', infoOnly: 'info only',
-    methodTitle: 'Methodology: NASA “Data Sonification: Caldwell 73” framework (SVS #13786)',
+    methodTitle: 'Methodology (NASA SVS #13786)',
     methodBody: 'Following the NASA SVS approach in “Data Sonification: Caldwell 73” (#13786), each image is read like a musical score: a vertical playhead sweeps the map from left to right. A pixel’s vertical position sets pitch, with the top sounding highest. Brightness and density set volume. The color band (spectrum) picks the timbre or instrument, and the spatial distribution of features creates rhythm. Every note is snapped to the selected scale and shaped by an exponential ADSR envelope that prevents clicks. Audio description narrates the image, the rules and each phenomenon heard, lowering the music while it speaks.',
     footer: 'Visualizations: NASA Goddard Space Flight Center · Scientific Visualization Studio (SVS).',
     citationsTitle: 'Official NASA citations',
@@ -1223,6 +1293,7 @@ const state = {
   playing: false, x: 0, acc: 0, step: 0, loadToken: 0, seeking: false,
   markers: [], recent: new Map(), muted: new Set(),
   lastLive: 0, lastDom: '', lastTele: 0, lastFlash: null, lastTime: 0,
+  explore: false, exploreTouched: false, ex: null, exKbd: false,
   ambAcc: 0, legendTok: 0, touring: false, legendFirst: true,
   ad: false, adAuto: true, adRate: 1, lastSpoken: 0, lastSpokenDom: '', current: null
 };
@@ -1239,7 +1310,7 @@ function analyzeColumn(cx) {
       const i = (y * w + x) * 4, r = data[i], g = data[i + 1], b = data[i + 2];
       tot++; rr += r; rg += g; rb += b;
       const k = t.classify(r, g, b, y, h);
-      if (!k) { const bk = t.base(r, g, b, y, h); if (bk) base[bk] = (base[bk] || 0) + 1; continue; }
+      if (!k) { const bk = t.base(r, g, b, y, h, x, w); if (bk) base[bk] = (base[bk] || 0) + 1; continue; }
       n++; sr += r; sg += g; sb += b;
       const o = cats[k] || (cats[k] = { count: 0, sumY: 0, sumL: 0, maxL: 0 });
       const L = (r * 0.299 + g * 0.587 + b * 0.114) / 255;
@@ -1417,6 +1488,13 @@ function render() {
     sctx.beginPath(); sctx.arc(m.x, m.y, rad, 0, 7); sctx.stroke();
   }
   sctx.globalAlpha = 1;
+  if (state.exKbd && state.ex) {   // mira da exploração por teclado
+    const s = scale, ex = state.ex.x, ey = state.ex.y;
+    sctx.save(); sctx.strokeStyle = '#f59e0b'; sctx.lineWidth = 3 * s; sctx.shadowColor = '#000'; sctx.shadowBlur = 6;
+    sctx.beginPath(); sctx.arc(ex, ey, 13 * s, 0, 7);
+    [[-1, 0], [1, 0], [0, -1], [0, 1]].forEach(([u, v]) => { sctx.moveTo(ex + u * 7 * s, ey + v * 7 * s); sctx.lineTo(ex + u * 22 * s, ey + v * 22 * s); });
+    sctx.stroke(); sctx.restore();
+  }
 }
 
 let discAngle = 0;
@@ -1524,7 +1602,7 @@ function loadFile(file) {
    ============================================================ */
 const trackNarration = () => {
   const t = state.track, L = state.lang;
-  return `${tr('trackLabel')}: ${t.title[L]}. ${tr('imageLabel')}: ${t.visual[L]} ${tr('rulesLabel')}: ${t.rules[L]} ${state.playing ? '' : tr('playHint')}`;
+  return `${tr('trackLabel')}: ${t.title[L]}. ${tr('imageLabel')}: ${t.visual[L]} ${tr('rulesLabel')}: ${t.rules[L]} ${state.explore ? tr('exploreHint') : ''} ${state.playing ? '' : tr('playHint')}`;
 };
 const describeImage = () => `${tr('imageLabel')}: ${state.track.visual[state.lang]}`;
 const readRules = () => `${tr('rulesLabel')}: ${state.track.rules[state.lang]}`;
@@ -1538,7 +1616,7 @@ function buildCards() {
   TRACKS.forEach((t, i) => {
     const b = document.createElement('button');
     b.className = 'track'; b.dataset.id = t.id; b.setAttribute('aria-pressed', 'false'); b.setAttribute('aria-keyshortcuts', String(i + 1));
-    b.innerHTML = `<span class="vinyl" style="--c:${t.disc}" aria-hidden="true"></span><span class="tmeta"><b></b><span></span></span>`;
+    b.innerHTML = `<span class="vinyl" style="--c:${t.disc}" aria-hidden="true"></span><span class="tmeta"><b></b><span class="tag"></span><span class="sub"></span></span>`;
     b.addEventListener('click', () => { AudioEngine.init(); selectTrack(t.id); });
     box.appendChild(b);
   });
@@ -1547,10 +1625,11 @@ function updateCards() {
   document.querySelectorAll('.track').forEach((b, i) => {
     const t = TRACKS.find(k => k.id === b.dataset.id);
     b.setAttribute('aria-pressed', String(state.track === t));
-    b.querySelector('b').textContent = t.title[state.lang];
+    b.querySelector('b').innerHTML = `<span class="key" aria-hidden="true">${i + 1}</span>${t.short[state.lang]}`;
+    b.querySelector('.tag').textContent = t.tag[state.lang];
     const kind = t.kind;
     const badge = kind ? `<span class="badge ${kind}">${tr(kind === 'real' ? 'bReal' : kind === 'manual' ? 'bManual' : 'bProc')}</span>` : '';
-    b.querySelector('.tmeta span').innerHTML = `<span class="key" aria-hidden="true">${i + 1}</span>NASA SVS #${t.svs}${badge}`;
+    b.querySelector('.sub').innerHTML = `NASA SVS #${t.svs}${badge}`;
   });
 }
 function updateTrackText() {
@@ -1671,7 +1750,9 @@ function applyLang() {
   const L = state.lang, D = I18N[L];
   document.documentElement.lang = L === 'pt' ? 'pt-BR' : 'en';
   document.querySelectorAll('[data-i18n]').forEach(el => { const v = D[el.dataset.i18n]; if (typeof v === 'string') el.textContent = v; });
-  $('#hint').innerHTML = D.hint;
+  $('#keys').innerHTML = D.keys.map(([k, d]) => `<li><kbd>${k}</kbd><span>${d}</span></li>`).join('');
+  $('#adSwitchTxt').textContent = state.ad ? D.adSwitchOn : D.adSwitchOff;
+  if (!state.ad) $('#adText').textContent = D.adIdle;
   $('#langBtn').textContent = D.langBtn; $('#langBtn').setAttribute('aria-label', D.langAria);
   $('#sizeGrp').setAttribute('aria-label', D.sizeLbl);
   document.querySelectorAll('#sizeGrp button').forEach((b, i) => b.setAttribute('aria-label', D.sizes[i]));
@@ -1715,11 +1796,247 @@ function stop() {
 function setAD(on) {
   state.ad = on;
   $('#adBtn').setAttribute('aria-pressed', String(on));
-  $('#adPanel').hidden = !on;
+  $('#adSwitch').setAttribute('aria-checked', String(on));
+  $('#adSwitchTxt').textContent = on ? tr('adSwitchOn') : tr('adSwitchOff');
+  $('#adPanel').classList.toggle('on', on);
   $('#adNote').hidden = Speech.ok;
   document.body.classList.toggle('ad-on', on);
+  if (!state.exploreTouched) setExplore(on, false);   // acompanha a audiodescrição até o usuário escolher
   if (on) { AudioEngine.init(); Speech.speak(`${tr('adOn')} ${trackNarration()}`); }
-  else { Speech.stop(); announce(tr('adOff')); }
+  else { Speech.stop(); $('#adText').textContent = tr('adIdle'); announce(tr('adOff')); }
+}
+function setExplore(on, user) {
+  state.explore = on; if (user) state.exploreTouched = true;
+  $('#exploreBtn').setAttribute('aria-pressed', String(on)); $('#adExplore').checked = on;
+  exKey = ''; clearTimeout(exTimer);
+  if (user) { if (on) Speech.speak(tr('exploreOn')); else { Speech.stop(); announce(tr('exploreOff')); } }
+}
+
+/* ============================================================
+   11b. DESCRIÇÃO DO PONTO (mouse, dedo ou teclado)
+   ============================================================ */
+const R2 = (pt, en) => ({ pt, en });
+// geometria de cada imagem, ajustada por pontos de referência nos arquivos originais
+const GEO = {
+  aerosols: { eq: { lat0: 90, lat1: -90, lonStart: -180, halves: 1 } },
+  nightlights: {
+    eq: { lat0: 83.6, lat1: -75.4, lonStart: -168.75, halves: 2 },
+    frames: [
+      { r: [0.088, 0.33, 0.28, 0.62], n: R2('quadro ampliado da Europa Ocidental', 'zoomed frame of Western Europe') },
+      { r: [0.285, 0.035, 0.175, 0.56], n: R2('quadro ampliado do Mediterrâneo Oriental', 'zoomed frame of the Eastern Mediterranean') },
+      { r: [0.6, 0.035, 0.17, 0.39], n: R2('quadro ampliado da Ucrânia', 'zoomed frame of Ukraine') },
+      { r: [0.785, 0.36, 0.185, 0.6], n: R2('quadro ampliado da Índia', 'zoomed frame of India') }
+    ],
+    bar: [0.475, 0.5, 0.105, 0.12]
+  },
+  lightning: { orth: { cx: 0.645, cy: 0.663, R: 1.014, lon0: 62.82, lat0: -11.7 } },
+  gedi: { orth: { cx: 0.547, cy: 0.472, R: 0.596, lon0: 45.45, lat0: 2.51 }, orthProc: { cx: 0.535, cy: 0.5, R: 0.455, lon0: 28, lat0: 14 }, legendY: 0.82 }
+};
+function landRegion(lon, lat) {
+  if (lat < -60) return R2('Antártida', 'Antarctica');
+  if (lon > -75 && lon < -10 && lat > 59) return R2('Groenlândia', 'Greenland');
+  if (lon > 42 && lon < 51 && lat > -26 && lat < -11) return R2('Madagascar', 'Madagascar');
+  if (lon > 34 && lon < 62 && lat > 12 && lat < 40) return R2('Oriente Médio e Península Arábica', 'Middle East and Arabian Peninsula');
+  if (lon > 66 && lon < 92 && lat > 5 && lat < 32) return R2('Índia', 'India');
+  if (lon > -25 && lon < 45 && lat > 35 && lat < 72) {
+    if (lon < 3 && lat < 44) return R2('Península Ibérica', 'Iberian Peninsula');
+    if (lat > 55 && lon > 4 && lon < 32) return R2('Escandinávia', 'Scandinavia');
+    if (lon > 22 && lat > 44 && lat < 53) return R2('Ucrânia e Leste Europeu', 'Ukraine and Eastern Europe');
+    if (lon > 26 && lat < 42) return R2('Turquia', 'Türkiye');
+    return R2('Europa', 'Europe');
+  }
+  if (lon > -20 && lon < 52 && lat > -36 && lat <= 37) {
+    if (lat > 17) return R2('Norte da África e Saara', 'North Africa and the Sahara');
+    if (lon >= 32 && lat > -12) return R2('África Oriental', 'East Africa');
+    if (lat > 4 && lon < 12) return R2('África Ocidental e Sahel', 'West Africa and the Sahel');
+    if (lat > -12) return R2('África Central e Bacia do Congo', 'Central Africa and the Congo Basin');
+    return R2('África Austral', 'Southern Africa');
+  }
+  if (lon > -170 && lon < -50 && lat > 7) {
+    if (lat < 25) return R2('México e América Central', 'Mexico and Central America');
+    if (lat > 55) return R2('Canadá e Alasca', 'Canada and Alaska');
+    return lon > -100 ? R2('Leste da América do Norte', 'Eastern North America') : R2('Oeste da América do Norte', 'Western North America');
+  }
+  if (lon > -82 && lon < -34 && lat <= 13) {
+    if (lat > -15) return R2('Amazônia e norte da América do Sul', 'Amazon and northern South America');
+    if (lat > -30) return lon > -55 ? R2('Sudeste do Brasil', 'Southeastern Brazil') : R2('Centro da América do Sul', 'Central South America');
+    return R2('Sul da América do Sul', 'Southern South America');
+  }
+  if (lon > 110 && lon < 155 && lat > -45 && lat < -10) return R2('Austrália', 'Australia');
+  if (lon > 165 && lat < -33) return R2('Nova Zelândia', 'New Zealand');
+  if (lon > 92 && lon < 142 && lat > -11 && lat < 23) return R2('Sudeste Asiático', 'Southeast Asia');
+  if (lon > 128 && lon < 146 && lat > 30 && lat < 46) return R2('Japão', 'Japan');
+  if (lon > 95 && lon < 135 && lat >= 20 && lat < 55) return R2('China e Leste Asiático', 'China and East Asia');
+  if (lat >= 50 && lon > 40) return R2('Rússia e Sibéria', 'Russia and Siberia');
+  if (lon > 45 && lon < 100 && lat > 30) return R2('Ásia Central', 'Central Asia');
+  return R2('Terra firme', 'Land');
+}
+function oceanRegion(lon, lat) {
+  if (lat > 66) return R2('Oceano Ártico', 'Arctic Ocean');
+  if (lat < -55) return R2('Oceano Austral', 'Southern Ocean');
+  if (lon > -6 && lon < 36 && lat > 30 && lat < 46) return R2('Mar Mediterrâneo', 'Mediterranean Sea');
+  if (lon > 27 && lon < 42 && lat >= 40 && lat < 47) return R2('Mar Negro', 'Black Sea');
+  if (lon > 32 && lon < 44 && lat > 12 && lat < 30) return R2('Mar Vermelho', 'Red Sea');
+  if (lon > 47 && lon < 57 && lat > 23 && lat < 31) return R2('Golfo Pérsico', 'Persian Gulf');
+  if (lon > -98 && lon < -60 && lat > 9 && lat < 31) return R2('Golfo do México e Caribe', 'Gulf of Mexico and the Caribbean');
+  if (lat >= 0 && lon > -82 && lon < 15 && !(lon < -77 && lat < 9)) return R2('Oceano Atlântico Norte', 'North Atlantic Ocean');
+  if (lat < 0 && lon > -67 && lon < 20) return R2('Oceano Atlântico Sul', 'South Atlantic Ocean');
+  if (lon >= 20 && lon < 100 && lat < 25) return R2('Oceano Índico', 'Indian Ocean');
+  if (lon >= 100 && lon < 125 && lat > -10 && lat < 25) return R2('Mares do Sudeste Asiático', 'Southeast Asian seas');
+  if (lon >= 100 && lon < 130 && lat <= -10) return R2('Oceano Índico', 'Indian Ocean');
+  return lat >= 0 ? R2('Oceano Pacífico Norte', 'North Pacific Ocean') : R2('Oceano Pacífico Sul', 'South Pacific Ocean');
+}
+function regionAt(x, y, hint = null) {
+  const g = GEO[state.track.id], { w, h } = state.src, fx = x / w, fy = y / h;
+  if (g.frames) {
+    for (const f of g.frames) { const [rx, ry, rw, rh] = f.r; if (fx >= rx && fx <= rx + rw && fy >= ry && fy <= ry + rh) return f.n; }
+    const b = g.bar; if (fx >= b[0] && fx <= b[0] + b[2] && fy >= b[1] && fy <= b[1] + b[3]) return R2('barra de cores da legenda', 'legend color bar');
+  }
+  const p = lonLatAt(state.track.id, x, y, w, h);
+  if (!p) return null;
+  const land = hint ? hint === 'land' : isLand(p.lon, p.lat);
+  return land ? landRegion(p.lon, p.lat) : oceanRegion(p.lon, p.lat);
+}
+/* pixel → (lon, lat) usando a geometria ajustada de cada imagem */
+function lonLatAt(id, x, y, w, h) {
+  const g = GEO[id], fx = x / w, fy = y / h;
+  let lon, lat;
+  if (g.eq) {
+    const e = g.eq, hw = 1 / e.halves;
+    lon = e.lonStart + ((fx % hw) / hw) * 360; lat = e.lat0 - fy * (e.lat0 - e.lat1);
+  } else {
+    const o = (state.srcKind === 'proc' && g.orthProc) ? g.orthProc : g.orth, Rp = o.R * h;
+    const p = orthoInverse((x - o.cx * w) / Rp, (o.cy * h - y) / Rp, o.lon0 * DEG, o.lat0 * DEG);
+    if (!p) return null;
+    lon = p.lon; lat = p.lat;
+  }
+  return { lon: ((lon + 180) % 360 + 360) % 360 - 180, lat };
+}
+const NONE = {
+  aerosols: R2('Área sem dado de aerossol', 'Area with no aerosol data'),
+  nightlights: R2('Sem luz relevante', 'No significant light'),
+  lightning: R2('Espaço', 'Space'),
+  gedi: R2('Espaço', 'Space')
+};
+function pointInfo(x, y, touch = false) {
+  const t = state.track, { data, w, h } = state.src, L = state.lang;
+  const xi = clamp(x | 0, 0, w - 1), yi = clamp(y | 0, 0, h - 1), i = (yi * w + xi) * 4;
+  const r = data[i], g = data[i + 1], b = data[i + 2];
+  // vizinhança: o dedo cobre uma área maior que o mouse
+  const rad = Math.max(2, Math.round(w / (touch ? 110 : 320))), st = Math.max(1, (rad / 3) | 0);
+  const cnt = {};
+  for (let dy = -rad; dy <= rad; dy += st) for (let dx = -rad; dx <= rad; dx += st) {
+    const px = clamp(xi + dx, 0, w - 1), py = clamp(yi + dy, 0, h - 1), j = (py * w + px) * 4;
+    const R_ = data[j], G_ = data[j + 1], B_ = data[j + 2];
+    const kk = t.classify(R_, G_, B_, py, h) || t.base(R_, G_, B_, py, h, px, w);
+    if (!kk) continue;
+    cnt[kk] = (cnt[kk] || 0) + 1;
+  }
+  const lums = [];
+  if (t.id === 'gedi') {
+    const fr = Math.max(rad, Math.round(w / 160)), fs = Math.max(1, (fr / 5) | 0);
+    for (let dy = -fr; dy <= fr; dy += fs) for (let dx = -fr; dx <= fr; dx += fs) {
+      const px = clamp(xi + dx, 0, w - 1), py = clamp(yi + dy, 0, h - 1), j = (py * w + px) * 4;
+      if (t.classify(data[j], data[j + 1], data[j + 2], py, h) === 'forest') lums.push((data[j] * 0.299 + data[j + 1] * 0.587 + data[j + 2] * 0.114) / 255);
+    }
+    lums.sort((a, b) => a - b);
+  }
+  if (t.id === 'lightning' && !cnt.flash) {   // flashes têm poucos pixels: procura um pouco mais longe
+    const fr = Math.round(w / (touch ? 70 : 140));
+    for (let dy = -fr; dy <= fr && !cnt.flash; dy++) for (let dx = -fr; dx <= fr; dx++) {
+      const px = clamp(xi + dx, 0, w - 1), py = clamp(yi + dy, 0, h - 1), j = (py * w + px) * 4;
+      if (t.classify(data[j], data[j + 1], data[j + 2], py, h) === 'flash') { cnt.flash = 1; break; }
+    }
+  }
+  let k = null, best = 0;
+  for (const [kk, n] of Object.entries(cnt)) if (!t.cats[kk].ambient && n > best) { best = n; k = kk; }
+  if (!k || best < (k === 'flash' ? 1 : 2)) {
+    k = null; best = 0;
+    for (const [kk, n] of Object.entries(cnt)) if (t.cats[kk].ambient && n > best) { best = n; k = kk; }
+  }
+  const c = k ? t.cats[k] : null, inLegend = t.id === 'gedi' && yi > h * 0.82;
+  let name, extra = '', hn = 0;
+  if (c) name = c.name[L];
+  else if (inLegend) name = L === 'pt' ? 'Legenda “Height Above Ground”' : '“Height Above Ground” legend';
+  else if (t.id === 'lightning' && r > 165 && g > 165 && b > 165) name = L === 'pt' ? 'Nuvem ou trajetória da ISS' : 'Cloud or ISS track';
+  else if (t.id === 'lightning' && lonLatAt('lightning', xi, yi, w, h)) name = L === 'pt' ? 'Lado noturno da Terra, sem raios' : 'Earth’s night side, no lightning';
+  else name = NONE[t.id][L];
+  if (k === 'forest') {
+    const p90 = lums.length ? lums[Math.floor(lums.length * 0.9)] : 0; hn = clamp((p90 - 0.2) / 0.7, 0, 1);   // ~0,2 → 0 m · ~0,9 → 55 m (barra de cores do original)
+    extra = L === 'pt' ? `cerca de ${Math.round(hn * 55)} m de altura` : `about ${Math.round(hn * 55)} m tall`;
+  }
+  const geoOk = !inLegend && (k || GEO[t.id].eq || (t.id === 'lightning' && name !== NONE.lightning[L]));
+  // o contorno dos continentes é simplificado: a região segue o tipo do item (floresta nunca cai no mar)
+  const hint = (k === 'land' || k === 'forest' || (t.id === 'nightlights' && k && k !== 'ocean')) ? 'land' : k === 'ocean' ? 'ocean' : null;
+  const reg = geoOk ? regionAt(xi, yi, hint) : null;
+  const muted = !!k && state.muted.has(k);
+  const first = name + (c ? `, ${tr('colorWord')} ${c.colorName[L]}` : '') + (extra ? `, ${extra}` : '') + (muted ? ` (${tr('layerOff')})` : '') + '.';
+  return {
+    k, c, name, extra, hn, muted, reg: reg ? reg[L] : '',
+    color: c ? c.color : `rgb(${r},${g},${b})`, fx: xi / w, fy: yi / h,
+    key: `${k}|${reg ? reg.pt : ''}|${k === 'forest' ? Math.round(hn * 5) : ''}`,
+    spoken: reg ? `${first} ${tr('regionWord')}: ${reg[L]}.` : first
+  };
+}
+function pointSound(info, x, y) {
+  const k = info.k; if (!k || info.muted || !state.src || k === 'neutral') return;
+  AudioEngine.wake();
+  const { w, h } = state.src, pan = (x / w) * 1.6 - 0.8;
+  if (k === 'ocean') AudioEngine.noise({ g: 0.14, a: 0.12, hold: 0.08, r: 0.35, cutoff: 650 }, pan);
+  else if (k === 'land') AudioEngine.note({ f: mtof(40), type: 'triangle', g: 0.22, a: 0.04, d: 0.15, s: 0.7, hold: 0.2, r: 0.3 }, pan);
+  else if (k === 'flash') AudioEngine.perc(scaleFreq(1 - y / h, 57, 3), 0.38, pan);
+  else if (k === 'forest') AudioEngine.note({ f: scaleFreq(info.hn, 45, 3), type: 'sine', g: 0.2, a: 0.02, d: 0.12, s: 0.5, hold: 0.1, r: 0.3 }, pan);
+  else { pointNote(x, y); return; }
+  state.markers.push({ x, y, color: '#ffffff', t: performance.now(), big: true });
+}
+const tip = $('#tip');
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+function boxPos(e) { const br = $('#canvasbox').getBoundingClientRect(); return { x: e.clientX - br.left, y: e.clientY - br.top }; }
+function canvasToBox(x, y) {
+  const r = stage.getBoundingClientRect(), br = $('#canvasbox').getBoundingClientRect();
+  const ar = stage.width / stage.height, boxAr = r.width / r.height;
+  let w = r.width, h = r.height, ox = 0, oy = 0;
+  if (boxAr > ar) { w = r.height * ar; ox = (r.width - w) / 2; } else { h = r.width / ar; oy = (r.height - h) / 2; }
+  return { x: r.left - br.left + ox + x / stage.width * w, y: r.top - br.top + oy + y / stage.height * h };
+}
+function showTip(info, bx, by, above) {
+  const L = state.lang;
+  tip.innerHTML = `<b><i style="background:${info.color}"></i>${esc(info.name)}</b>`
+    + (info.c ? `<small>${tr('colorWord')}: ${esc(info.c.colorName[L])}${info.extra ? ' · ' + esc(info.extra) : ''}</small>` : '')
+    + (info.reg ? `<small>${tr('regionWord')}: ${esc(info.reg)}</small>` : '')
+    + `<small class="pos">x ${Math.round(info.fx * 100)}% · y ${Math.round(info.fy * 100)}%</small>`;
+  tip.classList.add('on');
+  const cb = $('#canvasbox'), bw = cb.clientWidth, bh = cb.clientHeight, tw = tip.offsetWidth, th = tip.offsetHeight;
+  let left = bx + 18, top = above ? by - th - 34 : by + 18;
+  if (left + tw > bw - 6) left = bx - tw - 18;
+  if (top + th > bh - 6) top = by - th - 18;
+  tip.style.left = clamp(left, 6, Math.max(6, bw - tw - 6)) + 'px';
+  tip.style.top = clamp(top, 6, Math.max(6, bh - th - 6)) + 'px';
+}
+function hideTip() { tip.classList.remove('on'); }
+let exTimer = 0, exKey = '';
+/* mouse ou dedo: mostra o balão sempre; com a descrição ligada, toca o som do ponto e fala o que é */
+function exploreAt(x, y, bx, by, touch) {
+  if (!state.src) return;
+  const info = pointInfo(x, y, touch);
+  showTip(info, bx, by, touch);
+  if (!state.explore || info.key === exKey) return;
+  exKey = info.key; clearTimeout(exTimer);
+  exTimer = setTimeout(() => {
+    pointSound(info, x, y);
+    exTimer = setTimeout(() => Speech.speak(info.spoken), info.k ? 260 : 0);
+  }, touch ? 120 : 260);
+}
+/* teclado: ↑ ↓ ← → e Enter descrevem o ponto da mira */
+function describeEx(force) {
+  if (!state.src || !state.ex) return;
+  const e = state.ex, info = pointInfo(e.x, e.y), p = canvasToBox(e.x, e.y);
+  state.exKbd = true;
+  showTip(info, p.x, p.y, false);
+  pointSound(info, e.x, e.y);
+  clearTimeout(exTimer);
+  if (force || state.explore || state.ad) exTimer = setTimeout(() => Speech.speak(info.spoken), 200);
+  else announce(info.spoken);
 }
 
 /* --- interação: ouvir um ponto --- */
@@ -1742,7 +2059,7 @@ function pointNote(x, y) {   // nota extra do pixel exato sob o cursor
 }
 let speakTimer = 0;
 function narrateSoon() {   // depois de arrastar/buscar, narra o ponto onde parou
-  if (!state.ad) return;
+  if (!state.ad || state.explore) return;
   clearTimeout(speakTimer);
   speakTimer = setTimeout(() => Speech.speak(readCurrent()), 500);
 }
@@ -1753,21 +2070,47 @@ function canvasPos(e) {
   if (boxAr > ar) { w = r.height * ar; ox = (r.width - w) / 2; } else { h = r.width / ar; oy = (r.height - h) / 2; }
   return { x: clamp((e.clientX - r.left - ox) / w * stage.width, 0, stage.width - 1), y: clamp((e.clientY - r.top - oy) / h * stage.height, 0, stage.height - 1) };
 }
-let dragging = false, lastScrub = 0;
-stage.addEventListener('pointerdown', e => { dragging = true; stage.setPointerCapture(e.pointerId); const p = canvasPos(e); lastScrub = performance.now(); scrubAt(p.x, p.y); });
-stage.addEventListener('pointermove', e => {
-  if (!dragging) return; const now = performance.now(); if (now - lastScrub < 90) return; lastScrub = now;
-  const p = canvasPos(e); scrubAt(p.x, p.y);
+let dragging = false, lastScrub = 0, tipHide = 0;
+stage.addEventListener('pointerdown', e => {
+  dragging = true; stage.setPointerCapture(e.pointerId);
+  const p = canvasPos(e); lastScrub = performance.now(); scrubAt(p.x, p.y);
+  state.exKbd = false; state.ex = { x: p.x, y: p.y };
+  if (e.pointerType !== 'mouse') { clearTimeout(tipHide); exKey = ''; const bp = boxPos(e); exploreAt(p.x, p.y, bp.x, bp.y, true); }
 });
-['pointerup', 'pointercancel'].forEach(ev => stage.addEventListener(ev, () => { if (dragging) narrateSoon(); dragging = false; }));
+stage.addEventListener('pointermove', e => {
+  const touch = e.pointerType !== 'mouse';
+  if (touch && !dragging) return;
+  const p = canvasPos(e), bp = boxPos(e);
+  state.exKbd = false; state.ex = { x: p.x, y: p.y };
+  if (dragging) { const now = performance.now(); if (now - lastScrub >= 90) { lastScrub = now; scrubAt(p.x, p.y); } }
+  exploreAt(p.x, p.y, bp.x, bp.y, touch);
+});
+['pointerup', 'pointercancel'].forEach(ev => stage.addEventListener(ev, e => {
+  if (dragging && !state.explore) narrateSoon();
+  dragging = false;
+  if (e.pointerType !== 'mouse') { clearTimeout(tipHide); tipHide = setTimeout(hideTip, 2000); }
+}));
+stage.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && !dragging) { hideTip(); clearTimeout(exTimer); exKey = ''; } });
+stage.addEventListener('focus', () => { if (state.src && !state.ex) state.ex = { x: state.x, y: state.src.h / 2 }; });
+stage.addEventListener('blur', () => { state.exKbd = false; hideTip(); });
 stage.addEventListener('keydown', e => {
-  if (!state.src || (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft')) return;
-  e.preventDefault();
-  const step = state.src.w * (e.shiftKey ? 0.05 : 0.01) * (e.key === 'ArrowRight' ? 1 : -1);
-  const prev = state.x, nx = clamp(state.x + step, 0, state.src.w - 1);
-  if (state.track.percussive) { AudioEngine.wake(); state.x = nx; scanLightning(Math.min(prev, nx), Math.max(prev, nx), true); lightningTelemetry(true); updateClock(true); }
-  else scrubAt(nx);
-  narrateSoon();
+  if (!state.src) return;
+  const W = state.src.w, H = state.src.h;
+  if (!state.ex) state.ex = { x: state.x, y: H / 2 };
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+    e.preventDefault();
+    const step = W * (e.shiftKey ? 0.05 : 0.01) * (e.key === 'ArrowRight' ? 1 : -1);
+    const prev = state.x, nx = clamp(state.x + step, 0, W - 1);
+    if (state.track.percussive) { AudioEngine.wake(); state.x = nx; scanLightning(Math.min(prev, nx), Math.max(prev, nx), true); lightningTelemetry(true); updateClock(true); }
+    else scrubAt(nx);
+    state.ex.x = state.x;
+    if (state.explore) describeEx(false); else { state.exKbd = true; narrateSoon(); }
+  } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+    e.preventDefault();
+    state.ex.x = state.x;
+    state.ex.y = clamp(state.ex.y + H * (e.shiftKey ? 0.1 : 0.04) * (e.key === 'ArrowDown' ? 1 : -1), 0, H - 1);
+    describeEx(false);
+  } else if (e.key === 'Enter') { e.preventDefault(); describeEx(true); }
 });
 
 /* --- drag & drop de imagem --- */
@@ -1804,6 +2147,9 @@ $('#fileInput').addEventListener('change', e => { loadFile(e.target.files && e.t
 $('#restoreBtn').addEventListener('click', () => { const t = state.track; delete t.cache.manual; delete t.cache.manualName; selectTrack(t.id, false); });
 
 $('#adBtn').addEventListener('click', () => setAD(!state.ad));
+$('#adSwitch').addEventListener('click', () => setAD(!state.ad));
+$('#exploreBtn').addEventListener('click', () => setExplore(!state.explore, true));
+$('#adExplore').addEventListener('change', e => setExplore(e.target.checked, true));
 $('#legendAll').addEventListener('click', () => playLegend());
 $('#legendStop').addEventListener('click', stopLegend);
 $('#legendFirst').addEventListener('change', e => { state.legendFirst = e.target.checked; });
@@ -1824,6 +2170,7 @@ document.addEventListener('keydown', e => {
   if (inForm || document.querySelector('dialog[open]')) return;
   const k = e.key.toLowerCase();
   if (k === 'a') setAD(!state.ad);
+  else if (k === 'e') setExplore(!state.explore, true);
   else if (k === 'l') state.touring ? stopLegend() : playLegend();
   else if (k === 'd') { if (!state.ad) setAD(true); Speech.speak(describeImage()); }
   else if (k === 'r') { if (!state.ad) setAD(true); Speech.speak(readCurrent()); }
